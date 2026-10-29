@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>COMM 467 Study Pages</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,650&family=Public+Sans:wght@400;500;600&display=swap">
+<style>
+/* Landing page: two cards linking to the study pages. Same tokens as the pages it links to. */
+:root {
+  --bg: #f4f6f9;
+  --surface: #ffffff;
+  --ink: #18202d;
+  --muted: #586274;
+  --line: #dbe0e8;
+  --accent: #1d5ca8;
+  --accent-soft: #e5eef9;
+  --font-display: "Source Serif 4", "Songti SC", Georgia, serif;
+  --font-body: "Public Sans", "PingFang SC", "Noto Sans SC", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11151c; --surface: #19202a; --ink: #e5e9f0; --muted: #9ba5b6; --line: #2a323e;
+    --accent: #82b2f0; --accent-soft: #1d2a3c; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11151c; --surface: #19202a; --ink: #e5e9f0; --muted: #9ba5b6; --line: #2a323e;
+  --accent: #82b2f0; --accent-soft: #1d2a3c; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.65;
+  padding: 0 16px 64px;
+}
+.wrap { max-width: 860px; margin: 0 auto; }
+header { padding-block: 48px 28px; border-bottom: 1px solid var(--line); margin-bottom: 28px; display: grid; gap: 10px; }
+.eyebrow { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+h1 { font-family: var(--font-display); font-weight: 650; font-size: clamp(28px, 5vw, 40px); line-height: 1.15; margin: 0; text-wrap: balance; }
+h2 { font-family: var(--font-display); font-weight: 650; font-size: 22px; line-height: 1.25; margin: 0; }
+p { margin: 0; }
+.lede { color: var(--muted); max-width: 64ch; }
+.zh { display: block; font-size: 13px; color: var(--muted); line-height: 1.6; font-weight: 400; letter-spacing: 0; text-transform: none; }
+h1 .zh { font-size: 16px; margin-top: 4px; }
+h2 .zh { margin-top: 2px; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.card {
+  display: grid; gap: 12px; align-content: start; padding: 22px; border: 1px solid var(--line); border-radius: 10px;
+  background: var(--surface); color: inherit; text-decoration: none; transition: border-color .15s;
+}
+.card:hover { border-color: var(--accent); }
+.card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.card ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14px; }
+.go { color: var(--accent); font-weight: 600; font-size: 14px; }
+footer { margin-top: 32px; font-size: 13px; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">COMM 467 · Elton, Gruber, Brown &amp; Goetzmann, 9th ed.</div>
+    <h1>Modern Portfolio Theory Study Pages<span class="zh">现代投资组合理论学习页面</span></h1>
+    <p class="lede">Chapters 1, 4, 5 and 7: worked answers, key-concept notes and a practice midterm.<span class="zh">第 1、4、5、7 章：课后题解答、知识点笔记和模拟期中考试。</span></p>
+  </header>
+
+  <div class="cards">
+    <a class="card" href="mpt-solutions.html">
+      <h2>Problem Solutions<span class="zh">课后题解答</span></h2>
+      <ul>
+        <li>32 end-of-chapter problems with step-by-step answers</li>
+        <li>16 key-concept cards with charts and video links</li>
+      </ul>
+      <span class="go">Open solutions →</span>
+    </a>
+    <a class="card" href="practice-midterm.html">
+      <h2>Practice Midterm<span class="zh">模拟期中考试</span></h2>
+      <ul>
+        <li>72 multiple-choice questions with explanations</li>
+        <li>12 written problems with full solutions</li>
+        <li>Chapter filters and an 80-minute timer</li>
+      </ul>
+      <span class="go">Start practice →</span>
+    </a>
+  </div>
+
+  <footer>
+    <p>Self-made study material; answers may contain mistakes, so check against course materials.<span class="zh">自制学习资料，答案可能有误，请以课程资料为准。</span></p>
+  </footer>
+</div>
+</body>
+</html>
