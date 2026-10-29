@@ -3,6 +3,26 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+/* Language toggle: "both" shows the small Chinese lines, "en" hides them. Shared across pages via localStorage. */
+(function () {
+  var lang = "both";
+  try { lang = localStorage.getItem("comm467-lang") || "both"; } catch (e) {}
+  document.documentElement.dataset.lang = lang;
+  document.addEventListener("DOMContentLoaded", function () {
+    var btns = document.querySelectorAll(".lang button");
+    function sync() { btns.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.set === document.documentElement.dataset.lang)); }); }
+    btns.forEach(function (b) {
+      b.addEventListener("click", function () {
+        document.documentElement.dataset.lang = b.dataset.set;
+        try { localStorage.setItem("comm467-lang", b.dataset.set); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
 <title>COMM 467 Practice Midterm</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -113,11 +133,22 @@ td { font-family: var(--font-mono); }
 .q table td { font-family: var(--font-display); font-size: 14px; }
 .empty { color: var(--muted); font-size: 14px; }
 @media (max-width: 560px) { .timer { margin-left: 0; } .mc, article.prob { padding: 14px; } }
+
+/* language toggle in the header */
+.topline { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; }
+.lang { display: inline-flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: var(--surface); }
+.lang button { font: inherit; font-size: 12px; font-weight: 500; border: 0; background: transparent; color: var(--muted); padding: 4px 10px; cursor: pointer; }
+.lang button + button { border-left: 1px solid var(--line); }
+.lang button[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent); }
+:root[data-lang="en"] .zh { display: none !important; }
 </style>
 
 <div class="wrap">
 <header class="top">
-  <div class="eyebrow">COMM 467 · Practice exam · Ch 1, 4, 5, 7</div>
+  <div class="topline">
+    <div class="eyebrow">COMM 467 · Practice exam · Ch 1, 4, 5, 7</div>
+    <div class="lang" role="group" aria-label="Language"><button type="button" data-set="both">EN + 中文</button><button type="button" data-set="en">English</button></div>
+  </div>
   <h1>Practice Midterm<span class="zh">期中模拟考试</span></h1>
   <p class="lede">Original practice questions written to match the coverage and style of the Midterm Review slides: definitions, theory and calculations in multiple choice, then numerical and short-answer problems. Not past exam questions.</p>
   <p class="zh">按老师 Midterm Review 课件的范围和题型自编的练习题，不是历年真题。</p>

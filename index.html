@@ -3,6 +3,26 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+/* Language toggle: "both" shows the small Chinese lines, "en" hides them. Shared across pages via localStorage. */
+(function () {
+  var lang = "both";
+  try { lang = localStorage.getItem("comm467-lang") || "both"; } catch (e) {}
+  document.documentElement.dataset.lang = lang;
+  document.addEventListener("DOMContentLoaded", function () {
+    var btns = document.querySelectorAll(".lang button");
+    function sync() { btns.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.set === document.documentElement.dataset.lang)); }); }
+    btns.forEach(function (b) {
+      b.addEventListener("click", function () {
+        document.documentElement.dataset.lang = b.dataset.set;
+        try { localStorage.setItem("comm467-lang", b.dataset.set); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
 <title>COMM 467 Study Pages</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -55,12 +75,23 @@ h2 .zh { margin-top: 2px; }
 .card ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14px; }
 .go { color: var(--accent); font-weight: 600; font-size: 14px; }
 footer { margin-top: 32px; font-size: 13px; color: var(--muted); }
+
+/* language toggle in the header */
+.topline { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; }
+.lang { display: inline-flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: var(--surface); }
+.lang button { font: inherit; font-size: 12px; font-weight: 500; border: 0; background: transparent; color: var(--muted); padding: 4px 10px; cursor: pointer; }
+.lang button + button { border-left: 1px solid var(--line); }
+.lang button[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent); }
+:root[data-lang="en"] .zh { display: none !important; }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <div class="eyebrow">COMM 467 · Elton, Gruber, Brown &amp; Goetzmann, 9th ed.</div>
+    <div class="topline">
+      <div class="eyebrow">COMM 467 · Elton, Gruber, Brown &amp; Goetzmann, 9th ed.</div>
+      <div class="lang" role="group" aria-label="Language"><button type="button" data-set="both">EN + 中文</button><button type="button" data-set="en">English</button></div>
+    </div>
     <h1>Modern Portfolio Theory Study Pages<span class="zh">现代投资组合理论学习页面</span></h1>
     <p class="lede">Chapters 1, 4, 5 and 7: worked answers, key-concept notes and a practice midterm.<span class="zh">第 1、4、5、7 章：课后题解答、知识点笔记和模拟期中考试。</span></p>
   </header>
