@@ -1,0 +1,1314 @@
+<title>Elton & Gruber 习题解答</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,650&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: sticky chapter rail on the left, problem sheets on the right; answers fold under each question like a workbook key. English leads, Chinese follows in small grey type. */
+:root {
+  --bg: #f4f6f9;
+  --surface: #ffffff;
+  --ink: #18202d;
+  --muted: #586274;
+  --line: #dbe0e8;
+  --accent: #1d5ca8;
+  --accent-soft: #e5eef9;
+  --eff: #c4352b;
+  --plot-muted: #9aa4b4;
+  --font-display: "Source Serif 4", "Songti SC", Georgia, serif;
+  --font-body: "Public Sans", "PingFang SC", "Noto Sans SC", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11151c; --surface: #19202a; --ink: #e5e9f0; --muted: #9ba5b6; --line: #2a323e;
+    --accent: #82b2f0; --accent-soft: #1d2a3c; --eff: #f2786c; --plot-muted: #66707f; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11151c; --surface: #19202a; --ink: #e5e9f0; --muted: #9ba5b6; --line: #2a323e;
+  --accent: #82b2f0; --accent-soft: #1d2a3c; --eff: #f2786c; --plot-muted: #66707f; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.65;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 64px;
+}
+.wrap { max-width: 1120px; margin: 0 auto; }
+header.top { padding-block: 40px 28px; border-bottom: 1px solid var(--line); margin-bottom: 28px; display: grid; gap: 10px; }
+.eyebrow { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+h1 { font-family: var(--font-display); font-weight: 650; font-size: clamp(26px, 4vw, 38px); line-height: 1.15; margin: 0; text-wrap: balance; }
+.lede { color: var(--muted); max-width: 68ch; margin: 0; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 6px; }
+button { font: inherit; cursor: pointer; }
+.btn { border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 6px; padding: 6px 12px; font-size: 13px; font-weight: 500; }
+.btn:hover { border-color: var(--accent); color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.note { font-size: 13px; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; max-width: 80ch; display: grid; gap: 4px; }
+.note p { margin: 0; }
+
+/* bilingual: Chinese sits under the English in smaller grey type */
+.zh { font-family: var(--font-body); font-size: 13px; color: var(--muted); line-height: 1.6; font-weight: 400; letter-spacing: 0; text-transform: none; }
+h1 .zh, h2 .zh, h3 .zh, h4 .zh { display: block; margin-top: 2px; }
+h1 .zh { font-size: 16px; }
+li .zh { display: block; }
+
+.layout { display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 40px; align-items: start; }
+nav.rail { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 16px); display: grid; gap: 18px; font-size: 13px; max-height: calc(100vh - 32px); overflow-y: auto; }
+nav.rail h4 { margin: 0 0 6px; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+nav.rail ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+nav.rail a { color: var(--ink); text-decoration: none; display: block; padding: 3px 8px; border-radius: 4px; }
+nav.rail a:hover { background: var(--accent-soft); color: var(--accent); }
+nav.rail a span { font-family: var(--font-mono); color: var(--muted); margin-right: 6px; font-size: 12px; }
+
+main { display: grid; gap: 56px; min-width: 0; }
+section.chapter { display: grid; gap: 22px; min-width: 0; }
+.ch-head { display: grid; gap: 4px; border-bottom: 2px solid var(--ink); padding-bottom: 10px; }
+.ch-head h2 { font-family: var(--font-display); font-size: 26px; font-weight: 650; margin: 0; line-height: 1.2; }
+.ch-head p { margin: 0; color: var(--muted); font-size: 14px; }
+
+article.prob { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 20px 22px; display: grid; gap: 14px; min-width: 0; scroll-margin-top: 16px; }
+.prob-head { display: flex; align-items: baseline; gap: 12px; }
+.prob-num { font-family: var(--font-mono); font-weight: 500; font-size: 13px; color: var(--accent); background: var(--accent-soft); border-radius: 4px; padding: 1px 8px; flex: none; }
+.prob-head h3 { margin: 0; font-family: var(--font-display); font-size: 18px; font-weight: 650; line-height: 1.3; }
+.q { font-family: var(--font-display); font-size: 15.5px; line-height: 1.6; display: grid; gap: 8px; min-width: 0; }
+.q p, .ans p { margin: 0; }
+.q ol, .ans ol, .ans ul { margin: 0; padding-left: 22px; display: grid; gap: 3px; }
+.q ol { list-style: upper-alpha; }
+.ans ul { gap: 8px; }
+
+details.ans { border-top: 1px dashed var(--line); padding-top: 12px; }
+details.ans > summary { cursor: pointer; font-weight: 600; color: var(--accent); font-size: 14px; list-style: none; display: inline-flex; gap: 6px; align-items: center; }
+details.ans > summary::-webkit-details-marker { display: none; }
+details.ans > summary::before { content: "▸"; transition: transform .15s; display: inline-block; }
+details.ans[open] > summary::before { transform: rotate(90deg); }
+details.ans > summary .zh { font-weight: 400; }
+.ans-body { display: grid; gap: 14px; margin-top: 14px; min-width: 0; }
+.part { display: grid; gap: 6px; min-width: 0; }
+.part > h5 { margin: 0; font-size: 13px; font-weight: 600; color: var(--ink); letter-spacing: .02em; }
+.part > h5 b { font-family: var(--font-mono); color: var(--accent); font-weight: 500; margin-right: 6px; }
+.part > h5 .zh { font-size: 12px; margin-left: 6px; }
+.formula { font-family: var(--font-mono); font-size: 13px; background: var(--bg); border-radius: 6px; padding: 8px 12px; overflow-x: auto; white-space: pre; line-height: 1.7; }
+.result { font-weight: 600; }
+.key { display: inline-block; font-family: var(--font-mono); font-size: 13px; background: var(--accent-soft); color: var(--accent); border-radius: 4px; padding: 0 6px; }
+.callout { border-left: 3px solid var(--eff); padding: 4px 0 4px 12px; font-size: 14px; display: grid; gap: 2px; }
+.small { font-size: 13px; color: var(--muted); }
+
+.tbl { overflow-x: auto; max-width: 100%; }
+table { border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; min-width: 100%; }
+th, td { padding: 4px 10px; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th { font-weight: 600; color: var(--muted); font-family: var(--font-body); font-size: 12px; }
+th:first-child, td:first-child { text-align: left; }
+td { font-family: var(--font-mono); }
+.q table td { font-family: var(--font-display); font-size: 14px; }
+tr.hl td { background: var(--accent-soft); }
+
+.charts { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+.chart { border: 1px solid var(--line); border-radius: 8px; padding: 8px; display: grid; gap: 4px; min-width: 0; }
+.chart .cap { font-size: 12px; color: var(--muted); padding: 0 4px; }
+.chart .cap .zh { font-size: 12px; display: block; }
+.chart svg { width: 100%; height: auto; display: block; }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12px; color: var(--muted); }
+.legend i { display: inline-block; width: 18px; height: 3px; vertical-align: middle; margin-right: 6px; border-radius: 2px; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.seg button { border: 0; background: var(--surface); color: var(--muted); padding: 5px 12px; font-size: 13px; }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--surface); }
+
+.notes { display: grid; gap: 12px; min-width: 0; }
+.notes > h3 { margin: 0; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.notes > h3 .zh { display: inline; margin-left: 6px; font-size: 12px; }
+.concept { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px 20px; display: grid; gap: 8px; min-width: 0; scroll-margin-top: 16px; }
+.concept h4 { margin: 0; font-family: var(--font-display); font-size: 17px; font-weight: 650; line-height: 1.3; }
+.concept h4 .pg { margin-left: 8px; vertical-align: 2px; }
+.concept p { margin: 0; max-width: 72ch; }
+.pg { font-family: var(--font-mono); font-size: 12px; font-weight: 400; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 0 6px; white-space: nowrap; }
+.refs { display: grid; gap: 4px; font-size: 13px; }
+.refs div { display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: baseline; }
+.refs .lbl { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 600; min-width: 64px; }
+.refs a { color: var(--accent); text-decoration: none; }
+.refs a:hover { text-decoration: underline; }
+.refs .src { color: var(--muted); font-size: 12px; }
+
+@media (max-width: 820px) {
+  .layout { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  nav.rail { position: static; max-height: none; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  nav.rail a { padding: 2px 4px; }
+  article.prob { padding: 16px; }
+}
+@media (prefers-reduced-motion: reduce) { details.ans > summary::before { transition: none; } }
+</style>
+
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">COMM 467 · Modern Portfolio Theory and Investment Analysis, 9th ed.</div>
+  <h1>Problem Solutions: Chapters 1, 4, 5 and 7<span class="zh">第 1、4、5、7 章课后习题解答</span></h1>
+  <p class="lede">Every end-of-chapter Question and Problem from Elton, Gruber, Brown &amp; Goetzmann. Each chapter opens with key concepts (explanation, formulas, book pages and video lectures), followed by the problems with worked solutions and charts.</p>
+  <p class="zh">每章先有“Key Concepts 本章要点”（讲解、公式、书页码、视频），后面是习题和带步骤的解答。英文为主，中文在下方作参考。</p>
+  <div class="note">
+    <p>These are self-worked solutions following the book’s methods, <b>not the official solutions manual</b>. Variances and standard deviations divide by N (the book’s convention); N−1 versions are noted where it matters. Numbers are rounded to two decimals.</p>
+    <p class="zh">答案按书中方法自行计算，不是官方答案。方差按书中惯例除以 N，需要时另列 N−1 的结果。考试以老师要求为准。</p>
+  </div>
+  <div class="toolbar">
+    <button class="btn" id="openAll" type="button">Expand all answers · 展开全部</button>
+    <button class="btn" id="closeAll" type="button">Collapse all · 收起全部</button>
+  </div>
+</header>
+
+<div class="layout">
+<nav class="rail" aria-label="Contents">
+  <div><h4>Ch 1 Introduction</h4><ul>
+    <li><a href="#ch1-notes"><span>★</span>Key concepts</a></li>
+    <li><a href="#c1-1"><span>1.1</span>Candy store</a></li>
+    <li><a href="#c1-2"><span>1.2</span>Two periods, $20</a></li>
+    <li><a href="#c1-3"><span>1.3</span>Two periods, $5,000</a></li>
+    <li><a href="#c1-4"><span>1.4</span>Adding wealth</a></li>
+    <li><a href="#c1-5"><span>1.5</span>Choosing a job</a></li>
+    <li><a href="#c1-6"><span>1.6</span>Different rates</a></li>
+    <li><a href="#c1-7"><span>1.7</span>Preference function</a></li>
+    <li><a href="#c1-8"><span>1.8</span>Optimal consumption</a></li>
+    <li><a href="#c1-9"><span>1.9</span>Pizza or burgers</a></li>
+    <li><a href="#c1-10"><span>1.10</span>Two periods, $50</a></li>
+    <li><a href="#c1-11"><span>1.11</span>Inheritance</a></li>
+    <li><a href="#c1-12"><span>1.12</span>Max consumption</a></li>
+  </ul></div>
+  <div><h4>Ch 4 Opportunity set</h4><ul>
+    <li><a href="#ch4-notes"><span>★</span>Key concepts</a></li>
+    <li><a href="#c4-1"><span>4.1</span>Four assets</a></li>
+    <li><a href="#c4-2"><span>4.2</span>Price data</a></li>
+    <li><a href="#c4-3"><span>4.3</span>Diversification</a></li>
+    <li><a href="#c4-4"><span>4.4</span>How many stocks</a></li>
+    <li><a href="#c4-5"><span>4.5</span>Italy / Belgium</a></li>
+    <li><a href="#c4-6"><span>4.6</span>Variance &lt; 8</a></li>
+  </ul></div>
+  <div><h4>Ch 5 Efficient portfolios</h4><ul>
+    <li><a href="#ch5-notes"><span>★</span>Key concepts</a></li>
+    <li><a href="#c5-1"><span>5.1</span>Pairwise combinations</a></li>
+    <li><a href="#c5-2"><span>5.2</span>Historical data</a></li>
+    <li><a href="#c5-3"><span>5.3</span>Minimum variance</a></li>
+    <li><a href="#c5-4"><span>5.4</span>ρ = −1 derivation</a></li>
+    <li><a href="#c5-5"><span>5.5</span>Three correlations</a></li>
+    <li><a href="#c5-6"><span>5.6</span>Riskless rate 10%</a></li>
+  </ul></div>
+  <div><h4>Ch 7 Single-index model</h4><ul>
+    <li><a href="#ch7-notes"><span>★</span>Key concepts</a></li>
+    <li><a href="#c7-1"><span>7.1</span>Alpha and beta</a></li>
+    <li><a href="#c7-2"><span>7.2</span>SIM vs historical</a></li>
+    <li><a href="#c7-3"><span>7.3</span>Vasicek proof</a></li>
+    <li><a href="#c7-4"><span>7.4</span>Blume / Vasicek</a></li>
+    <li><a href="#c7-5"><span>7.5</span>Means, covariances</a></li>
+    <li><a href="#c7-6"><span>7.6</span>Equal-weight portfolio</a></li>
+    <li><a href="#c7-7"><span>7.7</span>Blume</a></li>
+    <li><a href="#c7-8"><span>7.8</span>Vasicek</a></li>
+  </ul></div>
+</nav>
+
+<main>
+<!-- ======================= CHAPTER 1 ======================= -->
+<section class="chapter" id="ch1">
+  <div class="ch-head">
+    <div class="eyebrow">Chapter 1 · pp. 9–10</div>
+    <h2>Introduction<span class="zh">导论：确定性下的选择</span></h2>
+    <p>Opportunity sets, indifference curves and the two-period consumption–investment decision under certainty.</p>
+  </div>
+  <div class="notes" id="ch1-notes">
+    <h3>Key concepts<span class="zh">本章要点</span></h3>
+    <div class="concept">
+      <h4>The two-period opportunity set<span class="pg">p.4–6</span><span class="zh">两期机会集（预算线）</span></h4>
+      <p>With income Y₁ and Y₂ and the ability to lend or borrow at rate r, each dollar not consumed in period 1 becomes (1 + r) dollars in period 2. The opportunity set is therefore a straight line with slope −(1 + r) that always passes through the income point (Y₁, Y₂).</p>
+      <p class="zh">第 1 期少花 1 元存起来，第 2 期多花 (1 + r) 元，所以预算线斜率为 −(1 + r)，并经过收入点。</p>
+      <div class="formula">C₂ = Y₂ + (Y₁ − C₁)(1 + r)
+Max C₁ = Y₁ + Y₂/(1 + r)   (present value)      Max C₂ = Y₁(1 + r) + Y₂   (future value)</div>
+      <div class="refs">
+        <div><span class="lbl">Videos</span><a href="https://www.youtube.com/watch?v=kr9P1ceprCk" target="_blank" rel="noopener">Deriving the Intertemporal Budget Constraint</a><span class="src">Everything Econ</span><a href="https://www.youtube.com/watch?v=V3ZtAil124A" target="_blank" rel="noopener">2-Period Consumption Model with Interest Rates</a><span class="src">In Case of Econ Struggles</span></div>
+        <div><span class="lbl">Problems</span><a href="#c1-2">1.2</a><a href="#c1-3">1.3</a><a href="#c1-4">1.4</a><a href="#c1-10">1.10</a><a href="#c1-11">1.11</a></div>
+      </div>
+    </div>
+    <div class="concept">
+      <h4>Indifference curves and the optimal choice<span class="pg">p.6–8</span><span class="zh">无差异曲线与最优选择</span></h4>
+      <p>All points on one indifference curve are equally preferred. Curves slope downward (more is preferred to less), are convex to the origin (diminishing marginal rate of substitution), and curves further up and to the right are better. The optimum is where the opportunity set is tangent to the highest attainable indifference curve; in the two-period problem the marginal rate of substitution then equals 1 + r.</p>
+      <p class="zh">曲线向下倾斜、凸向原点，越往右上越好。最优点是预算线与最高无差异曲线的切点，此时边际替代率 = 1 + r。</p>
+      <div class="formula">Tangency condition:  MRS = −dC₂/dC₁ (along the indifference curve) = 1 + r</div>
+      <div class="refs">
+        <div><span class="lbl">Videos</span><a href="https://www.youtube.com/watch?v=Mh8pTjzJSXE" target="_blank" rel="noopener">Lecture 42: Optimal Consumption in the Two-Period Model</a><span class="src">IIT Roorkee</span></div>
+        <div><span class="lbl">Problems</span><a href="#c1-1">1.1</a><a href="#c1-7">1.7</a><a href="#c1-8">1.8</a><a href="#c1-9">1.9</a></div>
+      </div>
+    </div>
+    <div class="concept">
+      <h4>Present value and unequal borrowing/lending rates<span class="pg">p.6–8</span><span class="zh">现值比较与借贷利率不同</span></h4>
+      <p>In a perfect market, the income stream with the higher present value shifts the whole opportunity set outward, so it is preferred whatever your tastes. If the borrowing rate exceeds the lending rate, the opportunity set kinks at the income point: slope −(1 + r<sub>lend</sub>) to the left, −(1 + r<sub>borrow</sub>) to the right.</p>
+      <p class="zh">现值高的收入流让预算线整体外移，无论偏好如何都更好。借款利率高于存款利率时，预算线在收入点处弯折。</p>
+      <div class="refs">
+        <div><span class="lbl">Videos</span><a href="https://www.youtube.com/watch?v=V3ZtAil124A" target="_blank" rel="noopener">2-Period Consumption Model with Interest Rates</a><span class="src">In Case of Econ Struggles</span></div>
+        <div><span class="lbl">Problems</span><a href="#c1-5">1.5</a><a href="#c1-6">1.6</a><a href="#c1-12">1.12</a></div>
+      </div>
+    </div>
+  </div>
+  <div class="note">
+    <p>Problems 1.1, 1.2, 1.9 and 1.10 ask for <i>your own</i> indifference curves, so there is no unique answer. The charts use U = C₁·C₂ (or U = x·y) as an illustrative preference: downward-sloping and convex to the origin.</p>
+    <p class="zh">这几题要求画“自己的”无差异曲线，没有唯一答案。图中用 U = C₁·C₂ 作示例偏好。</p>
+  </div>
+
+  <article class="prob" id="c1-1">
+    <div class="prob-head"><span class="prob-num">1.1</span><h3>The candy store opportunity set<span class="zh">糖果店的机会集</span></h3></div>
+    <div class="q"><p>Walking down an unfamiliar street one day, you come across an old-fashioned candy store. They have red hots five for one penny, and rock candy—one small piece for one penny. You decide to purchase some for yourself and your friends, but you find that you have only $1.00 in your pocket. Construct your opportunity set both geometrically and algebraically. Draw in your indifference map (set of indifference curves). Explain why you have drawn your indifference curves as you have drawn them.</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="formula">$1.00 = 100 cents. Red hots (H) cost 0.2¢ each; rock candy (K) costs 1¢ each.
+0.2H + 1K ≤ 100    ⇔    H + 5K ≤ 500,   H ≥ 0, K ≥ 0
+Intercepts: all red hots H = 500; all rock candy K = 100; slope dK/dH = −1/5</div>
+      <div class="chart"><div id="chart-c1-1"></div><div class="cap">The opportunity set is the triangle under the red budget line. Grey curves are illustrative indifference curves H·K = constant.<span class="zh">红线以下的三角形为机会集，灰线为示例无差异曲线。</span></div></div>
+      <p>The indifference curves slope downward because both candies are desirable: giving up some of one must be compensated with more of the other. They are convex to the origin because the more red hots you already have, the fewer rock candies you will give up for another one (diminishing marginal rate of substitution). Higher curves represent greater satisfaction. With the illustrative preference, the optimum is the tangency point H = 250, K = 50 (50¢ on each).</p>
+      <p class="zh">向下倾斜：两种糖都想要，少一种要用另一种补偿。凸向原点：边际替代率递减。越高的曲线越满意。示例最优点为各花 50 美分。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c1-2">
+    <div class="prob-head"><span class="prob-num">1.2</span><h3>Two periods: $20 income, 10% rate<span class="zh">两期消费：每期 $20，利率 10%</span></h3></div>
+    <div class="q"><p>Let us solve a two-period consumption investment decision similar to the one presented in the text. Assume that you have income equal to $20 in each of two periods. Furthermore, you have the ability to both lend and borrow money at a 10% rate. Draw the opportunity set and your indifference map. Show the optimum amount of consumption in each period.</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="formula">C₂ = Y₂ + (Y₁ − C₁)(1 + r) = 20 + (20 − C₁)(1.1) = 42 − 1.1C₁
+Max C₁ = 20 + 20/1.1 = 38.18   (borrow all of period-2 income)
+Max C₂ = 20·1.1 + 20 = 42      (lend all of period-1 income)</div>
+      <div class="chart"><div id="chart-c1-2"></div><div class="cap">Red line: opportunity set C₂ = 42 − 1.1C₁. Blue dot: income point (20, 20). Grey: illustrative indifference curves.<span class="zh">红线为机会集，蓝点为收入点，灰线为示例无差异曲线。</span></div></div>
+      <p>The optimum is the tangency between an indifference curve and the opportunity set. With U = C₁C₂: maximize C₁(42 − 1.1C₁) → <span class="key">C₁ = 19.09, C₂ = 21.00</span>, i.e. lend $0.91 in period 1.</p>
+      <p class="zh">最优点为切点。以 U = C₁C₂ 为例，第 1 期贷出 $0.91。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c1-3">
+    <div class="prob-head"><span class="prob-num">1.3</span><h3>$5,000 per period at 10%<span class="zh">每期 $5,000，利率 10%</span></h3></div>
+    <div class="q"><p>Assume you can lend and borrow at 10% and have $5,000 in income in each of two periods. What is your opportunity set?</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="formula">C₂ = 5,000 + (5,000 − C₁)(1.1) = 10,500 − 1.1C₁
+Max C₁ = 5,000 + 5,000/1.1 = 9,545.45      Max C₂ = 10,500</div>
+      <p>The opportunity set is this line and the region below it with C₁ ≥ 0, C₂ ≥ 0.</p>
+      <p class="zh">机会集为这条直线及其下方的区域。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c1-4">
+    <div class="prob-head"><span class="prob-num">1.4</span><h3>Adding $50,000 of current wealth<span class="zh">加上 $50,000 现有财富</span></h3></div>
+    <div class="q"><p>Assume you can lend and borrow at 5% and have $20,000 in income in each of two periods. Further assume you have current wealth of $50,000. What is your opportunity set?</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <p>Current wealth adds to period-1 resources, so $70,000 is available in period 1.</p>
+      <p class="zh">现有财富加到第 1 期，第 1 期可用 $70,000。</p>
+      <div class="formula">C₂ = 20,000 + (70,000 − C₁)(1.05) = 93,500 − 1.05C₁
+Max C₁ = 70,000 + 20,000/1.05 = 89,047.62      Max C₂ = 93,500</div>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c1-5">
+    <div class="prob-head"><span class="prob-num">1.5</span><h3>Which job to choose<span class="zh">选哪份工作</span></h3></div>
+    <div class="q"><p>An individual has two employment opportunities involving the same work conditions but different incomes. Job 1 yields Y₁ = 50, Y₂ = 30. Job 2 yields Y₁ = 40, Y₂ = 40. Given that markets are perfect and bonds yield 5%, which should be selected?</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <p>With perfect markets you can borrow and lend freely at 5%, so compare present values. The higher present value gives an opportunity set that lies entirely outside the other, so it is preferred regardless of preferences.</p>
+      <p class="zh">市场完美时只比较现值，现值高的机会集完全在外侧。</p>
+      <div class="formula">PV(Job 1) = 50 + 30/1.05 = 78.57
+PV(Job 2) = 40 + 40/1.05 = 78.10</div>
+      <p class="result">Choose Job 1 (PV higher by 0.48).</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c1-6">
+    <div class="prob-head"><span class="prob-num">1.6</span><h3>Lend at 10%, borrow at 20%<span class="zh">贷出 10%、借入 20%</span></h3></div>
+    <div class="q"><p>Assume you have income of $5,000 in each of two periods and can lend at 10% but pay 20% on borrowing. What is your opportunity set?</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="formula">Lending   (C₁ ≤ 5,000):  C₂ = 5,000 + (5,000 − C₁)(1.10) = 10,500 − 1.1C₁
+Borrowing (C₁ &gt; 5,000):  C₂ = 5,000 − (C₁ − 5,000)(1.20) = 11,000 − 1.2C₁
+Max C₁ = 5,000 + 5,000/1.2 = 9,166.67      Max C₂ = 10,500</div>
+      <div class="chart"><div id="chart-c1-6"></div><div class="cap">The set kinks at the income point (5,000, 5,000): slope −1.1 to the left, −1.2 to the right. Dashed: the line if borrowing also cost 10%.<span class="zh">在收入点处弯折；虚线为借款也按 10% 时的情况。</span></div></div>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c1-7">
+    <div class="prob-head"><span class="prob-num">1.7</span><h3>Preference function P = C₁ + C₂ + C₁C₂<span class="zh">偏好函数</span></h3></div>
+    <div class="q"><p>Assume your preference function P is P = C₁ + C₂ + C₁C₂. Plot the location of all points with P = 50, P = 100.</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="formula">Solve for C₂:  C₂ = (P − C₁) / (1 + C₁)
+Equivalently (1 + C₁)(1 + C₂) = P + 1, a hyperbola centred at (−1, −1)
+
+P = 50:   (0, 50)  (1, 24.5)  (2, 16)   (6.14, 6.14)  (16, 2)   (50, 0)
+P = 100:  (0, 100) (1, 49.5)  (4, 19.2) (9.05, 9.05)  (19.2, 4) (100, 0)</div>
+      <div class="chart"><div id="chart-c1-7"></div><div class="cap">Both curves are symmetric about the 45° line; P = 100 lies further out (higher satisfaction).<span class="zh">两条曲线关于 45° 线对称，P = 100 在外侧。</span></div></div>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c1-8">
+    <div class="prob-head"><span class="prob-num">1.8</span><h3>Optimal choice for Problem 3 with this preference<span class="zh">第 3 题在第 7 题偏好下的最优选择</span></h3></div>
+    <div class="q"><p>In Problem 3, what is the preferred choice if the preference function discussed in Problem 7 holds?</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="formula">max  P = C₁ + C₂ + C₁C₂    s.t.  C₂ = 10,500 − 1.1C₁
+dP/dC₁ = 1 + C₂ + (1 + C₁)(−1.1) = 0   →   C₂ = 1.1C₁ + 0.1
+Substitute: 1.1C₁ + 0.1 = 10,500 − 1.1C₁   →   C₁ = 4,772.68,  C₂ = 5,250.05</div>
+      <p class="result">Consume $4,772.68 in period 1 and $5,250.05 in period 2 (lend $227.32 in period 1). P ≈ 2.507 × 10⁷.</p>
+      <p>Equivalently, the tangency condition sets the MRS (1 + C₂)/(1 + C₁) equal to 1 + r = 1.1.</p>
+      <p class="zh">第 1 期贷出 $227.32。切点条件即边际替代率等于 1.1。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c1-9">
+    <div class="prob-head"><span class="prob-num">1.9</span><h3>$10 dinner: pizza or hamburgers<span class="zh">$10 的晚餐：披萨还是汉堡</span></h3></div>
+    <div class="q"><p>Suppose you have $10.00 to spend on dinner. There are two possibilities: pizza at $2.00 a slice or hamburgers at $2.50 a piece. Construct an opportunity set algebraically and graphically. Add indifference curves according to your own individual taste.</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="formula">2.00·Pz + 2.50·Hb ≤ 10,   Pz ≥ 0, Hb ≥ 0
+Intercepts: 5 slices of pizza; 4 hamburgers; slope dHb/dPz = −0.8</div>
+      <div class="chart"><div id="chart-c1-9"></div><div class="cap">Illustrative preference U = Pz·Hb; optimum 2.5 slices + 2 hamburgers ($5 on each).<span class="zh">示例偏好下各花 $5。</span></div></div>
+      <p>If only whole slices and whole burgers can be bought, the opportunity set is the integer points under the line, e.g. (5, 0), (2, 2), (0, 4).</p>
+      <p class="zh">如果只能买整份，机会集是预算线下方的整数点。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c1-10">
+    <div class="prob-head"><span class="prob-num">1.10</span><h3>$50 per period at 5%<span class="zh">每期 $50，利率 5%</span></h3></div>
+    <div class="q"><p>Using the two-period consumption model, solve the following problem. Assume you can lend and borrow at 5% and your income is $50 in each period. Derive the opportunity set and add your indifference curves.</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="formula">C₂ = 50 + (50 − C₁)(1.05) = 102.5 − 1.05C₁
+Max C₁ = 50 + 50/1.05 = 97.62      Max C₂ = 102.5</div>
+      <p>With U = C₁C₂ the tangency is <span class="key">C₁ = 48.81, C₂ = 51.25</span> (lend $1.19 in period 1). The indifference curves are drawn as in Problem 2: downward-sloping and convex.</p>
+      <p class="zh">示例偏好下第 1 期贷出 $1.19，无差异曲线画法同第 2 题。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c1-11">
+    <div class="prob-head"><span class="prob-num">1.11</span><h3>Inheriting $10,000 in period 2 at 20%<span class="zh">第 2 期继承 $10,000，利率 20%</span></h3></div>
+    <div class="q"><p>Assume you earn $10,000 in periods 1 and 2. Also, you inherit $10,000 in period 2. If the borrowing/lending rate is 20%, what is the opportunity set? What is the maximum that can be consumed in the first period? In the second period?</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="formula">Y₁ = 10,000,  Y₂ = 10,000 + 10,000 = 20,000
+C₂ = 20,000 + (10,000 − C₁)(1.2) = 32,000 − 1.2C₁
+Max C₁ = 10,000 + 20,000/1.2 = 10,000 + 16,666.67 = 26,666.67
+Max C₂ = 10,000·1.2 + 20,000 = 32,000</div>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c1-12">
+    <div class="prob-head"><span class="prob-num">1.12</span><h3>Borrow at 10%, lend at 5%<span class="zh">借入 10%、贷出 5%</span></h3></div>
+    <div class="q"><p>Assume the borrowing rate is 10% and the lending rate is 5%. Also assume your income is $100 in each period. What is the maximum you can consume in each period? What is the opportunity set?</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="formula">Max C₁ = 100 + 100/1.10 = 190.91     (borrow at 10%)
+Max C₂ = 100 + 100·1.05 = 205          (lend at 5%)
+
+Lending   (C₁ ≤ 100):  C₂ = 100 + (100 − C₁)(1.05) = 205 − 1.05C₁
+Borrowing (C₁ &gt; 100):  C₂ = 100 − (C₁ − 100)(1.10) = 210 − 1.1C₁</div>
+      <div class="chart"><div id="chart-c1-12"></div><div class="cap">Kink at the income point (100, 100); unequal rates bend the opportunity set inward.<span class="zh">借贷利率不同，使机会集在收入点处向内弯折。</span></div></div>
+    </div></details>
+  </article>
+</section>
+
+<!-- ======================= CHAPTER 4 ======================= -->
+<section class="chapter" id="ch4">
+  <div class="ch-head">
+    <div class="eyebrow">Chapter 4 · pp. 62–64</div>
+    <h2>The Characteristics of the Opportunity Set under Risk<span class="zh">风险下机会集的特征</span></h2>
+    <p>Expected return, variance, covariance, correlation, and how diversification reduces portfolio risk.</p>
+  </div>
+  <div class="notes" id="ch4-notes">
+    <h3>Key concepts<span class="zh">本章要点</span></h3>
+    <div class="concept">
+      <h4>Expected return and standard deviation<span class="pg">p.43–46</span><span class="zh">期望收益与标准差</span></h4>
+      <p>The expected return is the probability-weighted average of the possible outcomes; with historical data each period gets equal weight, so it is the simple average. Variance measures how far returns spread around the mean; its square root, the standard deviation, is the book’s measure of risk.</p>
+      <p class="zh">期望收益是按概率加权的平均；历史数据下就是简单平均。标准差是方差的平方根，用来度量风险。</p>
+      <div class="formula">R̄ = Σ Pⱼ Rⱼ        σ² = Σ Pⱼ (Rⱼ − R̄)²        historical data: Pⱼ = 1/N</div>
+      <div class="refs">
+        <div><span class="lbl">Videos</span><a href="https://www.youtube.com/watch?v=GkqQoMYPFxU" target="_blank" rel="noopener">Statistics for Finance: Expected Return, Standard Deviation, Covariance &amp; Correlation</a><span class="src">Prof John K</span></div>
+        <div><span class="lbl">Problems</span><a href="#c4-1">4.1 A</a><a href="#c4-2">4.2 A–C</a></div>
+      </div>
+    </div>
+    <div class="concept">
+      <h4>Covariance and correlation<span class="pg">p.47–50</span><span class="zh">协方差与相关系数</span></h4>
+      <p>Covariance measures whether two assets move together: positive if they rise and fall together, negative if they move oppositely, zero if unrelated. The correlation coefficient scales covariance to lie between −1 and +1. Assets driven by unrelated factors (rainfall vs. the stock market in 4.1) have zero covariance.</p>
+      <p class="zh">协方差看是否同涨同跌；相关系数把它标准化到 −1 到 +1。受不同因素驱动的资产协方差为 0。</p>
+      <div class="formula">σᵢⱼ = Σ Pⱼ (Rᵢ − R̄ᵢ)(Rⱼ − R̄ⱼ)        ρᵢⱼ = σᵢⱼ / (σᵢ σⱼ)</div>
+      <div class="refs">
+        <div><span class="lbl">Videos</span><a href="https://www.youtube.com/watch?v=OiOLGFXM8Cg" target="_blank" rel="noopener">How to Calculate Portfolio Variance and Covariance</a><span class="src">Everest Exam Prep (uses a joint probability table)</span><a href="https://www.youtube.com/watch?v=2K2317vqBIg" target="_blank" rel="noopener">Covariance vs. Correlation</a><span class="src">Farhat Lectures</span></div>
+        <div><span class="lbl">Problems</span><a href="#c4-1">4.1 B</a><a href="#c4-2">4.2 D</a></div>
+      </div>
+    </div>
+    <div class="concept">
+      <h4>Portfolio expected return and variance<span class="pg">p.47–52</span><span class="zh">组合的期望收益与方差</span></h4>
+      <p>Portfolio expected return is the weighted average of the assets’ expected returns, but portfolio variance is not: it also contains a covariance term for every pair of assets. Because of those terms, combining assets with low correlation gives a portfolio risk below the weighted average of the individual risks.</p>
+      <p class="zh">组合收益是加权平均，组合方差不是：它包含每一对资产的协方差项。相关性低时组合风险更小。</p>
+      <div class="formula">R̄p = Σ Xᵢ R̄ᵢ
+σp² = Σ Xᵢ² σᵢ² + Σ Σ(i≠j) Xᵢ Xⱼ σᵢⱼ
+Two assets: σp² = X₁²σ₁² + X₂²σ₂² + 2X₁X₂ρ₁₂σ₁σ₂</div>
+      <div class="refs">
+        <div><span class="lbl">Videos</span><a href="https://www.youtube.com/watch?v=1cycBfC5iVE" target="_blank" rel="noopener">Portfolio Expected Return, Standard Deviation, Covariance</a><span class="src">Financial Analyst Network</span><a href="https://www.youtube.com/watch?v=FNx1_M4KnHc" target="_blank" rel="noopener">Two-asset portfolio volatility</a><span class="src">Bionic Turtle</span></div>
+        <div><span class="lbl">Problems</span><a href="#c4-1">4.1 C</a><a href="#c4-2">4.2 E</a></div>
+      </div>
+    </div>
+    <div class="concept">
+      <h4>Diversification: why risk does not fall to zero<span class="pg">p.52–59 · Tables 4.8, 4.9</span><span class="zh">分散化：为什么风险降不到 0</span></h4>
+      <p>In an equally weighted portfolio of N stocks, the contribution of individual variances shrinks with 1/N and disappears, but the covariance terms approach the average covariance, which cannot be diversified away. The floor on portfolio risk is the average covariance, the market-wide (systematic) risk. Countries differ in how large the average covariance is relative to the average variance, so diversification works better in some markets than others (Table 4.9).</p>
+      <p class="zh">个股方差的贡献按 1/N 消失，协方差项趋近平均协方差，分散不掉。各国市场的平均协方差比例不同，分散化效果也不同。</p>
+      <div class="formula">σp² = (1/N)(σ̄ⱼ² − σ̄ₖⱼ) + σ̄ₖⱼ        as N → ∞, σp² → σ̄ₖⱼ</div>
+      <div class="refs">
+        <div><span class="lbl">Videos</span><a href="https://www.youtube.com/watch?v=08A8OVgiHcg" target="_blank" rel="noopener">Systematic vs. Unsystematic Risk | Diversification Explained</a><span class="src">Farhat Lectures</span><a href="https://www.youtube.com/watch?v=mibyZAwLJfE" target="_blank" rel="noopener">Portfolio Theory 6: Diversification and the Minimum Variance Portfolio</a><span class="src">TechFin</span></div>
+        <div><span class="lbl">Problems</span><a href="#c4-3">4.3</a><a href="#c4-4">4.4</a><a href="#c4-5">4.5</a><a href="#c4-6">4.6</a></div>
+      </div>
+    </div>
+  </div>
+
+  <article class="prob" id="c4-1">
+    <div class="prob-head"><span class="prob-num">4.1</span><h3>Return distributions of four assets<span class="zh">四项资产的收益分布</span></h3></div>
+    <div class="q">
+      <p>Assume that you are considering selecting assets from among the following four candidates:</p>
+      <div class="tbl"><table>
+        <tr><th>Market condition</th><th>Prob.</th><th>Asset 1</th><th>Asset 2</th><th>Asset 3</th><th>Rainfall</th><th>Prob.</th><th>Asset 4</th></tr>
+        <tr><td>Good</td><td>1/4</td><td>16</td><td>4</td><td>20</td><td>Plentiful</td><td>1/3</td><td>16</td></tr>
+        <tr><td>Average</td><td>1/2</td><td>12</td><td>6</td><td>14</td><td>Average</td><td>1/3</td><td>12</td></tr>
+        <tr><td>Poor</td><td>1/4</td><td>8</td><td>8</td><td>8</td><td>Light</td><td>1/3</td><td>8</td></tr>
+      </table></div>
+      <p>Assume that there is no relationship between the amount of rainfall and the condition of the stock market.</p>
+      <ol>
+        <li>Solve for the expected return and the standard deviation of return for each separate investment.</li>
+        <li>Solve for the correlation coefficient and the covariance between each pair of investments.</li>
+        <li>Solve for the expected return and variance of each of the portfolios shown below (a: ½ 1 + ½ 2; b: ½ 1 + ½ 3; c: ½ 1 + ½ 4; d: ½ 2 + ½ 3; e: ½ 3 + ½ 4; f: ⅓ each of 1, 2, 3; g: ⅓ each of 2, 3, 4; h: ⅓ each of 1, 3, 4; i: ¼ each of all four).</li>
+        <li>Plot the original assets and each of the portfolios from Part C in expected return standard deviation space.</li>
+      </ol>
+    </div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="part"><h5><b>A</b>Expected return and standard deviation<span class="zh">期望收益和标准差</span></h5>
+        <div class="formula">R̄ = Σ Pᵢ·Rᵢ        σ² = Σ Pᵢ·(Rᵢ − R̄)²
+Asset 1: R̄ = ¼·16 + ½·12 + ¼·8 = 12     σ² = ¼·4² + ½·0 + ¼·4² = 8
+Asset 2: R̄ = ¼·4 + ½·6 + ¼·8 = 6        σ² = ¼·2² + ¼·2² = 2
+Asset 3: R̄ = ¼·20 + ½·14 + ¼·8 = 14     σ² = ¼·6² + ¼·6² = 18
+Asset 4: R̄ = ⅓·(16 + 12 + 8) = 12       σ² = ⅓·(4² + 0 + 4²) = 10.67</div>
+        <div class="tbl"><table>
+          <tr><th>Asset</th><th>R̄ (%)</th><th>σ²</th><th>σ (%)</th></tr>
+          <tr><td>1</td><td>12.00</td><td>8.00</td><td>2.83</td></tr>
+          <tr><td>2</td><td>6.00</td><td>2.00</td><td>1.41</td></tr>
+          <tr><td>3</td><td>14.00</td><td>18.00</td><td>4.24</td></tr>
+          <tr><td>4</td><td>12.00</td><td>10.67</td><td>3.27</td></tr>
+        </table></div>
+      </div>
+      <div class="part"><h5><b>B</b>Covariance and correlation<span class="zh">协方差和相关系数</span></h5>
+        <p>Assets 1, 2 and 3 depend on the same market condition, so multiply deviations state by state. Asset 4 depends only on rainfall, which is independent of the market, so its covariance with every other asset is 0.</p>
+        <p class="zh">资产 1–3 由同一市场状态决定，逐状态相乘；资产 4 与市场独立，协方差为 0。</p>
+        <div class="formula">σ₁₂ = ¼(4)(−2) + ½(0)(0) + ¼(−4)(2) = −4     ρ₁₂ = −4 / (2.83·1.41) = −1
+σ₁₃ = ¼(4)(6)  + ¼(−4)(−6)            = 12     ρ₁₃ = 12 / (2.83·4.24) = +1
+σ₂₃ = ¼(−2)(6) + ¼(2)(−6)             = −6     ρ₂₃ = −6 / (1.41·4.24) = −1
+σ₁₄ = σ₂₄ = σ₃₄ = 0                              ρ = 0</div>
+        <div class="tbl"><table>
+          <tr><th>Pair</th><th>1–2</th><th>1–3</th><th>1–4</th><th>2–3</th><th>2–4</th><th>3–4</th></tr>
+          <tr><td>Covariance</td><td>−4</td><td>12</td><td>0</td><td>−6</td><td>0</td><td>0</td></tr>
+          <tr><td>Correlation</td><td>−1</td><td>+1</td><td>0</td><td>−1</td><td>0</td><td>0</td></tr>
+        </table></div>
+      </div>
+      <div class="part"><h5><b>C</b>Portfolio expected return and variance<span class="zh">各组合的期望收益和方差</span></h5>
+        <div class="formula">R̄p = Σ Xᵢ R̄ᵢ        σp² = Σ Xᵢ² σᵢ² + Σ Σ(i≠j) Xᵢ Xⱼ σᵢⱼ
+e.g. a: R̄ = ½·12 + ½·6 = 9     σ² = ¼·8 + ¼·2 + 2·½·½·(−4) = 0.5</div>
+        <div class="tbl"><table>
+          <tr><th>Portfolio</th><th>Weights (1, 2, 3, 4)</th><th>R̄p (%)</th><th>σp²</th><th>σp (%)</th></tr>
+          <tr><td>a</td><td>½, ½, 0, 0</td><td>9.00</td><td>0.50</td><td>0.71</td></tr>
+          <tr><td>b</td><td>½, 0, ½, 0</td><td>13.00</td><td>12.50</td><td>3.54</td></tr>
+          <tr><td>c</td><td>½, 0, 0, ½</td><td>12.00</td><td>4.67</td><td>2.16</td></tr>
+          <tr><td>d</td><td>0, ½, ½, 0</td><td>10.00</td><td>2.00</td><td>1.41</td></tr>
+          <tr><td>e</td><td>0, 0, ½, ½</td><td>13.00</td><td>7.17</td><td>2.68</td></tr>
+          <tr><td>f</td><td>⅓, ⅓, ⅓, 0</td><td>10.67</td><td>3.56</td><td>1.89</td></tr>
+          <tr><td>g</td><td>0, ⅓, ⅓, ⅓</td><td>10.67</td><td>2.07</td><td>1.44</td></tr>
+          <tr><td>h</td><td>⅓, 0, ⅓, ⅓</td><td>12.67</td><td>6.74</td><td>2.60</td></tr>
+          <tr><td>i</td><td>¼, ¼, ¼, ¼</td><td>11.00</td><td>2.67</td><td>1.63</td></tr>
+        </table></div>
+      </div>
+      <div class="part"><h5><b>D</b>Plot in σ–R̄ space<span class="zh">作图</span></h5>
+        <div class="chart"><div id="chart-c4-1"></div><div class="cap">x-axis σ (%), y-axis R̄ (%). Blue: assets 1–4. Grey: portfolios a–i.<span class="zh">蓝点为资产，灰点为组合。</span></div></div>
+      </div>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c4-2">
+    <div class="prob-head"><span class="prob-num">4.2</span><h3>Returns from historical prices and dividends<span class="zh">用历史价格和股利计算收益</span></h3></div>
+    <div class="q">
+      <p>Following are actual price and dividend data for three companies for each of seven months.</p>
+      <div class="tbl"><table>
+        <tr><th>Time</th><th>A price</th><th>A div.</th><th>B price</th><th>B div.</th><th>C price</th><th>C div.</th></tr>
+        <tr><td>1</td><td>57 6/8</td><td></td><td>333</td><td></td><td>106 6/8</td><td></td></tr>
+        <tr><td>2</td><td>59 7/8</td><td></td><td>368</td><td></td><td>108 2/8</td><td></td></tr>
+        <tr><td>3</td><td>59 3/8</td><td>0.725</td><td>368 4/8</td><td>1.35</td><td>124</td><td>0.40</td></tr>
+        <tr><td>4</td><td>55 4/8</td><td></td><td>382 2/8</td><td></td><td>122 2/8</td><td></td></tr>
+        <tr><td>5</td><td>56 2/8</td><td></td><td>386</td><td></td><td>135 4/8</td><td></td></tr>
+        <tr><td>6</td><td>59</td><td>0.725</td><td>397 6/8</td><td>1.35</td><td>141 6/8</td><td>0.42</td></tr>
+        <tr><td>7</td><td>60 2/8</td><td></td><td>392</td><td></td><td>165 6/8</td><td></td></tr>
+      </table></div>
+      <p class="small">A dividend on the same line as a price means the return between that period and the previous one consisted of a capital gain (or loss) and the receipt of the dividend.</p>
+      <ol>
+        <li>Compute the rate of return for each company for each month.</li>
+        <li>Compute the average rate of return for each company.</li>
+        <li>Compute the standard deviation of the rate of return for each company.</li>
+        <li>Compute the correlation coefficient between all possible pairs of securities.</li>
+        <li>Compute the average return and standard deviation for the portfolios ½A + ½B, ½A + ½C, ½B + ½C, ⅓A + ⅓B + ⅓C.</li>
+      </ol>
+    </div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="part"><h5><b>A</b>Monthly returns (%)<span class="zh">每月收益率</span></h5>
+        <div class="formula">Rₜ = (Pₜ + Dₜ − Pₜ₋₁) / Pₜ₋₁
+e.g. A, period 3: (59.375 + 0.725 − 59.875) / 59.875 = 0.38%</div>
+        <div class="tbl"><table>
+          <tr><th>Month</th><th>1→2</th><th>2→3</th><th>3→4</th><th>4→5</th><th>5→6</th><th>6→7</th></tr>
+          <tr><td>A</td><td>3.68</td><td>0.38</td><td>−6.53</td><td>1.35</td><td>6.18</td><td>2.12</td></tr>
+          <tr><td>B</td><td>10.51</td><td>0.50</td><td>3.73</td><td>0.98</td><td>3.39</td><td>−1.45</td></tr>
+          <tr><td>C</td><td>1.41</td><td>14.92</td><td>−1.41</td><td>10.84</td><td>4.92</td><td>16.93</td></tr>
+        </table></div>
+      </div>
+      <div class="part"><h5><b>B · C</b>Average return and standard deviation<span class="zh">平均收益率和标准差</span></h5>
+        <div class="formula">R̄ = ΣRₜ / 6        σ² = Σ(Rₜ − R̄)² / 6</div>
+        <div class="tbl"><table>
+          <tr><th>Security</th><th>R̄ (%)</th><th>σ²</th><th>σ (%)</th></tr>
+          <tr><td>A</td><td>1.20</td><td>15.36</td><td>3.92</td></tr>
+          <tr><td>B</td><td>2.95</td><td>14.53</td><td>3.81</td></tr>
+          <tr><td>C</td><td>7.93</td><td>46.20</td><td>6.80</td></tr>
+        </table></div>
+        <p class="small">With the sample convention (divide by 5), σ = 4.29, 4.18 and 7.45. <span class="zh">样本口径（除以 5）的结果。</span></p>
+      </div>
+      <div class="part"><h5><b>D</b>Correlation coefficients<span class="zh">相关系数</span></h5>
+        <div class="formula">σᵢⱼ = Σ(Rᵢₜ − R̄ᵢ)(Rⱼₜ − R̄ⱼ) / 6        ρᵢⱼ = σᵢⱼ / (σᵢ σⱼ)</div>
+        <div class="tbl"><table>
+          <tr><th>Pair</th><th>Covariance</th><th>Correlation</th></tr>
+          <tr><td>A–B</td><td>2.10</td><td>0.14</td></tr>
+          <tr><td>A–C</td><td>7.33</td><td>0.28</td></tr>
+          <tr><td>B–C</td><td>−20.06</td><td>−0.77</td></tr>
+        </table></div>
+      </div>
+      <div class="part"><h5><b>E</b>Portfolio average return and standard deviation<span class="zh">组合的平均收益和标准差</span></h5>
+        <div class="formula">e.g. ½A + ½B: σp² = ¼·15.36 + ¼·14.53 + 2·½·½·2.10 = 8.52  →  σp = 2.92</div>
+        <div class="tbl"><table>
+          <tr><th>Portfolio</th><th>R̄p (%)</th><th>σp (%)</th></tr>
+          <tr><td>½A + ½B</td><td>2.07</td><td>2.92</td></tr>
+          <tr><td>½A + ½C</td><td>4.57</td><td>4.37</td></tr>
+          <tr><td>½B + ½C</td><td>5.44</td><td>2.27</td></tr>
+          <tr><td>⅓A + ⅓B + ⅓C</td><td>4.03</td><td>2.47</td></tr>
+        </table></div>
+        <p>B and C are negatively correlated (ρ = −0.77), so ½B + ½C has a lower standard deviation than either security alone: diversification at work.</p>
+        <p class="zh">B、C 负相关，所以组合标准差比两者各自都小。</p>
+      </div>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c4-3">
+    <div class="prob-head"><span class="prob-num">4.3</span><h3>Variance of an equally weighted portfolio<span class="zh">等权组合的期望方差</span></h3></div>
+    <div class="q"><p>Assume that the average variance of return for an individual security is 50 and that the average covariance is 10. What is the expected variance of an equally weighted portfolio of 5, 10, 20, 50, and 100 securities?</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="formula">σp² = (1/N)·σ̄² + ((N−1)/N)·σ̄ₖⱼ = (1/N)(σ̄² − σ̄ₖⱼ) + σ̄ₖⱼ = 40/N + 10</div>
+      <div class="tbl"><table>
+        <tr><th>N</th><th>5</th><th>10</th><th>20</th><th>50</th><th>100</th></tr>
+        <tr><td>σp²</td><td>18</td><td>14</td><td>12</td><td>10.8</td><td>10.4</td></tr>
+      </table></div>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c4-4">
+    <div class="prob-head"><span class="prob-num">4.4</span><h3>Stocks needed to be within 10% of minimum risk<span class="zh">风险只比最小值高 10% 需要几只股票</span></h3></div>
+    <div class="q"><p>In Problem 3, how many securities need to be held before the risk of a portfolio is only 10% more than minimum?</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <p>As N → ∞ the minimum variance equals the average covariance, 10. Ten percent more is 11:</p>
+      <p class="zh">最小方差是平均协方差 10，高出 10% 即 11。</p>
+      <div class="formula">40/N + 10 = 11   →   40/N = 1   →   N = 40</div>
+      <p class="result">40 securities.</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c4-5">
+    <div class="prob-head"><span class="prob-num">4.5</span><h3>Diversification in Italy and Belgium<span class="zh">意大利与比利时市场的分散化</span></h3></div>
+    <div class="q"><p>For the Italy data and Belgium data of Table 4.9, what is the ratio of the difference between the average variance minus average covariance and the average covariance? If the average variance of a single security is 50, what is the expected variance of a portfolio of 5, 20, and 100 securities?</p>
+    <p class="small">Table 4.9 (percentage of risk that can be eliminated): Italy 60.0%, Belgium 80.0%.</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <p>What remains after full diversification is the average covariance, so σ̄ₖⱼ / σ̄² = 1 − (fraction eliminated).</p>
+      <p class="zh">完全分散后剩下的就是平均协方差。</p>
+      <div class="formula">Italy:   σ̄ₖⱼ/σ̄² = 0.40   →  (σ̄² − σ̄ₖⱼ)/σ̄ₖⱼ = 0.60/0.40 = 1.5
+Belgium: σ̄ₖⱼ/σ̄² = 0.20   →  (σ̄² − σ̄ₖⱼ)/σ̄ₖⱼ = 0.80/0.20 = 4.0
+
+With σ̄² = 50:  Italy   σ̄ₖⱼ = 20 → σp² = 30/N + 20
+               Belgium σ̄ₖⱼ = 10 → σp² = 40/N + 10</div>
+      <div class="tbl"><table>
+        <tr><th>N</th><th>5</th><th>20</th><th>100</th></tr>
+        <tr><td>Italy σp²</td><td>26.0</td><td>21.5</td><td>20.3</td></tr>
+        <tr><td>Belgium σp²</td><td>18.0</td><td>12.0</td><td>10.4</td></tr>
+      </table></div>
+      <p>A larger ratio means more of an individual security’s risk can be diversified away. Diversification is far more effective in Belgium (4.0) than in Italy (1.5).</p>
+      <p class="zh">比值越大，可分散的风险越多；比利时远好于意大利。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c4-6">
+    <div class="prob-head"><span class="prob-num">4.6</span><h3>Minimum number of securities for variance below 8<span class="zh">方差小于 8 的最少股票数</span></h3></div>
+    <div class="q"><p>For the data in Table 4.8, suppose an investor desires an expected variance less than 8. What is the minimum number of securities for such a portfolio?</p>
+    <p class="small">Table 4.8: average variance 46.619, average covariance 7.058; the table shows 8.047 at N = 40 and 7.937 at N = 45.</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="formula">σp² = (46.619 − 7.058)/N + 7.058 = 39.561/N + 7.058 &lt; 8
+39.561/N &lt; 0.942   →   N &gt; 41.997</div>
+      <p class="result">At least 42 securities (σp² ≈ 7.9999 at N = 42). Reading the table alone: 40 is not enough (8.047), 45 is (7.937).</p>
+      <p class="zh">最少 42 只。只看表的话 40 只不够、45 只满足。</p>
+    </div></details>
+  </article>
+</section>
+
+<!-- ======================= CHAPTER 5 ======================= -->
+<section class="chapter" id="ch5">
+  <div class="ch-head">
+    <div class="eyebrow">Chapter 5 · pp. 92–93</div>
+    <h2>Delineating Efficient Portfolios<span class="zh">有效组合的刻画</span></h2>
+    <p>Minimum-variance portfolios, the efficient frontier, short sales, and riskless lending and borrowing.</p>
+  </div>
+  <div class="notes" id="ch5-notes">
+    <h3>Key concepts<span class="zh">本章要点</span></h3>
+    <div class="concept">
+      <h4>Correlation determines the shape of the combination line<span class="pg">p.65–74</span><span class="zh">相关系数决定组合曲线的形状</span></h4>
+      <p>The book works through four cases. With ρ = +1 combinations lie on a straight line between the two assets and there is no diversification benefit. With ρ = −1 they lie on two straight lines and a zero-risk portfolio exists. With ρ = 0 or intermediate values the curve bulges to the left. The lower ρ, the further left it bends and the larger the diversification benefit.</p>
+      <p class="zh">ρ = +1 为直线；ρ = −1 为两条折线，可得零风险组合；其他情况为向左凸出的曲线。ρ 越小，分散化效果越好。</p>
+      <div class="formula">ρ = +1:  σp = X₁σ₁ + (1−X₁)σ₂
+ρ = −1:  σp = |X₁σ₁ − (1−X₁)σ₂|,  σp = 0 when X₁ = σ₂/(σ₁+σ₂)</div>
+      <div class="refs">
+        <div><span class="lbl">Videos</span><a href="https://www.youtube.com/watch?v=FNx1_M4KnHc" target="_blank" rel="noopener">Two-asset portfolio volatility</a><span class="src">Bionic Turtle</span><a href="https://www.youtube.com/watch?v=mibyZAwLJfE" target="_blank" rel="noopener">Portfolio Theory 6: Diversification and the Minimum Variance Portfolio</a><span class="src">TechFin</span></div>
+        <div><span class="lbl">Problems</span><a href="#c5-4">5.4</a><a href="#c5-5">5.5</a></div>
+      </div>
+    </div>
+    <div class="concept">
+      <h4>The minimum-variance portfolio<span class="pg">p.69–74</span><span class="zh">最小方差组合</span></h4>
+      <p>Differentiate σp² with respect to X₁ and set it to zero to find the least risky combination. If short sales are not allowed and the solution falls outside 0 to 1, take the nearest boundary.</p>
+      <p class="zh">对 X₁ 求导令其为 0。不允许卖空且解超出 0–1 时取边界。</p>
+      <div class="formula">X₁ = (σ₂² − σ₁₂) / (σ₁² + σ₂² − 2σ₁₂)        when ρ = 0: X₁ = σ₂² / (σ₁² + σ₂²)</div>
+      <div class="refs">
+        <div><span class="lbl">Videos</span><a href="https://www.youtube.com/watch?v=fNIoVdDNFmk" target="_blank" rel="noopener">Calculating a Minimum Variance Two Asset Portfolio</a><span class="src">Maths and Stats</span></div>
+        <div><span class="lbl">Problems</span><a href="#c5-1">5.1</a><a href="#c5-2">5.2</a><a href="#c5-3">5.3</a><a href="#c5-5">5.5</a></div>
+      </div>
+    </div>
+    <div class="concept">
+      <h4>The efficient frontier, with and without short sales<span class="pg">p.74–81</span><span class="zh">有效边界与卖空</span></h4>
+      <p>Portfolios offering the highest return for a given risk (and the lowest risk for a given return) form the efficient frontier: the part of the curve from the minimum-variance portfolio upward. Without short sales it ends at the highest-return asset. With short sales you can sell the low-return asset short and buy more of the high-return one, so the frontier extends indefinitely up and to the right.</p>
+      <p class="zh">有效边界是最小方差点以上的部分。不允许卖空时止于收益最高的资产；允许卖空时无限延伸。</p>
+      <div class="refs">
+        <div><span class="lbl">Videos</span><a href="https://www.youtube.com/watch?v=6XhLC9KR-q8" target="_blank" rel="noopener">Constructing the Efficient Frontier</a><span class="src">Portfolio Management</span></div>
+        <div><span class="lbl">Problems</span><a href="#c5-1">5.1 A–B</a><a href="#c5-2">5.2</a></div>
+      </div>
+    </div>
+    <div class="concept">
+      <h4>Riskless lending and borrowing: the tangency portfolio<span class="pg">p.81–85</span><span class="zh">无风险借贷与切点组合</span></h4>
+      <p>With a riskless asset, an investor can combine r<sub>f</sub> with any risky portfolio T along a straight line. The steepest such line is tangent to the efficient frontier; the tangency portfolio is the optimal risky portfolio, and each investor then lends or borrows according to taste (the separation theorem). If some zero-risk combination earns more than r<sub>f</sub>, there is an arbitrage (see 5.1 C).</p>
+      <p class="zh">斜率最大的直线与有效边界相切，切点是最优风险组合；再按偏好借或贷（分离定理）。零风险组合收益高于 r<sub>f</sub> 即存在套利。</p>
+      <div class="formula">R̄e = r_f + [(R̄_T − r_f) / σ_T] · σe        maximize θ = (R̄_T − r_f) / σ_T</div>
+      <div class="refs">
+        <div><span class="lbl">Videos</span><a href="https://www.youtube.com/watch?v=WdZwU9fjGek" target="_blank" rel="noopener">The Capital Allocation Line and The Efficient Frontier Explained</a><span class="src">Darwinex</span><a href="https://www.youtube.com/watch?v=YLbN3HcH6LI" target="_blank" rel="noopener">Capital Allocation Between a Risky and Risk Free Asset</a><span class="src">Chandra S. Bhatnagar</span></div>
+        <div><span class="lbl">Problems</span><a href="#c5-1">5.1 C</a><a href="#c5-2">5.2 C</a><a href="#c5-6">5.6</a></div>
+      </div>
+    </div>
+  </div>
+
+  <article class="prob" id="c5-1">
+    <div class="prob-head"><span class="prob-num">5.1</span><h3>Pairwise combinations of the Chapter 4, Problem 1 assets<span class="zh">第 4 章第 1 题资产的两两组合</span></h3></div>
+    <div class="q">
+      <p>Return to the example presented in Problem 1, Chapter 4.</p>
+      <ol>
+        <li>Assuming short selling is not allowed: (1) For securities 1 and 2, find the composition, standard deviation, and expected return of the portfolio that has minimum risk. (2) On the same graph, plot the expected return and standard deviation for all possible combinations of securities 1 and 2. (3) Assuming that investors prefer more to less and are risk avoiders, indicate in red those sections of the diagram in Part 2 that are efficient. (4) Repeat steps 1, 2, and 3 for all other possible pairwise combinations.</li>
+        <li>Assuming short selling is allowed: repeat (1)–(4).</li>
+        <li>Assuming that the riskless lending and borrowing rate is 5%, and short sales are allowed, find the location of the optimal portfolio from among those considered. Repeat for a rate of 8%.</li>
+      </ol>
+    </div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="part"><h5><b>A(1) · B(1)</b>Minimum-variance portfolios<span class="zh">最小方差组合</span></h5>
+        <div class="formula">X₁ = (σ₂² − σ₁₂) / (σ₁² + σ₂² − 2σ₁₂)        X₂ = 1 − X₁</div>
+        <div class="tbl"><table>
+          <tr><th>Pair</th><th>ρ</th><th>No short: X (first)</th><th>R̄</th><th>σ</th><th>Short OK: X (first)</th><th>R̄</th><th>σ</th></tr>
+          <tr><td>1 &amp; 2</td><td>−1</td><td>1/3</td><td>8.00</td><td>0.00</td><td>1/3</td><td>8.00</td><td>0.00</td></tr>
+          <tr><td>1 &amp; 3</td><td>+1</td><td>1</td><td>12.00</td><td>2.83</td><td>3 (X₃ = −2)</td><td>8.00</td><td>0.00</td></tr>
+          <tr><td>1 &amp; 4</td><td>0</td><td>4/7 = 0.571</td><td>12.00</td><td>2.14</td><td>0.571</td><td>12.00</td><td>2.14</td></tr>
+          <tr><td>2 &amp; 3</td><td>−1</td><td>3/4</td><td>8.00</td><td>0.00</td><td>3/4</td><td>8.00</td><td>0.00</td></tr>
+          <tr><td>2 &amp; 4</td><td>0</td><td>16/19 = 0.842</td><td>6.95</td><td>1.30</td><td>0.842</td><td>6.95</td><td>1.30</td></tr>
+          <tr><td>3 &amp; 4</td><td>0</td><td>16/43 = 0.372</td><td>12.74</td><td>2.59</td><td>0.372</td><td>12.74</td><td>2.59</td></tr>
+        </table></div>
+        <p>Only pair 1 &amp; 3 is affected by the short-sale constraint: with ρ = +1 the formula gives X₁ = 3, so without short sales the best you can do is the boundary X₁ = 1 (all in the lower-risk asset 1).</p>
+        <p class="zh">只有 1 &amp; 3 受卖空限制影响：公式给出 X₁ = 3，不允许卖空时取边界 X₁ = 1。</p>
+      </div>
+      <div class="part"><h5><b>A(2)–(4) · B(2)–(4)</b>Combination curves and efficient sections<span class="zh">组合曲线与有效部分</span></h5>
+        <div class="toolbar"><div class="seg" role="group" aria-label="Short sales" data-target="c5-1"><button type="button" aria-pressed="true" data-short="0">No short sales</button><button type="button" aria-pressed="false" data-short="1">Short sales allowed</button></div>
+        <div class="legend"><span><i style="background:var(--eff)"></i>Efficient</span><span><i style="background:var(--plot-muted)"></i>Inefficient</span></div></div>
+        <div class="charts" id="charts-c5-1"></div>
+        <ul>
+          <li><b>1 &amp; 2</b>: efficient from the minimum-variance point (σ 0, R̄ 8) to all-in asset 1 (2.83, 12). With short sales the line continues upward (short asset 2, buy more of asset 1).<span class="zh">从 (0, 8) 到资产 1 有效；允许卖空时继续向上延伸。</span></li>
+          <li><b>1 &amp; 3</b>: ρ = +1, so combinations form a straight line. Without short sales the whole segment from asset 1 to asset 3 is efficient; with short sales everything from the riskless point (0, 8) at X₁ = 3 upward (smaller X₁) is efficient.<span class="zh">直线；不允许卖空时整段有效，允许卖空时从 (0, 8) 往上有效。</span></li>
+          <li><b>1 &amp; 4</b>: both assets have an expected return of 12%, so every combination earns 12% and <b>only the minimum-variance point</b> (2.14, 12) is efficient.<span class="zh">两者收益都是 12%，只有最小方差点有效。</span></li>
+          <li><b>2 &amp; 3</b>: efficient from (0, 8) to asset 3 (4.24, 14); with short sales it continues upward.<span class="zh">从 (0, 8) 到资产 3 有效。</span></li>
+          <li><b>2 &amp; 4</b>: efficient from the minimum-variance point (1.30, 6.95) to asset 4 (3.27, 12).<span class="zh">从最小方差点到资产 4 有效。</span></li>
+          <li><b>3 &amp; 4</b>: efficient from the minimum-variance point (2.59, 12.74) to asset 3 (4.24, 14).<span class="zh">从最小方差点到资产 3 有效。</span></li>
+        </ul>
+      </div>
+      <div class="part"><h5><b>C</b>Optimal portfolio with r<sub>f</sub> = 5% and 8%<span class="zh">无风险利率 5% 和 8%</span></h5>
+        <p>The key fact: assets 1, 2 and 3 are perfectly correlated with one another, so they can be combined into a <b>riskless</b> portfolio earning 8%, e.g. ⅓ asset 1 + ⅔ asset 2, ¾ asset 2 + ¼ asset 3, or 3 × asset 1 − 2 × asset 3.</p>
+        <p class="zh">资产 1、2、3 完全相关，可以组合出无风险的 8% 收益。</p>
+        <div class="callout"><p><b>r<sub>f</sub> = 5%:</b> borrow at 5% and invest in the riskless 8% portfolio. Each dollar borrowed earns a sure 3%, and the position can be scaled without limit: an arbitrage. There is no finite optimal portfolio (such prices could not persist in equilibrium).</p><p class="zh">以 5% 借钱投入无风险 8%，无限套利，不存在有限的最优组合。</p></div>
+        <div class="callout"><p><b>r<sub>f</sub> = 8%:</b> the synthetic riskless return equals r<sub>f</sub>, so the arbitrage disappears. Among the combinations considered, the steepest line is</p><p class="zh">合成无风险收益等于 r<sub>f</sub>，无套利；斜率最高的线如下。</p></div>
+        <div class="formula">R̄p = 8 + 1.871·σp
+Tangency (one choice): 4/7 asset 1 + 3/7 asset 4  →  R̄ = 12.00, σ = 2.14, slope (12 − 8)/2.14 = 1.871
+Pair 3 &amp; 4: 8/17 asset 3 + 9/17 asset 4          →  R̄ = 12.94, σ = 2.64, on the same line</div>
+        <p>Because the synthetic riskless portfolio can be mixed freely with these tangency points, the tangency portfolio is not unique, but the optimal line is: slope 1.871.</p>
+        <p class="zh">切点不唯一，但最优资本配置线唯一，斜率 1.871。</p>
+      </div>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c5-2">
+    <div class="prob-head"><span class="prob-num">5.2</span><h3>Repeat with the Chapter 4, Problem 2 data<span class="zh">用第 4 章第 2 题的历史数据重做</span></h3></div>
+    <div class="q"><p>Answer the questions to Problem 1 with data from Chapter 4, Problem 2.</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <p>Inputs from 4.2: R̄ = 1.20 / 2.95 / 7.93, σ = 3.92 / 3.81 / 6.80, ρ<sub>AB</sub> = 0.14, ρ<sub>AC</sub> = 0.28, ρ<sub>BC</sub> = −0.77.</p>
+      <div class="part"><h5><b>A(1) · B(1)</b>Minimum-variance portfolios<span class="zh">最小方差组合</span></h5>
+        <div class="tbl"><table>
+          <tr><th>Pair</th><th>X (first)</th><th>X (second)</th><th>R̄ (%)</th><th>σ (%)</th></tr>
+          <tr><td>A &amp; B</td><td>0.484</td><td>0.516</td><td>2.10</td><td>2.92</td></tr>
+          <tr><td>A &amp; C</td><td>0.829</td><td>0.171</td><td>2.35</td><td>3.74</td></tr>
+          <tr><td>B &amp; C</td><td>0.657</td><td>0.343</td><td>4.66</td><td>1.63</td></tr>
+        </table></div>
+        <p>All three solutions have weights between 0 and 1, so the minimum-variance portfolio is the same with or without short sales.</p>
+        <p class="zh">权重都在 0–1 之间，卖空与否结果相同。</p>
+      </div>
+      <div class="part"><h5><b>A(2)–(4) · B(2)–(4)</b>Combination curves and efficient sections<span class="zh">组合曲线与有效部分</span></h5>
+        <div class="toolbar"><div class="seg" role="group" aria-label="Short sales" data-target="c5-2"><button type="button" aria-pressed="true" data-short="0">No short sales</button><button type="button" aria-pressed="false" data-short="1">Short sales allowed</button></div>
+        <div class="legend"><span><i style="background:var(--eff)"></i>Efficient</span><span><i style="background:var(--plot-muted)"></i>Inefficient</span></div></div>
+        <div class="charts" id="charts-c5-2"></div>
+        <p>For each pair, the efficient section runs from the minimum-variance point to the higher-return security (B or C); with short sales it continues along the upper branch.</p>
+        <p class="zh">每一对都是从最小方差点到收益较高的证券有效；允许卖空时继续延伸。</p>
+      </div>
+      <div class="part"><h5><b>C</b>r<sub>f</sub> = 5% and 8%<span class="zh">无风险利率 5% 和 8%</span></h5>
+        <p>These are <b>monthly</b> returns, and 5% and 8% exceed the mean returns of A and B. In most cases the tangency therefore falls on the <b>lower</b> branch of the curve, and the best strategy is to <b>sell that portfolio short</b> and lend the proceeds at r<sub>f</sub>.</p>
+        <p class="zh">月度收益低于 r<sub>f</sub>，切点多落在曲线下半支，最优做法是卖空切点组合并以 r<sub>f</sub> 贷出。</p>
+        <div class="formula">Tangency direction Z = Σ⁻¹(R̄ − r_f),  normalized T = Z / ΣZ,  slope = (R̄_T − r_f) / σ_T</div>
+        <div class="tbl"><table>
+          <tr><th>Pair, r<sub>f</sub></th><th>Tangency T</th><th>R̄<sub>T</sub></th><th>σ<sub>T</sub></th><th>Slope</th><th>Action</th></tr>
+          <tr><td>A &amp; B, 5%</td><td>0.68 A + 0.32 B</td><td>1.75</td><td>3.09</td><td>−1.05</td><td>Short T, lend</td></tr>
+          <tr><td>A &amp; C, 5%</td><td>1.59 A − 0.59 C</td><td>−2.76</td><td>6.40</td><td>−1.21</td><td>Short T, lend</td></tr>
+          <tr><td>B &amp; C, 5%</td><td>1.04 B − 0.04 C</td><td>2.74</td><td>4.18</td><td>−0.54</td><td>Short T, lend</td></tr>
+          <tr class="hl"><td>A, B, C, 5%</td><td>−8.28 A + 4.59 B + 4.69 C</td><td>40.85</td><td>28.00</td><td>+1.28</td><td>Buy T</td></tr>
+          <tr><td>A &amp; B, 8%</td><td>0.58 A + 0.42 B</td><td>1.93</td><td>2.96</td><td>−2.05</td><td>Short T, lend</td></tr>
+          <tr><td>A &amp; C, 8%</td><td>1.18 A − 0.18 C</td><td>−0.05</td><td>4.46</td><td>−1.80</td><td>Short T, lend</td></tr>
+          <tr class="hl"><td>B &amp; C, 8%</td><td>0.70 B + 0.30 C</td><td>4.46</td><td>1.68</td><td>−2.11</td><td>Short T, lend</td></tr>
+          <tr><td>A, B, C, 8%</td><td>0.20 A + 0.58 B + 0.22 C</td><td>3.69</td><td>1.94</td><td>−2.22</td><td>Short T, lend</td></tr>
+        </table></div>
+        <p>Among the pairs only: at r<sub>f</sub> = 5%, A &amp; C has the steepest line (|slope| 1.21); at 8%, B &amp; C does (2.11). Without short sales, lending at r<sub>f</sub> beats every risky portfolio except C at 5%: (7.93 − 5)/6.80 = 0.43.</p>
+        <p class="zh">只比两两组合：5% 时 A &amp; C 最优，8% 时 B &amp; C 最优。不允许卖空时，除 5% 下的 C 外，直接贷出都更好。</p>
+      </div>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c5-3">
+    <div class="prob-head"><span class="prob-num">5.3</span><h3>Composition of the minimum-variance portfolios<span class="zh">最小方差组合的构成</span></h3></div>
+    <div class="q"><p>For Problem 2, find the composition of the portfolio that has minimum variance for each of the two security combinations you considered.</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="formula">X_A = (σ_B² − σ_AB) / (σ_A² + σ_B² − 2σ_AB) = (14.53 − 2.10) / (15.36 + 14.53 − 4.20) = 0.484</div>
+      <div class="tbl"><table>
+        <tr><th>Pair</th><th>Composition</th><th>R̄ (%)</th><th>σ (%)</th></tr>
+        <tr><td>A &amp; B</td><td>48.4% A + 51.6% B</td><td>2.10</td><td>2.92</td></tr>
+        <tr><td>A &amp; C</td><td>82.9% A + 17.1% C</td><td>2.35</td><td>3.74</td></tr>
+        <tr><td>B &amp; C</td><td>65.7% B + 34.3% C</td><td>4.66</td><td>1.63</td></tr>
+      </table></div>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c5-4">
+    <div class="prob-head"><span class="prob-num">5.4</span><h3>Location of two-asset portfolios when ρ = −1<span class="zh">ρ = −1 时两资产组合的轨迹</span></h3></div>
+    <div class="q"><p>Derive the expression for the location of all portfolios of two securities in expected return standard deviation space when the correlation between the two securities is −1.</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="formula">σp² = X²σ₁² + (1−X)²σ₂² − 2X(1−X)σ₁σ₂ = [Xσ₁ − (1−X)σ₂]²
+σp = |Xσ₁ − (1−X)σ₂|
+
+Case 1, Xσ₁ ≥ (1−X)σ₂:   σp = X(σ₁+σ₂) − σ₂   →  X = (σp + σ₂)/(σ₁+σ₂)
+Case 2, Xσ₁ &lt; (1−X)σ₂:   σp = σ₂ − X(σ₁+σ₂)   →  X = (σ₂ − σp)/(σ₁+σ₂)
+
+Substitute into R̄p = X R̄₁ + (1−X) R̄₂:
+  R̄p = (σ₂R̄₁ + σ₁R̄₂)/(σ₁+σ₂) + (R̄₁ − R̄₂)/(σ₁+σ₂) · σp     (Case 1)
+  R̄p = (σ₂R̄₁ + σ₁R̄₂)/(σ₁+σ₂) − (R̄₁ − R̄₂)/(σ₁+σ₂) · σp     (Case 2)</div>
+      <p>Both lines meet the vertical axis at σp = 0, where X = σ₂/(σ₁+σ₂) and the portfolio is riskless. If R̄₁ &gt; R̄₂, the positively sloped Case 1 line is the efficient part.</p>
+      <p class="zh">两条直线交于 σp = 0（零风险组合）。若 R̄₁ &gt; R̄₂，斜率为正的情形 1 是有效部分。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c5-5">
+    <div class="prob-head"><span class="prob-num">5.5</span><h3>Combinations under three correlations<span class="zh">三种相关系数下的组合</span></h3></div>
+    <div class="q">
+      <div class="tbl"><table>
+        <tr><th></th><th>Expected return</th><th>Standard deviation</th></tr>
+        <tr><td>Security 1</td><td>10%</td><td>5%</td></tr>
+        <tr><td>Security 2</td><td>4%</td><td>2%</td></tr>
+      </table></div>
+      <p>For the two securities shown, plot all combinations of the two securities in R̄p–σp space. Assume ρ = 1, −1, 0. For each correlation coefficient, what is the combination that yields the minimum σp and what is that σp? Assume no short selling.</p>
+    </div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="formula">ρ = +1:  σp = 5X + 2(1−X), increasing in X, so the minimum is at X = 0
+ρ = −1:  X = σ₂/(σ₁+σ₂) = 2/7
+ρ =  0:  X = σ₂²/(σ₁²+σ₂²) = 4/29</div>
+      <div class="tbl"><table>
+        <tr><th>ρ</th><th>X₁</th><th>X₂</th><th>min σp (%)</th><th>R̄p (%)</th></tr>
+        <tr><td>+1</td><td>0</td><td>1</td><td>2.00</td><td>4.00</td></tr>
+        <tr><td>−1</td><td>2/7 = 0.286</td><td>0.714</td><td>0.00</td><td>5.71</td></tr>
+        <tr><td>0</td><td>4/29 = 0.138</td><td>0.862</td><td>1.86</td><td>4.83</td></tr>
+      </table></div>
+      <div class="chart"><div id="chart-c5-5"></div><div class="cap">Dots mark the minimum-variance combination for each ρ.<span class="zh">点为每种 ρ 下的最小方差组合。</span></div></div>
+      <div class="legend"><span><i style="background:var(--accent)"></i>ρ = +1</span><span><i style="background:var(--eff)"></i>ρ = −1</span><span><i style="background:var(--plot-muted)"></i>ρ = 0</span></div>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c5-6">
+    <div class="prob-head"><span class="prob-num">5.6</span><h3>Optimal investment with a 10% riskless rate<span class="zh">无风险利率 10% 时的最优投资</span></h3></div>
+    <div class="q"><p>In Problem 5, assume a riskless rate of 10%. What is the optimal investment?</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <p>Without short sales, every risky combination has an expected return of at most 10% (security 1 earns 10%, every mix earns less) and carries positive risk (even the zero-risk ρ = −1 combination earns only 5.71%). The riskless asset gives 10% with no risk, so it dominates every risky portfolio.</p>
+      <p class="zh">所有风险组合收益都 ≤ 10% 且有风险，无风险资产以零风险给出 10%，优于所有风险组合。</p>
+      <p class="result">Optimal investment: put everything in the riskless asset (10% return, zero risk).</p>
+      <p class="small">If short sales were allowed you could short security 2 (4%) and lend at 10% for a higher return, but that is outside this problem’s no-short-selling assumption.</p>
+    </div></details>
+  </article>
+</section>
+
+<!-- ======================= CHAPTER 7 ======================= -->
+<section class="chapter" id="ch7">
+  <div class="ch-head">
+    <div class="eyebrow">Chapter 7 · pp. 150–152</div>
+    <h2>The Correlation Structure of Security Returns: The Single-Index Model<span class="zh">证券收益的相关结构：单指数模型</span></h2>
+    <p>Estimating alpha and beta by regression, variances and covariances from the single-index model, and the Blume and Vasicek beta adjustments.</p>
+  </div>
+  <div class="notes" id="ch7-notes">
+    <h3>Key concepts<span class="zh">本章要点</span></h3>
+    <div class="concept">
+      <h4>Why a single-index model?<span class="pg">p.127–128</span><span class="zh">为什么需要单指数模型</span></h4>
+      <p>Full mean–variance analysis needs a covariance for every pair of stocks: N(N − 1)/2 of them, or 11,175 for 150 stocks. The single-index model assumes stocks are related only through one common factor, the market, so it needs only αᵢ, βᵢ and σₑᵢ for each stock plus R̄ₘ and σₘ²: 3N + 2 inputs in total.</p>
+      <p class="zh">完整分析需要 N(N − 1)/2 个协方差；单指数模型只需要 3N + 2 个输入。</p>
+      <div class="refs">
+        <div><span class="lbl">Videos</span><a href="https://www.youtube.com/watch?v=v2TAokzG-X0" target="_blank" rel="noopener">Index Models 3: Using the Market Portfolio as the Single Index</a><span class="src">TechFin</span></div>
+      </div>
+    </div>
+    <div class="concept">
+      <h4>The basic equation and its assumptions<span class="pg">p.128–133</span><span class="zh">基本方程与假设</span></h4>
+      <p>A stock’s return splits into a market-independent part αᵢ, a market-sensitive part βᵢRₘ, and a random residual eᵢ. By construction the residual has mean zero and is uncorrelated with the market. The key assumption is that residuals of different stocks are uncorrelated, cov(eᵢ, eⱼ) = 0; that is what reduces every covariance to βᵢβⱼσₘ².</p>
+      <p class="zh">收益 = α + β·市场收益 + 残差。关键假设是不同股票的残差互不相关，所以协方差只剩 βᵢβⱼσₘ²。</p>
+      <div class="formula">Rᵢ = αᵢ + βᵢRₘ + eᵢ
+R̄ᵢ = αᵢ + βᵢR̄ₘ        σᵢ² = βᵢ²σₘ² + σₑᵢ²        σᵢⱼ = βᵢβⱼσₘ²</div>
+      <div class="refs">
+        <div><span class="lbl">Videos</span><a href="https://www.youtube.com/watch?v=z3nqQGMMJWc" target="_blank" rel="noopener">Single-Index Model Explained | Alpha, Beta, R-Squared</a><span class="src">Farhat Lectures</span><a href="https://www.youtube.com/watch?v=GaGh04m1mtw" target="_blank" rel="noopener">Tutorial: Single Index Models and CAPM</a><span class="src">Vitali Alexeev</span></div>
+        <div><span class="lbl">Problems</span><a href="#c7-2">7.2</a><a href="#c7-5">7.5</a></div>
+      </div>
+    </div>
+    <div class="concept">
+      <h4>Portfolio beta, alpha and variance<span class="pg">p.133–135</span><span class="zh">组合的 β、α 和方差</span></h4>
+      <p>Portfolio beta and alpha are weighted averages of the stocks’ betas and alphas. In portfolio variance, the market part βp²σₘ² cannot be diversified away, while the residual part shrinks with the squared weights and approaches zero as more stocks are added. For a well-diversified portfolio, beta is the measure of risk.</p>
+      <p class="zh">组合 β、α 是加权平均。市场部分分散不掉，残差部分随股票增多趋近 0，所以充分分散的组合以 β 度量风险。</p>
+      <div class="formula">βp = Σ Xᵢβᵢ        αp = Σ Xᵢαᵢ        σp² = βp²σₘ² + Σ Xᵢ²σₑᵢ²</div>
+      <div class="refs">
+        <div><span class="lbl">Videos</span><a href="https://www.youtube.com/watch?v=ozxid4y_Lrk" target="_blank" rel="noopener">Single-Index Model Explained | Read Beta, Alpha &amp; Residual Risk Graphs</a><span class="src">Farhat Lectures</span></div>
+        <div><span class="lbl">Problems</span><a href="#c7-2">7.2 C</a><a href="#c7-6">7.6</a></div>
+      </div>
+    </div>
+    <div class="concept">
+      <h4>Estimating beta from historical data<span class="pg">p.135–139</span><span class="zh">用历史数据回归估计 β</span></h4>
+      <p>Regress the stock’s returns on the market’s returns by least squares: the slope is β, the intercept is α, and the standard deviation of the residuals is σₑ. The book notes that historical betas of individual stocks are fairly unstable, while portfolio betas are much more stable.</p>
+      <p class="zh">最小二乘回归：斜率为 β，截距为 α，残差标准差为 σₑ。个股 β 不稳定，组合 β 稳定得多。</p>
+      <div class="formula">βᵢ = σᵢₘ / σₘ²        αᵢ = R̄ᵢ − βᵢR̄ₘ</div>
+      <div class="refs">
+        <div><span class="lbl">Videos</span><a href="https://www.youtube.com/watch?v=AToIQBBnPqk" target="_blank" rel="noopener">Session 7: The Beta Regression</a><span class="src">Aswath Damodaran</span></div>
+        <div><span class="lbl">Problems</span><a href="#c7-1">7.1</a></div>
+      </div>
+    </div>
+    <div class="concept">
+      <h4>Blume and Vasicek adjustments<span class="pg">p.139–143</span><span class="zh">Blume 与 Vasicek 调整</span></h4>
+      <p>Historical betas tend to regress toward 1 in the next period: high betas fall and low betas rise. Blume corrects for this with a regression of later betas on earlier ones. Vasicek weights each stock’s beta by how precisely it is estimated: the larger its standard error, the more it is pulled toward the average beta β̄.</p>
+      <p class="zh">历史 β 会向 1 回归。Blume 用前后两期 β 的回归修正；Vasicek 按估计精度加权，标准误越大越往平均 β 拉。</p>
+      <div class="formula">Blume:   βᵢ₂ = a + b·βᵢ₁        (book’s example: β₂ = 0.343 + 0.677β₁)
+Vasicek: βᵢ₂ = [σ²_β̄₁/(σ²_β̄₁ + σ²_βᵢ₁)]·βᵢ₁ + [σ²_βᵢ₁/(σ²_β̄₁ + σ²_βᵢ₁)]·β̄₁</div>
+      <div class="refs">
+        <div><span class="lbl">Reading</span><a href="https://corporatefinanceinstitute.com/resources/valuation/adjusted-beta/" target="_blank" rel="noopener">Adjusted Beta: Definition, Formula, Example</a><span class="src">Corporate Finance Institute (no reliable video found)</span></div>
+        <div><span class="lbl">Problems</span><a href="#c7-3">7.3</a><a href="#c7-4">7.4</a><a href="#c7-7">7.7</a><a href="#c7-8">7.8</a></div>
+      </div>
+    </div>
+  </div>
+
+  <article class="prob" id="c7-1">
+    <div class="prob-head"><span class="prob-num">7.1</span><h3>Regression estimates of alpha and beta<span class="zh">用月度数据回归 α 和 β</span></h3></div>
+    <div class="q">
+      <p>Monthly return data are presented below for each of three stocks and the S&amp;P index (corrected for dividends) for a 12-month period. Calculate the following quantities:</p>
+      <ol><li>alpha for each stock</li><li>beta for each stock</li><li>the standard deviation of the residuals from each regression</li><li>the correlation coefficient between each security and the market</li><li>the average return on the market</li><li>the variance of the market</li></ol>
+      <div class="tbl"><table>
+        <tr><th>Month</th><th>A</th><th>B</th><th>C</th><th>S&amp;P</th></tr>
+        <tr><td>1</td><td>12.05</td><td>25.20</td><td>31.67</td><td>12.28</td></tr>
+        <tr><td>2</td><td>15.27</td><td>2.86</td><td>15.82</td><td>5.99</td></tr>
+        <tr><td>3</td><td>−4.12</td><td>5.45</td><td>10.58</td><td>2.41</td></tr>
+        <tr><td>4</td><td>1.57</td><td>4.56</td><td>−14.43</td><td>4.48</td></tr>
+        <tr><td>5</td><td>3.16</td><td>3.72</td><td>31.98</td><td>4.41</td></tr>
+        <tr><td>6</td><td>−2.79</td><td>10.79</td><td>−0.72</td><td>4.43</td></tr>
+        <tr><td>7</td><td>−8.97</td><td>5.38</td><td>−19.64</td><td>−6.77</td></tr>
+        <tr><td>8</td><td>−1.18</td><td>−2.97</td><td>−10.00</td><td>−2.11</td></tr>
+        <tr><td>9</td><td>1.07</td><td>1.52</td><td>−11.51</td><td>3.46</td></tr>
+        <tr><td>10</td><td>12.75</td><td>10.75</td><td>5.63</td><td>6.16</td></tr>
+        <tr><td>11</td><td>7.48</td><td>3.79</td><td>−4.67</td><td>2.47</td></tr>
+        <tr><td>12</td><td>−0.94</td><td>1.32</td><td>7.94</td><td>−1.15</td></tr>
+      </table></div>
+    </div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="formula">βᵢ = Σ(Rᵢₜ − R̄ᵢ)(Rₘₜ − R̄ₘ) / Σ(Rₘₜ − R̄ₘ)²        αᵢ = R̄ᵢ − βᵢ R̄ₘ
+eᵢₜ = Rᵢₜ − αᵢ − βᵢRₘₜ        σₑᵢ = √(Σeᵢₜ² / 12)        ρᵢₘ = σᵢₘ / (σᵢ σₘ)</div>
+      <div class="tbl"><table>
+        <tr><th>Stock</th><th>R̄ᵢ</th><th>A. α</th><th>B. β</th><th>C. σₑ (÷N)</th><th>σₑ (÷N−2)</th><th>D. ρᵢₘ</th></tr>
+        <tr><td>A</td><td>2.95</td><td>−0.61</td><td>1.18</td><td>4.68</td><td>5.12</td><td>0.76</td></tr>
+        <tr><td>B</td><td>6.03</td><td>2.96</td><td>1.02</td><td>4.98</td><td>5.46</td><td>0.68</td></tr>
+        <tr><td>C</td><td>3.55</td><td>−3.42</td><td>2.32</td><td>12.34</td><td>13.52</td><td>0.65</td></tr>
+      </table></div>
+      <div class="formula">E. R̄ₘ = 36.06 / 12 = 3.005%
+F. σₘ² = Σ(Rₘₜ − R̄ₘ)² / 12 = 20.91      (sample version ÷11: 22.81)</div>
+      <div class="charts" id="charts-c7-1"></div>
+      <p class="small">Dots are monthly (S&amp;P, stock) returns; the line is the fitted regression Rᵢ = α + βRₘ. <span class="zh">散点为各月收益，直线为回归线。</span></p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c7-2">
+    <div class="prob-head"><span class="prob-num">7.2</span><h3>Single-index model vs historical data<span class="zh">单指数模型 vs 历史数据</span></h3></div>
+    <div class="q"><ol>
+      <li>Compute the mean return and variance of return for each stock in Problem 1 using (1) the single-index model, (2) the historical data.</li>
+      <li>Compute the covariance between each possible pair of stocks using (1) the single-index model, (2) the historical data.</li>
+      <li>Compute the return and standard deviation of a portfolio constructed by placing one-third of your funds in each stock, using (1) the single-index model, (2) the historical data.</li>
+      <li>Explain why the answers to parts A.1 and A.2 were the same, while the answers to parts B.1, B.2, and C.1, C.2 were different.</li>
+    </ol></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="part"><h5><b>A</b>Mean and variance<span class="zh">均值和方差</span></h5>
+        <div class="formula">Single-index model:  R̄ᵢ = αᵢ + βᵢR̄ₘ        σᵢ² = βᵢ²σₘ² + σₑᵢ²
+e.g. A: R̄ = −0.61 + 1.18·3.005 = 2.95      σ² = 1.18²·20.91 + 4.68² = 51.15</div>
+        <div class="tbl"><table>
+          <tr><th>Stock</th><th>R̄ (SIM)</th><th>R̄ (hist.)</th><th>σ² (SIM)</th><th>σ² (hist.)</th></tr>
+          <tr><td>A</td><td>2.95</td><td>2.95</td><td>51.15</td><td>51.15</td></tr>
+          <tr><td>B</td><td>6.03</td><td>6.03</td><td>46.61</td><td>46.61</td></tr>
+          <tr><td>C</td><td>3.55</td><td>3.55</td><td>264.99</td><td>264.99</td></tr>
+        </table></div>
+      </div>
+      <div class="part"><h5><b>B</b>Covariances<span class="zh">协方差</span></h5>
+        <div class="formula">Single-index model:  σᵢⱼ = βᵢβⱼσₘ²        e.g. AB: 1.183 · 1.021 · 20.91 = 25.25</div>
+        <div class="tbl"><table>
+          <tr><th>Pair</th><th>SIM</th><th>Historical</th></tr>
+          <tr><td>A–B</td><td>25.25</td><td>18.46</td></tr>
+          <tr><td>A–C</td><td>57.44</td><td>61.62</td></tr>
+          <tr><td>B–C</td><td>49.54</td><td>54.08</td></tr>
+        </table></div>
+      </div>
+      <div class="part"><h5><b>C</b>Equally weighted portfolio (⅓ each)<span class="zh">等权组合</span></h5>
+        <div class="formula">R̄p = (2.95 + 6.03 + 3.55)/3 = 4.18
+SIM:  βp = (1.183 + 1.021 + 2.321)/3 = 1.508
+      σp² = βp²σₘ² + Σ(⅓)²σₑᵢ² = 1.508²·20.91 + (4.68² + 4.98² + 12.34²)/9 = 69.69  →  σp = 8.35
+Hist: σp² = ΣΣ XᵢXⱼσᵢⱼ = 70.12  →  σp = 8.37</div>
+        <div class="tbl"><table>
+          <tr><th></th><th>R̄p (%)</th><th>σp (%)</th></tr>
+          <tr><td>Single-index model</td><td>4.18</td><td>8.35</td></tr>
+          <tr><td>Historical</td><td>4.18</td><td>8.37</td></tr>
+        </table></div>
+      </div>
+      <div class="part"><h5><b>D</b>Explanation<span class="zh">解释</span></h5>
+        <p>α and β were estimated from the same historical data by least squares. The regression line passes through the point of means (R̄ₘ, R̄ᵢ), and total variance decomposes exactly into βᵢ²σₘ² + σₑᵢ², so means and variances agree under both methods.</p>
+        <p class="zh">回归线经过均值点，总方差可精确拆分，所以均值和方差两种方法相同。</p>
+        <p>The single-index model additionally assumes that residuals of different stocks are uncorrelated (cov(eᵢ, eⱼ) = 0), so covariance comes only from the common market factor. In this sample the residuals are somewhat correlated (e.g. A’s and B’s residuals are negatively correlated). Historical covariances include that; the model sets it to zero. Hence the covariances differ, and so does the portfolio standard deviation, which depends on them.</p>
+        <p class="zh">模型假设残差互不相关，但样本中残差有一定相关性，历史协方差包含了这部分，模型设为 0，所以协方差和组合标准差不同。</p>
+      </div>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c7-3">
+    <div class="prob-head"><span class="prob-num">7.3</span><h3>Vasicek reduces to proportional weighting when standard errors are equal<span class="zh">证明：标准误相同时 Vasicek 是比例加权</span></h3></div>
+    <div class="q"><p>Show that the Vasicek technique leads to a simple proportional weighting of the market beta and the stock’s beta if the standard error of all betas is the same.</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="formula">Vasicek:  βᵢ₂ = [σ²_β̄₁ / (σ²_β̄₁ + σ²_βᵢ₁)] · βᵢ₁  +  [σ²_βᵢ₁ / (σ²_β̄₁ + σ²_βᵢ₁)] · β̄₁
+
+If every beta has the same standard error, σ²_βᵢ₁ = σ²_β (a constant). Let
+  w = σ²_β̄₁ / (σ²_β̄₁ + σ²_β)     (the same constant for every stock)
+Then  βᵢ₂ = w·βᵢ₁ + (1 − w)·β̄₁</div>
+      <p>The weight w no longer varies across stocks, so every forecast beta is the same fixed-proportion average of the stock’s own historical beta and the average beta. This has the same form as Blume’s linear adjustment βᵢ₂ = (1 − w)β̄₁ + w·βᵢ₁, with intercept (1 − w)β̄₁ and slope w.</p>
+      <p class="zh">权重 w 对所有股票相同，因此每只股票都是自身 β 与平均 β 的固定比例加权，形式与 Blume 调整一致。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c7-4">
+    <div class="prob-head"><span class="prob-num">7.4</span><h3>Blume and Vasicek forecasts of beta<span class="zh">Blume 和 Vasicek 调整后的 β</span></h3></div>
+    <div class="q"><ol>
+      <li>If the Blume adjustment equation is fit and the appropriate equation is β<sub>i,t+1</sub> = 0.41 + 0.60 β<sub>i,t</sub>, what is your best forecast of beta for each of the stocks in Question 1?</li>
+      <li>If the parameters of the Vasicek technique are fit, and they are β̄₁ = 1.00, σ²<sub>β̄1</sub> = 0.25, σ²<sub>β1A</sub> = 0.22, σ²<sub>β1B</sub> = 0.36, σ²<sub>β1C</sub> = 0.41, what is your best forecast of beta for each of the stocks in Question 1?</li>
+    </ol></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="formula">Blume:   βA = 0.41 + 0.60·1.183 = 1.12
+Vasicek: βA = 0.25/(0.25+0.22)·1.183 + 0.22/(0.25+0.22)·1.00 = 0.532·1.183 + 0.468 = 1.10</div>
+      <div class="tbl"><table>
+        <tr><th>Stock</th><th>Historical β</th><th>Blume β</th><th>Vasicek weight on βᵢ</th><th>Vasicek β</th></tr>
+        <tr><td>A</td><td>1.18</td><td>1.12</td><td>0.532</td><td>1.10</td></tr>
+        <tr><td>B</td><td>1.02</td><td>1.02</td><td>0.410</td><td>1.01</td></tr>
+        <tr><td>C</td><td>2.32</td><td>1.80</td><td>0.379</td><td>1.50</td></tr>
+      </table></div>
+      <p>Both methods pull betas toward 1. C’s beta has the largest estimation error (0.41), so Vasicek adjusts it the most.</p>
+      <p class="zh">两种方法都把 β 拉向 1；C 的估计误差最大，Vasicek 调整幅度也最大。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c7-5">
+    <div class="prob-head"><span class="prob-num">7.5</span><h3>Means, variances and covariances from α and β<span class="zh">给定 α、β 时的均值、方差、协方差</span></h3></div>
+    <div class="q">
+      <div class="tbl"><table>
+        <tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th></tr>
+        <tr><td>α</td><td>2</td><td>3</td><td>1</td><td>4</td></tr>
+        <tr><td>β</td><td>1.5</td><td>1.3</td><td>0.8</td><td>0.9</td></tr>
+        <tr><td>σ<sub>ei</sub></td><td>3</td><td>1</td><td>2</td><td>4</td></tr>
+      </table></div>
+      <p>Given the preceding data and the fact that R̄ₘ = 8 and σₘ = 5, calculate: (a) the mean return for each security, (b) the variance of each security’s return, (c) the covariance of returns between each security.</p>
+    </div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="formula">(a) R̄ᵢ = αᵢ + βᵢ·8        (b) σᵢ² = βᵢ²·25 + σₑᵢ²        (c) σᵢⱼ = βᵢβⱼ·25</div>
+      <div class="tbl"><table>
+        <tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th></tr>
+        <tr><td>(a) R̄ᵢ</td><td>14.0</td><td>13.4</td><td>7.4</td><td>11.2</td></tr>
+        <tr><td>(b) σᵢ²</td><td>65.25</td><td>43.25</td><td>20.00</td><td>36.25</td></tr>
+      </table></div>
+      <div class="tbl"><table>
+        <tr><th>(c) σᵢⱼ</th><th>A–B</th><th>A–C</th><th>A–D</th><th>B–C</th><th>B–D</th><th>C–D</th></tr>
+        <tr><td>βᵢβⱼ·25</td><td>48.75</td><td>30.00</td><td>33.75</td><td>26.00</td><td>29.25</td><td>18.00</td></tr>
+      </table></div>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c7-6">
+    <div class="prob-head"><span class="prob-num">7.6</span><h3>Beta, alpha, variance and return of an equally weighted portfolio<span class="zh">等权组合的 β、α、方差和收益</span></h3></div>
+    <div class="q"><p>Using the data in Problem 5 and assuming an equally weighted portfolio, calculate: (a) β<sub>p</sub>, (b) α<sub>p</sub>, (c) σ²<sub>p</sub>, (d) R̄<sub>p</sub>.</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="formula">(a) βp = (1.5 + 1.3 + 0.8 + 0.9)/4 = 1.125
+(b) αp = (2 + 3 + 1 + 4)/4 = 2.5
+(c) σp² = βp²σₘ² + Σ(¼)²σₑᵢ² = 1.125²·25 + (9 + 1 + 4 + 16)/16
+        = 31.64 + 1.875 = 33.52
+(d) R̄p = αp + βpR̄ₘ = 2.5 + 1.125·8 = 11.5</div>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c7-7">
+    <div class="prob-head"><span class="prob-num">7.7</span><h3>Blume adjustment<span class="zh">Blume 调整</span></h3></div>
+    <div class="q"><p>Using Blume’s technique, where β<sub>i2</sub> = 0.343 + 0.677β<sub>i1</sub>, calculate β<sub>i2</sub> for the securities in Problem 5.</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="tbl"><table>
+        <tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th></tr>
+        <tr><td>β<sub>i1</sub></td><td>1.5</td><td>1.3</td><td>0.8</td><td>0.9</td></tr>
+        <tr><td>0.343 + 0.677β<sub>i1</sub></td><td>1.359</td><td>1.223</td><td>0.885</td><td>0.952</td></tr>
+      </table></div>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c7-8">
+    <div class="prob-head"><span class="prob-num">7.8</span><h3>Vasicek adjustment<span class="zh">Vasicek 调整</span></h3></div>
+    <div class="q"><p>Suppose β̄₁ = 1 and σ<sub>β̄1</sub> = 0.25, σ<sub>βA</sub> = 0.21, σ<sub>βB</sub> = 0.32, σ<sub>βC</sub> = 0.18, σ<sub>βD</sub> = 0.20, forecast each security’s beta using the Vasicek technique.</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <p>The problem gives <b>standard deviations</b> σ, but the Vasicek formula uses variances, so square them first: σ²<sub>β̄1</sub> = 0.0625.</p>
+      <p class="zh">题目给的是标准差，公式要用方差，先平方。</p>
+      <div class="formula">βᵢ₂ = σ²_β̄₁/(σ²_β̄₁ + σ²_βᵢ)·βᵢ₁ + σ²_βᵢ/(σ²_β̄₁ + σ²_βᵢ)·1
+e.g. A: σ²_βA = 0.0441,  w = 0.0625/0.1066 = 0.586
+     βA₂ = 0.586·1.5 + 0.414·1 = 1.293</div>
+      <div class="tbl"><table>
+        <tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th></tr>
+        <tr><td>σ²<sub>βi</sub></td><td>0.0441</td><td>0.1024</td><td>0.0324</td><td>0.0400</td></tr>
+        <tr><td>Weight on βᵢ₁</td><td>0.586</td><td>0.379</td><td>0.659</td><td>0.610</td></tr>
+        <tr class="hl"><td>Vasicek β</td><td>1.293</td><td>1.114</td><td>0.868</td><td>0.939</td></tr>
+      </table></div>
+      <p class="small">If the given numbers are used directly as variances (not squared), the results are 1.272, 1.132, 0.884 and 0.944. <span class="zh">若直接当方差用的结果。</span></p>
+    </div></details>
+  </article>
+</section>
+</main>
+</div>
+</div>
+
+<script>
+(function () {
+  const NS = "http://www.w3.org/2000/svg";
+  const css = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  function niceStep(span, n) {
+    const raw = span / n, mag = Math.pow(10, Math.floor(Math.log10(raw)));
+    const f = raw / mag;
+    return (f < 1.5 ? 1 : f < 3 ? 2 : f < 7 ? 5 : 10) * mag;
+  }
+  function el(tag, attrs, parent) {
+    const e = document.createElementNS(NS, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  // spec: {x:[min,max], y:[min,max], lines:[{pts, color, width, dash}], dots:[{x,y,label,color,r}], xl, yl, title}
+  function chart(host, spec) {
+    const W = 340, H = 240, L = 40, R = 12, T = spec.title ? 24 : 12, B = 34;
+    const [x0, x1] = spec.x, [y0, y1] = spec.y;
+    const sx = (v) => L + (v - x0) / (x1 - x0) * (W - L - R);
+    const sy = (v) => H - B - (v - y0) / (y1 - y0) * (H - T - B);
+    const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": spec.title || "chart" });
+    const ink = css("--muted"), grid = css("--line");
+    if (spec.title) { const t = el("text", { x: L, y: 15, fill: css("--ink"), "font-size": 12, "font-weight": 600, "font-family": "Public Sans, sans-serif" }, svg); t.textContent = spec.title; }
+    const xs = niceStep(x1 - x0, 5), ys = niceStep(y1 - y0, 5);
+    for (let v = Math.ceil(x0 / xs) * xs; v <= x1 + 1e-9; v += xs) {
+      el("line", { x1: sx(v), x2: sx(v), y1: T, y2: H - B, stroke: grid, "stroke-width": 1 }, svg);
+      const t = el("text", { x: sx(v), y: H - B + 14, fill: ink, "font-size": 10, "text-anchor": "middle", "font-family": "JetBrains Mono, monospace" }, svg);
+      t.textContent = +v.toFixed(2);
+    }
+    for (let v = Math.ceil(y0 / ys) * ys; v <= y1 + 1e-9; v += ys) {
+      el("line", { x1: L, x2: W - R, y1: sy(v), y2: sy(v), stroke: grid, "stroke-width": 1 }, svg);
+      const t = el("text", { x: L - 5, y: sy(v) + 3, fill: ink, "font-size": 10, "text-anchor": "end", "font-family": "JetBrains Mono, monospace" }, svg);
+      t.textContent = +v.toFixed(2);
+    }
+    const xl = el("text", { x: (L + W - R) / 2, y: H - 4, fill: ink, "font-size": 10, "text-anchor": "middle", "font-family": "Public Sans, sans-serif" }, svg);
+    xl.textContent = spec.xl || "σ (%)";
+    const yl = el("text", { x: 10, y: (T + H - B) / 2, fill: ink, "font-size": 10, "text-anchor": "middle", transform: `rotate(-90 10 ${(T + H - B) / 2})`, "font-family": "Public Sans, sans-serif" }, svg);
+    yl.textContent = spec.yl || "R̄ (%)";
+    const clipId = "c" + Math.random().toString(36).slice(2);
+    const cp = el("clipPath", { id: clipId }, el("defs", {}, svg));
+    el("rect", { x: L, y: T, width: W - L - R, height: H - T - B, fill: "none" }, cp);
+    const g = el("g", { "clip-path": `url(#${clipId})` }, svg);
+    (spec.lines || []).forEach((ln) => {
+      if (ln.pts.length < 2) return;
+      el("polyline", { points: ln.pts.map((p) => `${sx(p[0]).toFixed(1)},${sy(p[1]).toFixed(1)}`).join(" "), fill: "none", stroke: ln.color, "stroke-width": ln.width || 2, "stroke-dasharray": ln.dash || "", "stroke-linecap": "round", "stroke-linejoin": "round" }, g);
+    });
+    (spec.dots || []).forEach((d) => {
+      el("circle", { cx: sx(d.x), cy: sy(d.y), r: d.r || 3.5, fill: d.color, stroke: css("--surface"), "stroke-width": 1 }, svg);
+      if (d.label) {
+        const right = sx(d.x) > W - 70;
+        const t = el("text", { x: sx(d.x) + (right ? -6 : 6), y: sy(d.y) - 5, fill: css("--ink"), "font-size": 10, "text-anchor": right ? "end" : "start", "font-family": "JetBrains Mono, monospace" }, svg);
+        t.textContent = d.label;
+      }
+    });
+    host.replaceChildren(svg);
+  }
+
+  // two-asset frontier, efficient part in red
+  function pairChart(host, a, b, short, names) {
+    const [m1, m2] = [a.m, b.m], [v1, v2] = [a.v, b.v], c = a.c[b.i];
+    const den = v1 + v2 - 2 * c;
+    let xg = den > 1e-12 ? (v2 - c) / den : 0;
+    if (!short) xg = Math.min(1, Math.max(0, xg));
+    const lo = short ? Math.min(-1, xg - 1) : 0, hi = short ? Math.max(2, xg + 1) : 1;
+    const pt = (x) => [Math.sqrt(Math.max(0, x * x * v1 + (1 - x) * (1 - x) * v2 + 2 * x * (1 - x) * c)), x * m1 + (1 - x) * m2];
+    const N = 240, all = [], eff = [];
+    for (let k = 0; k <= N; k++) {
+      const x = lo + (hi - lo) * k / N, p = pt(x);
+      all.push(p);
+      if ((m1 > m2 && x >= xg - 1e-9) || (m1 < m2 && x <= xg + 1e-9)) eff.push(p);
+    }
+    const g = pt(xg);
+    const s1 = Math.sqrt(v1), s2 = Math.sqrt(v2);
+    const xmax = Math.max(s1, s2) * (short ? 2.2 : 1.25);
+    const ys = [m1, m2, g[1]];
+    const pad = Math.max(1, (Math.max(...ys) - Math.min(...ys)) * (short ? 0.9 : 0.3));
+    chart(host, {
+      title: `${names[0]} & ${names[1]}`,
+      x: [0, xmax], y: [Math.min(...ys) - pad, Math.max(...ys) + pad],
+      lines: [{ pts: all, color: css("--plot-muted"), width: 1.5 }, { pts: eff, color: css("--eff"), width: 3 }],
+      dots: [{ x: s1, y: m1, label: names[0], color: css("--accent") }, { x: s2, y: m2, label: names[1], color: css("--accent") },
+             { x: g[0], y: g[1], label: "MV", color: css("--eff"), r: 4 }]
+    });
+  }
+  function asAssets(mean, cov) { return mean.map((m, i) => ({ i, m, v: cov[i][i], c: cov[i] })); }
+
+  const P1 = asAssets([12, 6, 14, 12], [[8, -4, 12, 0], [-4, 2, -6, 0], [12, -6, 18, 0], [0, 0, 0, 10.6667]]);
+  const P2 = asAssets([1.1961, 2.9456, 7.9342], [[15.3615, 2.1001, 7.3287], [2.1001, 14.526, -20.0603], [7.3287, -20.0603, 46.2013]]);
+  const groups = {
+    "c5-1": { assets: P1, names: ["1", "2", "3", "4"] },
+    "c5-2": { assets: P2, names: ["A", "B", "C"] }
+  };
+  const state = { "c5-1": false, "c5-2": false };
+  function drawGroup(id) {
+    const { assets, names } = groups[id], host = document.getElementById("charts-" + id);
+    host.replaceChildren();
+    for (let i = 0; i < assets.length; i++) for (let j = i + 1; j < assets.length; j++) {
+      const box = document.createElement("div"); box.className = "chart";
+      const inner = document.createElement("div"); box.appendChild(inner); host.appendChild(box);
+      pairChart(inner, assets[i], assets[j], state[id], [names[i], names[j]]);
+    }
+  }
+  document.querySelectorAll(".seg").forEach((seg) => seg.addEventListener("click", (e) => {
+    const btn = e.target.closest("button"); if (!btn) return;
+    seg.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
+    state[seg.dataset.target] = btn.dataset.short === "1";
+    drawGroup(seg.dataset.target);
+  }));
+
+  function drawC41() {
+    const ports = { a: [9, 0.7071], b: [13, 3.5355], c: [12, 2.1602], d: [10, 1.4142], e: [13, 2.6771], f: [10.6667, 1.8856], g: [10.6667, 1.4402], h: [12.6667, 2.5963], i: [11, 1.633] };
+    const dots = [[12, 2.8284, "1"], [6, 1.4142, "2"], [14, 4.2426, "3"], [12, 3.266, "4"]].map(([y, x, l]) => ({ x, y, label: l, color: css("--accent"), r: 4.5 }));
+    for (const k in ports) dots.push({ x: ports[k][1], y: ports[k][0], label: k, color: css("--plot-muted") });
+    chart(document.getElementById("chart-c4-1"), { x: [0, 5], y: [4, 16], dots });
+  }
+  function drawC55() {
+    const curve = (rho) => { const pts = []; for (let k = 0; k <= 100; k++) { const x = k / 100; pts.push([Math.sqrt(Math.max(0, x * x * 25 + (1 - x) * (1 - x) * 4 + 2 * x * (1 - x) * rho * 10)), 10 * x + 4 * (1 - x)]); } return pts; };
+    chart(document.getElementById("chart-c5-5"), {
+      x: [0, 6], y: [3, 11],
+      lines: [{ pts: curve(1), color: css("--accent") }, { pts: curve(-1), color: css("--eff") }, { pts: curve(0), color: css("--plot-muted") }],
+      dots: [{ x: 5, y: 10, label: "1", color: css("--ink") }, { x: 2, y: 4, label: "2", color: css("--ink") },
+             { x: 0, y: 40 / 7, color: css("--eff") }, { x: 1.857, y: 4.828, color: css("--plot-muted") }]
+    });
+  }
+  function drawC71() {
+    const M = [12.28, 5.99, 2.41, 4.48, 4.41, 4.43, -6.77, -2.11, 3.46, 6.16, 2.47, -1.15];
+    const S = {
+      A: [[12.05, 15.27, -4.12, 1.57, 3.16, -2.79, -8.97, -1.18, 1.07, 12.75, 7.48, -0.94], -0.6103, 1.1834],
+      B: [[25.20, 2.86, 5.45, 4.56, 3.72, 10.79, 5.38, -2.97, 1.52, 10.75, 3.79, 1.32], 2.9641, 1.0205],
+      C: [[31.67, 15.82, 10.58, -14.43, 31.98, -0.72, -19.64, -10.00, -11.51, 5.63, -4.67, 7.94], -3.4219, 2.3215]
+    };
+    const host = document.getElementById("charts-c7-1"); host.replaceChildren();
+    for (const k in S) {
+      const [r, a, b] = S[k];
+      const box = document.createElement("div"); box.className = "chart";
+      const inner = document.createElement("div"); box.appendChild(inner); host.appendChild(box);
+      const ymin = Math.min(...r), ymax = Math.max(...r), py = (ymax - ymin) * 0.1;
+      chart(inner, {
+        title: `Stock ${k}: R = ${a.toFixed(2)} + ${b.toFixed(2)}·Rₘ`, xl: "S&P Rₘ (%)", yl: `R${k} (%)`,
+        x: [-8, 14], y: [ymin - py, ymax + py],
+        lines: [{ pts: [[-8, a - 8 * b], [14, a + 14 * b]], color: css("--eff"), width: 2 }],
+        dots: M.map((m, t) => ({ x: m, y: r[t], color: css("--accent"), r: 3 }))
+      });
+    }
+  }
+  // chapter 1: budget lines and indifference curves
+  const hyper = (k, x0, x1, f) => { const pts = []; for (let i = 0; i <= 120; i++) { const x = x0 + (x1 - x0) * i / 120; pts.push([x, f(x, k)]); } return pts; };
+  function drawC1() {
+    const red = css("--eff"), grey = css("--plot-muted"), blue = css("--accent");
+    chart(document.getElementById("chart-c1-1"), {
+      x: [0, 550], y: [0, 120], xl: "Red hots H", yl: "Rock candy K",
+      lines: [{ pts: [[0, 100], [500, 0]], color: red, width: 2.5 },
+              ...[6000, 12500, 20000].map((k) => ({ pts: hyper(k, 40, 550, (x, k) => k / x), color: grey, width: 1.5 }))],
+      dots: [{ x: 250, y: 50, label: "(250, 50)", color: red, r: 4 }]
+    });
+    chart(document.getElementById("chart-c1-2"), {
+      x: [0, 45], y: [0, 48], xl: "C₁ ($)", yl: "C₂ ($)",
+      lines: [{ pts: [[0, 42], [38.18, 0]], color: red, width: 2.5 },
+              ...[200, 400.9, 600].map((k) => ({ pts: hyper(k, 4, 45, (x, k) => k / x), color: grey, width: 1.5 }))],
+      dots: [{ x: 20, y: 20, label: "Income (20, 20)", color: blue }, { x: 19.09, y: 21, label: "Optimum", color: red, r: 4 }]
+    });
+    chart(document.getElementById("chart-c1-6"), {
+      x: [0, 11000], y: [0, 12000], xl: "C₁ ($)", yl: "C₂ ($)",
+      lines: [{ pts: [[0, 10500], [5000, 5000], [9166.67, 0]], color: red, width: 2.5 },
+              { pts: [[5000, 5000], [9545.45, 0]], color: grey, width: 1, dash: "4 4" }],
+      dots: [{ x: 5000, y: 5000, label: "Income", color: blue }]
+    });
+    chart(document.getElementById("chart-c1-7"), {
+      x: [0, 110], y: [0, 110], xl: "C₁", yl: "C₂",
+      lines: [{ pts: hyper(50, 0, 50, (x, P) => (P - x) / (1 + x)), color: grey, width: 2 },
+              { pts: hyper(100, 0, 100, (x, P) => (P - x) / (1 + x)), color: red, width: 2 }],
+      dots: [{ x: 6.14, y: 6.14, label: "P = 50", color: grey }, { x: 9.05, y: 9.05, label: "P = 100", color: red }]
+    });
+    chart(document.getElementById("chart-c1-9"), {
+      x: [0, 6], y: [0, 5], xl: "Pizza slices", yl: "Hamburgers",
+      lines: [{ pts: [[0, 4], [5, 0]], color: red, width: 2.5 },
+              ...[2.5, 5, 8].map((k) => ({ pts: hyper(k, 0.4, 6, (x, k) => k / x), color: grey, width: 1.5 }))],
+      dots: [{ x: 2.5, y: 2, label: "(2.5, 2)", color: red, r: 4 }]
+    });
+    chart(document.getElementById("chart-c1-12"), {
+      x: [0, 220], y: [0, 220], xl: "C₁ ($)", yl: "C₂ ($)",
+      lines: [{ pts: [[0, 205], [100, 100], [190.91, 0]], color: red, width: 2.5 }],
+      dots: [{ x: 100, y: 100, label: "Income (100, 100)", color: blue }, { x: 0, y: 205, label: "205", color: red }, { x: 190.91, y: 0, label: "190.91", color: red }]
+    });
+  }
+  function drawAll() { drawC1(); drawC41(); drawGroup("c5-1"); drawGroup("c5-2"); drawC55(); drawC71(); }
+  drawAll();
+  // repaint charts when the theme flips so SVG colors follow the tokens
+  const mq = matchMedia("(prefers-color-scheme: dark)");
+  mq.addEventListener && mq.addEventListener("change", drawAll);
+  new MutationObserver(drawAll).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+  const all = () => document.querySelectorAll("details.ans");
+  document.getElementById("openAll").addEventListener("click", () => all().forEach((d) => d.open = true));
+  document.getElementById("closeAll").addEventListener("click", () => all().forEach((d) => d.open = false));
+  // open the answer for a problem linked by #hash
+  function openHash() {
+    const t = location.hash && document.getElementById(location.hash.slice(1));
+    const d = t && t.querySelector("details.ans"); if (d) d.open = true;
+  }
+  addEventListener("hashchange", openHash); openHash();
+})();
+</script>

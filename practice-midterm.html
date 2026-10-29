@@ -1,0 +1,587 @@
+<title>COMM 467 Practice Midterm</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,650&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: exam paper on a single column; a sticky score bar tracks progress like a scan sheet. English leads, Chinese follows in small grey type. */
+:root {
+  --bg: #f4f6f9;
+  --surface: #ffffff;
+  --ink: #18202d;
+  --muted: #586274;
+  --line: #dbe0e8;
+  --accent: #1d5ca8;
+  --accent-soft: #e5eef9;
+  --good: #1f7a4d;
+  --good-soft: #e3f3ea;
+  --bad: #b8322a;
+  --bad-soft: #fbe8e6;
+  --font-display: "Source Serif 4", "Songti SC", Georgia, serif;
+  --font-body: "Public Sans", "PingFang SC", "Noto Sans SC", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11151c; --surface: #19202a; --ink: #e5e9f0; --muted: #9ba5b6; --line: #2a323e;
+    --accent: #82b2f0; --accent-soft: #1d2a3c; --good: #6fcf9b; --good-soft: #17301f; --bad: #f2867c; --bad-soft: #3a1d1b; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11151c; --surface: #19202a; --ink: #e5e9f0; --muted: #9ba5b6; --line: #2a323e;
+  --accent: #82b2f0; --accent-soft: #1d2a3c; --good: #6fcf9b; --good-soft: #17301f; --bad: #f2867c; --bad-soft: #3a1d1b; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 64px;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.wrap { max-width: 860px; margin: 0 auto; display: grid; gap: 28px; }
+.zh { font-family: var(--font-body); font-size: 13px; color: var(--muted); font-weight: 400; letter-spacing: 0; text-transform: none; }
+h1 .zh, h2 .zh, h3 .zh { display: block; margin-top: 2px; }
+
+header.top { padding-block: 36px 4px; display: grid; gap: 10px; }
+.eyebrow { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+h1 { font-family: var(--font-display); font-weight: 650; font-size: clamp(26px, 4vw, 36px); line-height: 1.15; margin: 0; text-wrap: balance; }
+h1 .zh { font-size: 16px; }
+.lede { margin: 0; max-width: 70ch; color: var(--muted); }
+.info { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+.info div { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; font-size: 13px; display: grid; gap: 2px; }
+.info b { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); padding-block: 10px; border-bottom: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; }
+.score { font-family: var(--font-mono); font-size: 14px; font-variant-numeric: tabular-nums; }
+.score b { color: var(--good); font-weight: 500; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+button { font: inherit; cursor: pointer; }
+.chip, .btn { border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 4px 12px; font-size: 13px; }
+.btn { border-radius: 6px; }
+.chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--surface); }
+.chip:hover, .btn:hover { border-color: var(--accent); }
+.timer { font-family: var(--font-mono); font-size: 14px; font-variant-numeric: tabular-nums; margin-left: auto; display: flex; gap: 8px; align-items: center; }
+.timer.low span { color: var(--bad); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+section.part { display: grid; gap: 16px; }
+.part-head { border-bottom: 2px solid var(--ink); padding-bottom: 8px; display: grid; gap: 2px; }
+.part-head h2 { font-family: var(--font-display); font-size: 24px; font-weight: 650; margin: 0; }
+.part-head p { margin: 0; color: var(--muted); font-size: 14px; }
+
+.mc { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; display: grid; gap: 10px; min-width: 0; }
+.mc-top { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.num { font-family: var(--font-mono); font-size: 13px; color: var(--accent); background: var(--accent-soft); border-radius: 4px; padding: 1px 8px; }
+.tag { font-size: 11px; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.qtext { font-family: var(--font-display); font-size: 16px; line-height: 1.55; margin: 0; }
+.qzh { margin: -4px 0 0; }
+.opts { display: grid; gap: 6px; }
+.opt { text-align: left; display: grid; grid-template-columns: 26px 1fr; gap: 8px; align-items: baseline; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 8px; padding: 8px 12px; font-size: 14.5px; }
+.opt:hover:not([disabled]) { border-color: var(--accent); }
+.opt[disabled] { cursor: default; }
+.opt .k { font-family: var(--font-mono); color: var(--muted); font-size: 13px; }
+.opt.right { border-color: var(--good); background: var(--good-soft); }
+.opt.right .k { color: var(--good); }
+.opt.wrong { border-color: var(--bad); background: var(--bad-soft); }
+.opt.wrong .k { color: var(--bad); }
+.exp { font-size: 14px; border-top: 1px dashed var(--line); padding-top: 8px; display: grid; gap: 2px; }
+.exp .verdict { font-weight: 600; }
+.exp .verdict.ok { color: var(--good); }
+.exp .verdict.no { color: var(--bad); }
+
+article.prob { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 18px 20px; display: grid; gap: 10px; min-width: 0; }
+article.prob h3 { margin: 0; font-family: var(--font-display); font-size: 18px; font-weight: 650; display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+article.prob h3 .zh { display: block; flex-basis: 100%; margin-top: -6px; }
+.q { font-family: var(--font-display); font-size: 15.5px; display: grid; gap: 8px; min-width: 0; }
+.q p, .sol p { margin: 0; }
+.q ol { margin: 0; padding-left: 22px; display: grid; gap: 3px; list-style: lower-alpha; }
+details.sol { border-top: 1px dashed var(--line); padding-top: 10px; }
+details.sol > summary { cursor: pointer; font-weight: 600; color: var(--accent); font-size: 14px; }
+details.sol > summary .zh { font-weight: 400; }
+.sol-body { display: grid; gap: 10px; margin-top: 10px; min-width: 0; }
+.formula { font-family: var(--font-mono); font-size: 13px; background: var(--bg); border-radius: 6px; padding: 8px 12px; overflow-x: auto; white-space: pre; line-height: 1.7; }
+.tbl { overflow-x: auto; max-width: 100%; }
+table { border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+th, td { padding: 4px 12px; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th { font-weight: 600; color: var(--muted); font-family: var(--font-body); font-size: 12px; }
+th:first-child, td:first-child { text-align: left; }
+td { font-family: var(--font-mono); }
+.q table td { font-family: var(--font-display); font-size: 14px; }
+.empty { color: var(--muted); font-size: 14px; }
+@media (max-width: 560px) { .timer { margin-left: 0; } .mc, article.prob { padding: 14px; } }
+</style>
+
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">COMM 467 · Practice exam · Ch 1, 4, 5, 7</div>
+  <h1>Practice Midterm<span class="zh">期中模拟考试</span></h1>
+  <p class="lede">Original practice questions written to match the coverage and style of the Midterm Review slides: definitions, theory and calculations in multiple choice, then numerical and short-answer problems. Not past exam questions.</p>
+  <p class="zh">按老师 Midterm Review 课件的范围和题型自编的练习题，不是历年真题。</p>
+  <div class="info">
+    <div><b>Coverage</b>Ch 1 (lecture slides), Ch 4, Ch 5, Ch 7 up to estimating and testing the SIM and MM</div>
+    <div><b>Not covered</b>Blume, Vasicek, fundamental betas, Bloomberg / WRDS betas</div>
+    <div><b>Test rules</b>Critical t = ±1.96; residual correlation rule of thumb ±2/√T</div>
+    <div><b>Conventions</b>R ~ (mean, variance); population formulas (÷T) unless stated</div>
+  </div>
+</header>
+
+<div class="bar">
+  <div class="score" id="score">Score <b>0</b> / 0 answered · 72 questions</div>
+  <div class="chips" role="group" aria-label="Filter by chapter">
+    <button class="chip" type="button" data-ch="all" aria-pressed="true">All</button>
+    <button class="chip" type="button" data-ch="1" aria-pressed="false">Ch 1</button>
+    <button class="chip" type="button" data-ch="4" aria-pressed="false">Ch 4</button>
+    <button class="chip" type="button" data-ch="5" aria-pressed="false">Ch 5</button>
+    <button class="chip" type="button" data-ch="7" aria-pressed="false">Ch 7</button>
+  </div>
+  <div class="timer" id="timerBox"><span id="timer">80:00</span><button class="btn" type="button" id="timerBtn">Start 80-min timer</button></div>
+  <button class="btn" type="button" id="reset">Reset answers · 重做</button>
+</div>
+
+<section class="part" id="partA">
+  <div class="part-head">
+    <h2>Part A · Multiple choice<span class="zh">第一部分：选择题</span></h2>
+    <p>Click an answer to check it. The explanation appears right away. 点选答案后立即显示对错和解析。</p>
+  </div>
+  <div id="mcList"></div>
+</section>
+
+<section class="part" id="partB">
+  <div class="part-head">
+    <h2>Part B · Numerical and short answer<span class="zh">第二部分：计算与简答</span></h2>
+    <p>Work each problem on paper first, then open the solution. 先在纸上做，再看答案。</p>
+  </div>
+
+  <article class="prob" data-ch="1">
+    <h3><span class="num">B1</span>Two-period consumption (Ch 1)<span class="zh">两期消费</span></h3>
+    <div class="q"><p>You earn $50,000 this year and $40,000 next year and can borrow and lend at 5%.</p>
+      <ol><li>What is the maximum you can consume this year? Next year?</li><li>Write the equation of the opportunity set.</li><li>If you consume $60,000 this year, how much can you consume next year?</li><li>Why do indifference curves for a person who prefers more to less have a negative slope and a convex shape?</li></ol></div>
+    <details class="sol"><summary>Show solution <span class="zh">查看答案</span></summary><div class="sol-body">
+      <div class="formula">(a) Max C₀ = 50,000 + 40,000/1.05 = 88,095.24        Max C₁ = 50,000(1.05) + 40,000 = 92,500
+(b) C₁ = 40,000 + (50,000 − C₀)(1.05) = 92,500 − 1.05C₀
+(c) C₁ = 92,500 − 1.05(60,000) = 29,500   (borrow 10,000 today, repay 10,500)</div>
+      <p>(d) Negative slope: giving up consumption in one period must be compensated by more in the other to stay equally satisfied. Convex: the less you have of one period’s consumption, the more of the other you require to give up another unit (diminishing marginal rate of substitution).</p>
+      <p class="zh">向下倾斜：少一期就要多另一期补偿；凸向原点：边际替代率递减。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" data-ch="4">
+    <h3><span class="num">B2</span>Two stocks, probability distribution (Ch 4)<span class="zh">概率分布下的两只股票</span></h3>
+    <div class="q">
+      <div class="tbl"><table><tr><th>State</th><th>Probability</th><th>R<sub>X</sub> (%)</th><th>R<sub>Y</sub> (%)</th></tr>
+        <tr><td>Boom</td><td>0.25</td><td>20</td><td>8</td></tr>
+        <tr><td>Normal</td><td>0.50</td><td>10</td><td>4</td></tr>
+        <tr><td>Recession</td><td>0.25</td><td>−4</td><td>10</td></tr></table></div>
+      <ol><li>Expected return, variance and standard deviation of X and Y.</li><li>Covariance and correlation between X and Y.</li><li>Mean and standard deviation of a portfolio with 40% in X and 60% in Y.</li><li>Composition, mean and standard deviation of the minimum-variance portfolio (no short sales).</li></ol></div>
+    <details class="sol"><summary>Show solution <span class="zh">查看答案</span></summary><div class="sol-body">
+      <div class="formula">(a) E[X] = .25(20) + .5(10) + .25(−4) = 9.0      E[Y] = .25(8) + .5(4) + .25(10) = 6.5
+    deviations X: 11, 1, −13      Y: 1.5, −2.5, 3.5
+    V[X] = .25(121) + .5(1) + .25(169) = 73.00   σX = 8.544
+    V[Y] = .25(2.25) + .5(6.25) + .25(12.25) = 6.75   σY = 2.598
+(b) Cov = .25(11)(1.5) + .5(1)(−2.5) + .25(−13)(3.5) = 4.125 − 1.25 − 11.375 = −8.50
+    ρ = −8.50 / (8.544 × 2.598) = −0.383
+(c) E[Rp] = .4(9) + .6(6.5) = 7.50
+    V[Rp] = .4²(73) + .6²(6.75) + 2(.4)(.6)(−8.5) = 11.68 + 2.43 − 4.08 = 10.03   σp = 3.167
+(d) X_X = (σY² − σXY)/(σX² + σY² − 2σXY) = (6.75 + 8.5)/(73 + 6.75 + 17) = 0.158
+    E = 0.158(9) + 0.842(6.5) = 6.89      σ = 2.085</div>
+      <p>The negative correlation lets the 40/60 portfolio have far less risk (3.17) than X alone (8.54). <span class="zh">负相关带来明显的分散化效果。</span></p>
+    </div></details>
+  </article>
+
+  <article class="prob" data-ch="4">
+    <h3><span class="num">B3</span>Returns from prices and dividends (Ch 4)<span class="zh">由价格和股利计算收益</span></h3>
+    <div class="q"><p>Month-end prices for a stock are 50, 52, 51, 54.50, 53. A dividend of $0.75 is received at the end of month 3 and month 5 (the 51 and 53 observations).</p>
+      <ol><li>Compute the four monthly holding-period returns.</li><li>Compute the mean return and the variance (population, ÷T). What would the sample variance be?</li></ol></div>
+    <details class="sol"><summary>Show solution <span class="zh">查看答案</span></summary><div class="sol-body">
+      <div class="formula">R_t = (P_t − P_t−1 + D_t) / P_t−1
+R₁ = (52 − 50)/50 = 4.00%
+R₂ = (51 − 52 + 0.75)/52 = −0.48%
+R₃ = (54.50 − 51)/51 = 6.86%
+R₄ = (53 − 54.50 + 0.75)/54.50 = −1.38%
+Mean = (4.00 − 0.48 + 6.86 − 1.38)/4 = 2.25%
+Population variance = Σ(R − 2.25)²/4 = 11.24      Sample variance (÷3) = 14.98</div>
+    </div></details>
+  </article>
+
+  <article class="prob" data-ch="4">
+    <h3><span class="num">B4</span>Naive diversification (Ch 4)<span class="zh">等权分散化</span></h3>
+    <div class="q"><p>For a population of stocks, the average variance is 52 and the average covariance is 14.</p>
+      <ol><li>What is the variance of an equally weighted portfolio of 10 stocks? Of 25 stocks?</li><li>What is the minimum variance attainable by naive diversification?</li><li>How many stocks are needed for a portfolio variance of at most 15?</li></ol></div>
+    <details class="sol"><summary>Show solution <span class="zh">查看答案</span></summary><div class="sol-body">
+      <div class="formula">σp² = (1/N)(avg var) + ((N−1)/N)(avg cov) = (1/N)(52 − 14) + 14 = 38/N + 14
+(a) N = 10: 17.80      N = 25: 15.52
+(b) N → ∞: σp² → 14 (the average covariance)
+(c) 38/N + 14 ≤ 15  →  N ≥ 38</div>
+    </div></details>
+  </article>
+
+  <article class="prob" data-ch="5">
+    <h3><span class="num">B5</span>IOS under ρ = +1, −1 and 0 (Ch 5)<span class="zh">三种相关系数下的 IOS</span></h3>
+    <div class="q"><p>A ~ (mean 8%, σ 12%) and B ~ (mean 14%, σ 20%). Fully invested, no short sales, no borrowing or lending.</p>
+      <ol><li>For ρ = +1, −1 and 0, find the minimum-variance portfolio (X<sub>A</sub>, mean, σ).</li><li>Write the IOS equation (E[R<sub>P</sub>] as a function of σ<sub>P</sub>) for ρ = +1 and for ρ = −1.</li><li>For each case, describe the efficient frontier.</li></ol></div>
+    <details class="sol"><summary>Show solution <span class="zh">查看答案</span></summary><div class="sol-body">
+      <div class="formula">X_A(MVP) = (σB² − ρσAσB) / (σA² + σB² − 2ρσAσB)
+ρ = +1: formula gives X_A = 2.5 (needs short sales) → no SS: X_A = 1, E = 8.00, σ = 12.00
+ρ = −1: X_A = σB/(σA + σB) = 20/32 = 0.625, E = 10.25, σ = 0
+ρ =  0: X_A = 400/544 = 0.735, E = 9.59, σ = 10.29
+
+IOS, ρ = +1: straight line through A and B: E[Rp] = −1 + 0.75σp   (12 ≤ σp ≤ 20)
+IOS, ρ = −1: two lines from (0, 10.25):  E[Rp] = 10.25 ± 0.1875σp</div>
+      <p>(c) ρ = +1: the whole line from A to B is efficient (MVP is A). ρ = −1: the upper line from (0, 10.25) to B is efficient; the lower line to A is not. ρ = 0: the curve from the MVP (10.29, 9.59) up to B is efficient.</p>
+      <p class="zh">ρ = +1 整条直线有效；ρ = −1 上面那条线有效；ρ = 0 从 MVP 到 B 的曲线有效。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" data-ch="5">
+    <h3><span class="num">B6</span>Short sales (Ch 5)<span class="zh">允许卖空</span></h3>
+    <div class="q"><p>Use A and B from B5 with ρ = 0.2.</p>
+      <ol><li>Find the minimum-variance portfolio.</li><li>Short sales are now allowed. Compute the mean and σ of (i) X<sub>A</sub> = 1.5, X<sub>B</sub> = −0.5 and (ii) X<sub>A</sub> = −0.5, X<sub>B</sub> = 1.5.</li><li>Which of the two is on the efficient frontier, and why?</li></ol></div>
+    <details class="sol"><summary>Show solution <span class="zh">查看答案</span></summary><div class="sol-body">
+      <div class="formula">σAB = 0.2(12)(20) = 48
+(a) X_A = (400 − 48)/(144 + 400 − 96) = 0.786   E = 9.29   σ = 11.11
+(b)(i)  E = 1.5(8) − 0.5(14) = 5.00     σ² = 2.25(144) + 0.25(400) + 2(1.5)(−0.5)(48) = 352  → σ = 18.76
+   (ii) E = −0.5(8) + 1.5(14) = 17.00   σ² = 0.25(144) + 2.25(400) + 2(−0.5)(1.5)(48) = 864 → σ = 29.39</div>
+      <p>(c) (ii). Efficient portfolios lie on the upper half of the curve, above the MVP return of 9.29%. Portfolio (i) earns only 5%, below the MVP, so it is inefficient. Shorting the low-return asset (A) to buy more of B extends the efficient frontier beyond B.</p>
+      <p class="zh">(ii) 有效：收益高于 MVP 的上半支才有效；(i) 收益 5% 低于 MVP。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" data-ch="5">
+    <h3><span class="num">B7</span>Unlimited borrowing and lending at RF (Ch 5)<span class="zh">无限借贷</span></h3>
+    <div class="q"><p>RF = 4%. Three risky portfolios are available: K (10%, σ 12%), L (13%, σ 20%), M (7%, σ 5%).</p>
+      <ol><li>Which portfolio would every risk-averse investor combine with RF? Justify.</li><li>An investor wants σ<sub>P</sub> = 9%. How should they invest, and what is E[R<sub>P</sub>]?</li><li>Another investor wants σ<sub>P</sub> = 3%. How should they invest, and what is E[R<sub>P</sub>]?</li><li>Which theorem says every investor holds the same risky portfolio?</li></ol></div>
+    <details class="sol"><summary>Show solution <span class="zh">查看答案</span></summary><div class="sol-body">
+      <div class="formula">Slope = (E[R] − RF)/σ:   K = 6/12 = 0.50    L = 9/20 = 0.45    M = 3/5 = 0.60  → M
+(b) σP = X_M σM → X_M = 9/5 = 1.8 (borrow 0.8 at RF)   E = 4 + 1.8(3) = 9.40%
+(c) X_M = 3/5 = 0.6 (lend 0.4 at RF)                     E = 4 + 0.6(3) = 5.80%</div>
+      <p>(d) The separation theorem: the choice of the risky portfolio (M) is separate from the investor’s risk preferences, which only determine how much to lend or borrow.</p>
+      <p class="zh">分离定理：风险组合的选择与个人风险偏好无关，偏好只决定借贷多少。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" data-ch="5">
+    <h3><span class="num">B8</span>Lend at RF, borrow at a higher R′F (Ch 5)<span class="zh">借贷利率不同</span></h3>
+    <div class="q"><p>Investors can lend at RF = 4% but borrow only at R′F = 7%. The tangency portfolio for lending is T₁ (10%, σ 15%) and for borrowing is T₂ (14%, σ 20%).</p>
+      <ol><li>Describe the efficient frontier.</li><li>An investor wants σ = 7.5%. What do they hold and what is E[R]?</li><li>An investor wants σ = 24%. What do they hold and what is E[R]?</li><li>Does the separation theorem hold here?</li></ol></div>
+    <details class="sol"><summary>Show solution <span class="zh">查看答案</span></summary><div class="sol-body">
+      <p>(a) Three pieces: the straight line from RF to T₁ (lending), the curved risky frontier between T₁ and T₂, and the straight line from T₂ outward using borrowing at R′F.</p>
+      <p class="zh">三段：RF 到 T₁ 的直线、T₁ 到 T₂ 之间的曲线、从 T₂ 向外的借款直线。</p>
+      <div class="formula">(b) X_T1 = 7.5/15 = 0.5, lend 0.5 at 4%:     E = 0.5(10) + 0.5(4) = 7.0%
+(c) X_T2 = 24/20 = 1.2, borrow 0.2 at 7%:   E = 1.2(14) − 0.2(7) = 15.4%</div>
+      <p>(d) No. Investors on different parts of the frontier hold different risky portfolios (T₁, T₂, or a portfolio on the curve between them), so the risky choice depends on preferences.</p>
+      <p class="zh">不成立：不同投资者持有不同的风险组合。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" data-ch="7">
+    <h3><span class="num">B9</span>Reading an Excel regression output (Ch 7)<span class="zh">读回归输出</span></h3>
+    <div class="q"><p>Monthly returns of stock Z were regressed on the S&amp;P/TSX (T = 60). The variance of the market return is 18.</p>
+      <div class="tbl"><table><tr><th></th><th>Coefficients</th><th>Standard Error</th></tr>
+        <tr><td>Intercept</td><td>0.42</td><td>0.61</td></tr>
+        <tr><td>RM</td><td>1.35</td><td>0.21</td></tr>
+        <tr><td>R Square</td><td>0.41</td><td></td></tr></table></div>
+      <ol><li>Write out the estimated model.</li><li>Test H₀: α = 0. Interpret.</li><li>Test H₀: β = 0. Interpret.</li><li>Test H₀: β = 1. Interpret.</li><li>Interpret R².</li><li>Compute the systematic, total and firm-specific variance of Z.</li><li>In one month R<sub>M</sub> = 3.2% and Z returned 5.9%. Find the predicted return and the residual.</li></ol></div>
+    <details class="sol"><summary>Show solution <span class="zh">查看答案</span></summary><div class="sol-body">
+      <div class="formula">(a) R̂_Z = 0.42 + 1.35 R_M
+(b) t = (0.42 − 0)/0.61 = 0.69   → −1.96 &lt; t &lt; 1.96: fail to reject. α not significantly different from 0.
+(c) t = (1.35 − 0)/0.21 = 6.43   → reject. Z is significantly related to the market.
+(d) t = (1.35 − 1)/0.21 = 1.67   → fail to reject. Z’s beta is not significantly different from the market’s.
+(f) Systematic = β²σM² = 1.35²(18) = 32.81
+    Total = 32.81 / 0.41 = 80.01        Firm-specific = 80.01 − 32.81 = 47.21
+(g) Predicted = 0.42 + 1.35(3.2) = 4.74%      Residual e = 5.90 − 4.74 = 1.16%</div>
+      <p>(e) 41% of the variance of Z’s returns is explained by the market (systematic risk); 59% is firm-specific and could be diversified away. <span class="zh">41% 由市场解释，59% 为公司特有风险。</span></p>
+    </div></details>
+  </article>
+
+  <article class="prob" data-ch="7">
+    <h3><span class="num">B10</span>SIM vs Market Model inputs (Ch 7)<span class="zh">SIM 与 MM</span></h3>
+    <div class="q"><p>R<sub>M</sub> ~ (10, 16). Single-index model estimates:</p>
+      <div class="tbl"><table><tr><th>Stock</th><th>α</th><th>β</th><th>σ²<sub>e</sub></th></tr>
+        <tr><td>A</td><td>1.5</td><td>1.2</td><td>20</td></tr><tr><td>B</td><td>−0.5</td><td>0.8</td><td>9</td></tr><tr><td>C</td><td>2.0</td><td>1.5</td><td>30</td></tr></table></div>
+      <ol><li>Mean and variance of each stock.</li><li>Covariance of each pair under the SIM.</li><li>α<sub>P</sub>, β<sub>P</sub>, mean and variance of an equally weighted portfolio under the SIM.</li><li>Under the Market Model you are told Cov(e<sub>A</sub>, e<sub>B</sub>) = 3 (other residual covariances 0). Recompute Cov(A, B) and the portfolio variance.</li></ol></div>
+    <details class="sol"><summary>Show solution <span class="zh">查看答案</span></summary><div class="sol-body">
+      <div class="formula">(a) E[Ri] = αi + βi(10):  A 13.5   B 7.5   C 17.0
+    V[Ri] = βi²(16) + σ²ei:  A 23.04 + 20 = 43.04   B 10.24 + 9 = 19.24   C 36 + 30 = 66.00
+(b) Cov = βiβj(16):  AB 15.36   AC 28.80   BC 19.20
+(c) αP = (1.5 − 0.5 + 2)/3 = 1.00      βP = (1.2 + 0.8 + 1.5)/3 = 1.167
+    E[RP] = 1.00 + 1.167(10) = 12.67
+    V[RP] = βP²(16) + (1/3)²(20 + 9 + 30) = 21.78 + 6.56 = 28.33    σP = 5.32
+(d) MM: Cov(A,B) = βAβBσM² + Cov(eA,eB) = 15.36 + 3 = 18.36
+    V[RP] = 28.33 + 2(1/3)(1/3)(3) = 29.00</div>
+    </div></details>
+  </article>
+
+  <article class="prob" data-ch="7">
+    <h3><span class="num">B11</span>Estimate beta by hand (Ch 7)<span class="zh">手算 β</span></h3>
+    <div class="q">
+      <div class="tbl"><table><tr><th>Month</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr>
+        <tr><td>R<sub>M</sub></td><td>2</td><td>4</td><td>−1</td><td>5</td><td>0</td></tr>
+        <tr><td>R<sub>i</sub></td><td>3</td><td>6</td><td>−2</td><td>7</td><td>1</td></tr></table></div>
+      <ol><li>Compute the means, Var(R<sub>M</sub>), Var(R<sub>i</sub>) and Cov(R<sub>i</sub>, R<sub>M</sub>) (÷T).</li><li>Estimate β and α.</li><li>Compute the correlation and R².</li><li>Compute the residual for month 3.</li></ol></div>
+    <details class="sol"><summary>Show solution <span class="zh">查看答案</span></summary><div class="sol-body">
+      <div class="formula">(a) R̄M = 10/5 = 2      R̄i = 15/5 = 3
+    dev RM: 0, 2, −3, 3, −2      dev Ri: 0, 3, −5, 4, −2
+    Var(RM) = (0 + 4 + 9 + 9 + 4)/5 = 5.2
+    Var(Ri) = (0 + 9 + 25 + 16 + 4)/5 = 10.8
+    Cov = (0 + 6 + 15 + 12 + 4)/5 = 7.4
+(b) β = 7.4/5.2 = 1.423      α = 3 − 1.423(2) = 0.154
+(c) ρ = 7.4/√(5.2 × 10.8) = 0.987      R² = ρ² = 0.975
+(d) predicted = 0.154 + 1.423(−1) = −1.269      e₃ = −2 − (−1.269) = −0.731</div>
+    </div></details>
+  </article>
+
+  <article class="prob" data-ch="7">
+    <h3><span class="num">B12</span>Testing residual correlations (Ch 7)<span class="zh">残差相关检验</span></h3>
+    <div class="q"><p>Regressions of stocks A, B and C on the market used T = 25 months. Correlations of the residuals (and with R<sub>M</sub>):</p>
+      <div class="tbl"><table><tr><th></th><th>e<sub>A</sub></th><th>e<sub>B</sub></th><th>e<sub>C</sub></th></tr>
+        <tr><td>e<sub>B</sub></td><td>−0.12</td><td></td><td></td></tr>
+        <tr><td>e<sub>C</sub></td><td>0.47</td><td>0.31</td><td></td></tr>
+        <tr><td>R<sub>M</sub></td><td>0.00</td><td>0.00</td><td>0.00</td></tr></table></div>
+      <ol><li>State the hypotheses and the critical value.</li><li>Which pairs violate the SIM assumption?</li><li>Why are all correlations with R<sub>M</sub> exactly zero?</li><li>Which model, SIM or MM, better describes the covariance of A and C?</li></ol></div>
+    <details class="sol"><summary>Show solution <span class="zh">查看答案</span></summary><div class="sol-body">
+      <div class="formula">(a) H₀: Corr(ei, ej) = 0   vs   Hₐ: Corr(ei, ej) ≠ 0      critical = ±2/√25 = ±0.40
+(b) A–B: −0.12 → fail to reject      B–C: 0.31 → fail to reject      A–C: 0.47 &gt; 0.40 → reject</div>
+      <p>(c) OLS forces residuals to be uncorrelated with the regressor R<sub>M</sub> by construction. (d) For A and C the residuals are significantly correlated, so the Market Model, which keeps Cov(e<sub>A</sub>, e<sub>C</sub>), describes their covariance better; the SIM would set it to zero.</p>
+      <p class="zh">只有 A–C 拒绝原假设，对这一对 MM 更合适；与 RM 的相关为 0 是 OLS 的构造性质。</p>
+    </div></details>
+  </article>
+</section>
+</div>
+
+<script>
+(function () {
+  // [chapter, type, question, chinese, options (first is correct), explanation, explanation zh]
+  const Q = [
+    [1, "Theory", "Under certainty, the economic theory of choice has two steps. They are:", "确定性下选择理论的两个步骤：",
+      ["Identify the investment opportunity set, then specify how to choose among the opportunities (indifference curves)", "Estimate means and variances, then find the efficient frontier", "Choose the tangency portfolio, then borrow or lend", "Find the minimum-variance portfolio, then add the risk-free asset"],
+      "Step 1 finds what is possible (the opportunity set); step 2 uses preferences (utility, indifference curves) to choose.", "先找机会集，再用无差异曲线做选择。"],
+    [1, "Calculation", "Income is $30 in each of two periods and you can borrow and lend at 8%. What is the maximum you can consume today?", "两期收入各 $30，利率 8%，今天最多消费多少？",
+      ["$57.78", "$60.00", "$62.40", "$55.56"], "Max C₀ = 30 + 30/1.08 = 57.78 (borrow the present value of tomorrow’s income).", "今天收入 + 明天收入的现值。"],
+    [1, "Calculation", "Same data: income $30 each period, rate 8%. What is the maximum you can consume tomorrow?", "同上，明天最多消费多少？",
+      ["$62.40", "$64.80", "$60.00", "$57.78"], "Max C₁ = 30(1.08) + 30 = 62.40 (lend all of today’s income).", "今天收入的终值 + 明天收入。"],
+    [1, "Theory", "With borrowing and lending at rate r, the slope of the two-period opportunity set (C₁ on the vertical axis) is:", "两期机会集的斜率是：",
+      ["−(1 + r)", "−r", "−1/(1 + r)", "+(1 + r)"], "Giving up $1 today adds (1 + r) tomorrow, so ΔC₁/ΔC₀ = −(1 + r).", "今天少 1 元，明天多 (1 + r)。"],
+    [1, "Theory", "For an investor who prefers more to less with diminishing marginal rate of substitution, indifference curves are:", "无差异曲线的形状：",
+      ["Downward sloping and convex to the origin", "Upward sloping and concave", "Horizontal lines", "Downward sloping and concave to the origin"], "More is preferred (negative slope) and the MRS diminishes (convex).", "向下倾斜且凸向原点。"],
+    [1, "Calculation", "Job X pays (40 today, 20 next year); Job Y pays (30, 31). Markets are perfect and r = 6%. Which job should be chosen?", "两份工作选哪份？",
+      ["Job Y, because its present value (59.25) is higher", "Job X, because its present value (58.87) is higher", "Job X, because it pays more today", "It depends on the investor’s indifference curves"],
+      "PV(X) = 40 + 20/1.06 = 58.87; PV(Y) = 30 + 31/1.06 = 59.25. With perfect markets the higher PV dominates for every investor.", "市场完美时选现值高的。"],
+    [1, "Theory", "If the borrowing rate is higher than the lending rate, the opportunity set:", "借款利率高于存款利率时，机会集：",
+      ["Is kinked at the income point", "Is a straight line with slope −(1 + r_borrow)", "Shifts out parallel", "Is unaffected"], "Left of the income point you lend (slope −(1 + r_lend)); right of it you borrow (steeper slope −(1 + r_borrow)).", "在收入点处弯折。"],
+
+    [4, "Definition", "Probabilities must:", "概率必须满足：",
+      ["Lie between 0 and 1 inclusive and sum to one", "Be negative when the return is negative", "Be equal across states", "Sum to the expected return"], "Each probability is in [0, 1] and they sum to 1.", "在 0–1 之间且总和为 1。"],
+    [4, "Definition", "A probability distribution is summarized by:", "概率分布用什么来概括？",
+      ["Measures of central tendency and dispersion", "Measures of central tendency only", "Measures of dispersion only", "The correlation coefficient"], "Reward is the mean (central tendency); risk is variance or standard deviation (dispersion).", "集中趋势和离散程度。"],
+    [4, "Definition", "A one-period holding (total) return is (P = price, D = dividend):", "单期持有收益率：",
+      ["(Pₜ − Pₜ₋₁ + Dₜ) / Pₜ₋₁", "(Pₜ + Pₜ₋₁ + Dₜ) / Pₜ₋₁", "(Pₜ − Pₜ₋₁) / Pₜ", "(Pₜ + Dₜ) / Pₜ"], "Capital gain plus dividend, divided by the beginning price.", "资本利得加股利，除以期初价格。"],
+    [4, "Calculation", "A stock bought at $40 pays a $1 dividend and is sold for $43. The holding-period return is:", "持有期收益率：",
+      ["10.00%", "7.50%", "9.30%", "2.50%"], "(43 − 40 + 1)/40 = 10%.", ""],
+    [4, "Calculation", "A stock returned −10% on 2 days, 5% on 6 days and 12% on 4 days. The mean return over the 12 days is:", "12 天的平均收益：",
+      ["4.83%", "2.33%", "5.80%", "3.00%"], "(2(−10) + 6(5) + 4(12))/12 = 58/12 = 4.83%. 2.33% wrongly averages the three values without weights.", "按天数加权，不能直接平均三个数。"],
+    [4, "Calculation", "States have probabilities 0.3, 0.5, 0.2 and returns −4%, 6%, 15%. The expected return is:", "期望收益：",
+      ["4.80%", "5.67%", "6.00%", "4.20%"], ".3(−4) + .5(6) + .2(15) = −1.2 + 3 + 3 = 4.8%.", ""],
+    [4, "Calculation", "Same distribution (probabilities .3, .5, .2; returns −4, 6, 15). The variance is:", "同上，方差：",
+      ["44.76", "6.69", "37.56", "48.20"], ".3(−8.8)² + .5(1.2)² + .2(10.2)² = 23.23 + 0.72 + 20.81 = 44.76. (6.69 is the standard deviation.)", "6.69 是标准差，不是方差。"],
+    [4, "Theory", "The variance of asset 1 is greater than the variance of asset 2. Which asset has the smaller standard deviation?", "哪个标准差更小？",
+      ["Asset 2", "Asset 1", "Asset 1 if it has the smallest covariance with asset 2", "Need more information"], "σ = √σ² is increasing, so the smaller variance has the smaller standard deviation.", ""],
+    [4, "Theory", "A variance must be greater than or equal to zero.", "方差一定 ≥ 0。",
+      ["True", "False", "Uncertain"], "It is an average of squared deviations.", "平方的平均，不可能为负。"],
+    [4, "Theory", "Cov(X, Y) = +2, so X’s performance is a good predictor of Y’s performance.", "协方差为 +2，所以 X 能很好地预测 Y？",
+      ["Uncertain", "True", "False"], "Covariance is scale dependent. You need the correlation to judge the strength of the relationship; it could be very small.", "需要看相关系数，协方差有量纲。"],
+    [4, "Definition", "Covariance is best described as:", "协方差的性质：",
+      ["Linear, scale dependent, with no upper or lower limits", "Linear, scale independent, bounded by ±1", "Nonlinear and scale dependent", "Bounded below by zero"], "Correlation is the scale-free, bounded version.", "相关系数才是无量纲、有界的。"],
+    [4, "Theory", "The correlation between two assets is scale independent.", "相关系数与量纲无关。",
+      ["True", "False", "Uncertain"], "Dividing by σᵢσⱼ removes the units.", ""],
+    [4, "Calculation", "R₁ ~ (10, 25) and R₂ ~ (8, 64), written as (mean, variance). Cov(R₁, R₂) = −12. The correlation is:", "相关系数：",
+      ["−0.30", "−0.0075", "−0.24", "−0.48"], "σ₁ = 5, σ₂ = 8: ρ = −12/(5 × 8) = −0.30. Remember to take square roots of the variances.", "注意先把方差开根号。"],
+    [4, "Calculation", "σ²_A = 16, σ²_B = 36, ρ_AB = 0.25, X_A = 0.6. The portfolio variance is:", "组合方差：",
+      ["14.40", "11.52", "17.28", "3.79"], ".36(16) + .16(36) + 2(.6)(.4)(.25)(4)(6) = 5.76 + 5.76 + 2.88 = 14.40. (11.52 forgets the covariance term.)", "11.52 漏了协方差项。"],
+    [4, "Theory", "The formula σ²_P = Σ xᵢ²σᵢ² (no covariance terms) is valid when:", "只有方差项的公式何时成立？",
+      ["All pairwise covariances are zero, e.g. independent assets", "Assets are perfectly correlated", "Always", "Never"], "Dropping the covariance terms is only correct when they are all zero.", "协方差都为 0 时。"],
+    [4, "Theory", "The formula σ²_P = Σᵢ Σⱼ xᵢxⱼσᵢⱼ, summing over all i and j including i = j:", "双重求和公式（含 i = j）：",
+      ["Is always a valid variance formula", "Ignores individual firm variances", "Understates the variance because it only includes covariances", "Applies only to independent assets"], "When i = j, σᵢᵢ = σᵢ², so the variances are included.", "i = j 时 σᵢᵢ 就是方差。"],
+    [4, "Calculation", "How many unique covariances are needed for the variance of a 25-asset portfolio?", "25 个资产需要多少个协方差？",
+      ["300", "600", "625", "325"], "N(N − 1)/2 = 25 × 24 / 2 = 300.", ""],
+    [4, "Calculation", "Average variance 40, average covariance 9. Variance of an equally weighted portfolio of 20 stocks:", "20 只股票的等权组合方差：",
+      ["10.55", "11.00", "9.45", "2.00"], "(1/20)(40) + (19/20)(9) = 2 + 8.55 = 10.55.", ""],
+    [4, "Theory", "As N → ∞ under naive diversification, portfolio variance approaches:", "N 趋于无穷时，组合方差趋近：",
+      ["The average covariance", "Zero", "The average variance", "Average variance minus average covariance"], "The (1/N) variance term vanishes; the covariance term tends to the average covariance.", "平均协方差。"],
+    [4, "Calculation", "Average variance .009, average covariance .002. What is the minimum number of stocks for a portfolio variance of at most .0025?", "方差不超过 .0025 最少几只？",
+      ["14", "13", "5", "18"], "(.009 − .002)/N + .002 ≤ .0025 → .007/N ≤ .0005 → N ≥ 14.", ""],
+    [4, "Calculation", "E[R_A] = 4% and E[R_B] = 6%. What is the expected value of R_P = .5R_A + .5R_B + 3?", "期望值：",
+      ["8%", "5%", "13%", "6.5%"], "E[.5R_A + .5R_B + 3] = .5(4) + .5(6) + 3 = 8. The expectation of a constant is the constant.", "常数的期望是它本身。"],
+    [4, "Calculation", "R_A ~ (2, 9), R_B ~ (5, 16), R_C ~ (−1, 4). Mean return of an equally weighted portfolio:", "等权组合的均值：",
+      ["2.00%", "9.67%", "3.00%", "2.67%"], "(2 + 5 − 1)/3 = 2. The second number in (mean, variance) is the variance.", "括号第二个数是方差。"],
+    [4, "Theory", "A matrix of 12 stocks has diagonal entries .0039, .0064, .0026, … Is it a correlation matrix or a variance–covariance matrix?", "这是相关矩阵还是方差-协方差矩阵？",
+      ["Variance–covariance matrix", "Correlation matrix", "Cannot tell"], "A correlation matrix has 1s on the diagonal.", "相关矩阵对角线都是 1。"],
+    [4, "Theory", "The diversification benefit of combining two assets is greatest when their correlation is:", "相关系数为多少时分散化效果最好？",
+      ["Lowest (closest to −1)", "Zero", "+1", "Correlation does not matter"], "Lower correlation reduces the covariance term the most.", ""],
+
+    [5, "Definition", "The initial assumptions used to find the investment opportunity set (IOS) for two risky assets are:", "求 IOS 的初始假设：",
+      ["Fully invested, no short sales, no borrowing or lending", "Short sales allowed, fully invested", "Unlimited borrowing and lending at RF", "Investors are risk seeking"], "0 ≤ Xᵢ ≤ 1 and X_A + X_B = 1, with risk-averse investors.", "全额投资、不卖空、不借贷。"],
+    [5, "Calculation", "The IOS is E[R_P] = 4.2 + 0.65σ_P. What is E[R_P] when σ_P = 10?", "σ = 10 时的期望收益：",
+      ["10.70%", "4.85%", "6.50%", "10.20%"], "4.2 + 0.65 × 10 = 10.70.", ""],
+    [5, "Theory", "For the IOS E[R_P] = 4.2 + 0.65σ_P, what is the intercept when σ_P = 14?", "截距是多少？",
+      ["4.2, regardless of the risk", "13.3", "9.1", "It depends on σ_P"], "The intercept is a fixed parameter of the line.", "截距与 σ 无关。"],
+    [5, "Theory", "With ρ = +1 and no short sales, the IOS of two risky assets is:", "ρ = +1 时的 IOS：",
+      ["A straight line between the two assets", "Two straight lines meeting at the vertical axis", "A curve bending to the left", "A single point"], "σ_P is a weighted average of the σ’s, so there is no diversification benefit.", "直线，没有分散化好处。"],
+    [5, "Theory", "With ρ = −1:", "ρ = −1 时：",
+      ["A zero-risk portfolio can be formed", "There is no diversification benefit", "The IOS is a straight line between the two assets", "The MVP is always 100% in the lower-risk asset"], "Choosing X_A = σ_B/(σ_A + σ_B) makes σ_P = 0.", "可以组合出零风险。"],
+    [5, "Calculation", "ρ = −1, σ_A = 12%, σ_B = 4%. What X_A gives a zero-risk portfolio?", "零风险组合中 A 的权重：",
+      ["0.25", "0.75", "0.33", "0.50"], "X_A = σ_B/(σ_A + σ_B) = 4/16 = 0.25.", ""],
+    [5, "Calculation", "ρ = 0, σ_A = 10%, σ_B = 20%. The minimum-variance portfolio puts what fraction in A?", "MVP 中 A 的权重：",
+      ["0.80", "0.67", "0.20", "0.50"], "X_A = σ_B²/(σ_A² + σ_B²) = 400/500 = 0.80.", ""],
+    [5, "Calculation", "σ_A = 15, σ_B = 10, ρ = 0.3. X_A for the MVP is:", "MVP 中 A 的权重：",
+      ["0.234", "0.400", "0.692", "0.766"], "σ_AB = .3(15)(10) = 45. X_A = (100 − 45)/(225 + 100 − 90) = 55/235 = 0.234.", ""],
+    [5, "Theory", "The minimum-risk position changes with the correlation (fully invested, no SS, no B and L).", "最小风险组合随相关系数变化。",
+      ["True", "False", "Uncertain"], "ρ appears in X_A(MVP) = (σ_B² − σ_Aσ_Bρ)/(σ_A² + σ_B² − 2σ_Aσ_Bρ).", "公式中含 ρ。"],
+    [5, "Theory", "The maximum-return position changes with the correlation (fully invested, no SS, no B and L).", "最大收益位置随相关系数变化。",
+      ["False", "True", "Uncertain"], "Without short sales the maximum return is always 100% in the higher-return asset.", "总是全部持有高收益资产。"],
+    [5, "Definition", "The efficient frontier is:", "有效边界是：",
+      ["The subset of the IOS from the minimum-risk portfolio up to the maximum return", "The entire IOS", "From maximum risk to minimum return", "The portion of the IOS below the MVP"], "Only portfolios with the highest return for their risk are efficient.", "从 MVP 到最大收益的部分。"],
+    [5, "Theory", "When short sales are allowed (no risk-free asset), the efficient frontier:", "允许卖空时的有效边界：",
+      ["Extends beyond the higher-return asset without limit", "Ends at the higher-return asset", "Becomes a straight line", "Is the same as without short sales"], "Shorting the lower-return asset funds more of the higher-return one.", "可以无限延伸。"],
+    [5, "Definition", "Which best describes the risk-free asset?", "无风险资产的描述：",
+      ["R_F ~ (R_F, 0) and ρ_i,F = 0 for all i", "R_F ~ (0, 0)", "R_F ~ (R_F, 0) and ρ_i,F = 1 for all i", "R_F ~ (R_F, σ²)"], "Known return, zero variance, so zero covariance and correlation with every risky asset.", "方差为 0，与任何资产相关为 0。"],
+    [5, "Theory", "With unlimited borrowing and lending at R_F, the tangency portfolio is:", "无限借贷时，切点组合是：",
+      ["A risky asset or portfolio", "The risk-free asset", "A combination of the risk-free asset and a risky asset", "Not enough information"], "At the tangency point X_G = 1 and X_F = 0.", "切点处全部是风险资产。"],
+    [5, "Calculation", "R_F = 3%. Portfolio A: (11%, σ 16%). Portfolio B: (9%, σ 10%). Which gives the steeper line from R_F?", "哪条线更陡？",
+      ["B, slope 0.60", "A, slope 0.50", "A, because it has the higher return", "They are equal"], "(11 − 3)/16 = 0.50; (9 − 3)/10 = 0.60.", ""],
+    [5, "Calculation", "R_F = 4%, tangency portfolio T = (12%, σ 20%). To get σ_P = 15%, you hold:", "要得到 σ = 15%：",
+      ["X_T = 0.75, E[R_P] = 10.0%", "X_T = 1.33, E[R_P] = 14.67%", "X_T = 0.75, E[R_P] = 9.0%", "X_T = 0.25, E[R_P] = 6.0%"], "σ_P = X_Tσ_T → X_T = 0.75. E = 0.25(4) + 0.75(12) = 10.", ""],
+    [5, "Theory", "The separation theorem holds when:", "分离定理何时成立？",
+      ["There is unlimited borrowing and lending at the same R_F", "Investors lend at R_F but borrow at a higher R′_F", "There is no risk-free asset", "Short sales are not allowed"], "Only then does every investor hold the same tangency portfolio.", "同一利率无限借贷。"],
+    [5, "Theory", "Investors can lend at R_F but borrow only at R′_F > R_F. The efficient frontier is:", "借贷利率不同时的有效边界：",
+      ["Line from R_F to T₁, the curve from T₁ to T₂, then the line beyond T₂ from R′_F", "A single line from R_F through the tangency portfolio", "Only the curved risky frontier", "A single line from R′_F"], "Two tangency points with a curved segment in between.", "两段直线加中间一段曲线。"],
+    [5, "Theory", "An investor on the segment between R_F and the tangency portfolio T is:", "位于 R_F 与 T 之间的投资者：",
+      ["Lending: part in R_F, part in T", "Borrowing at R_F", "Short selling T", "Fully invested in T"], "0 < X_T < 1 means the rest is lent at R_F.", "部分贷出，部分投 T。"],
+    [5, "Calculation", "You borrow at 7% to put 120% of your wealth in T₂ = (14%, σ 20%). E[R_P] and σ_P are:", "借款投资 120% 于 T₂：",
+      ["15.4%, 24%", "16.8%, 24%", "15.4%, 20%", "18.2%, 24%"], "E = 1.2(14) − 0.2(7) = 15.4; σ = 1.2(20) = 24. Don’t forget the borrowing cost.", "别忘了扣借款成本。"],
+
+    [7, "Definition", "The single-index model (SIM) is:", "单指数模型：",
+      ["Rᵢ = αᵢ + βᵢR_M + eᵢ with Cov(eᵢ, eⱼ) = 0 for i ≠ j", "Rᵢ = αᵢ + βᵢR_M + eᵢ with Cov(eᵢ, eⱼ) ≠ 0", "Rᵢ = βᵢR_M only", "Rᵢ = αᵢ + eᵢ"], "The defining assumption is uncorrelated residuals across firms.", "关键是残差互不相关。"],
+    [7, "Theory", "The key difference between the SIM and the Market Model (MM) is:", "SIM 与 MM 的区别：",
+      ["The MM allows Cov(eᵢ, eⱼ) ≠ 0", "The MM allows Cov(R_M, eᵢ) ≠ 0", "The SIM has no alpha", "The MM has no residual"], "Both assume Cov(R_M, eᵢ) = 0; only the SIM imposes Cov(eᵢ, eⱼ) = 0.", ""],
+    [7, "Calculation", "How many estimates does the SIM need for N = 100 stocks?", "N = 100 时 SIM 需要多少个估计？",
+      ["302", "5,150", "300", "4,950"], "3N + 2: N alphas, N betas, N residual variances, plus E[R_M] and V[R_M].", "3N + 2。"],
+    [7, "Calculation", "Full Markowitz analysis for N = 100 stocks needs how many means, variances and covariances in total?", "完整马科维茨需要多少个输入？",
+      ["5,150", "302", "4,950", "10,000"], "100 means + 100 variances + 100(99)/2 = 4,950 covariances = 5,150.", ""],
+    [7, "Theory", "In the SIM with N assets, how many terms must be calculated for the macro proxy R_M?", "R_M 需要估计几个量？",
+      ["2", "0", "1", "N"], "E[R_M] and V[R_M].", "均值和方差。"],
+    [7, "Calculation", "α = 1.2, β = 0.8, E[R_M] = 9%. Under the SIM, E[Rᵢ] is:", "期望收益：",
+      ["8.40%", "7.20%", "9.00%", "10.00%"], "1.2 + 0.8(9) = 8.4.", ""],
+    [7, "Calculation", "β = 1.3, σ²_M = 25, σ²_e = 16. Under the SIM, V[Rᵢ] is:", "方差：",
+      ["58.25", "48.50", "42.25", "32.50"], "β²σ²_M + σ²_e = 1.69(25) + 16 = 58.25. (48.50 forgets to square β.)", "β 要平方。"],
+    [7, "Calculation", "βᵢ = 1.2, βⱼ = 0.7, σ²_M = 20. Under the SIM, Cov(Rᵢ, Rⱼ) is:", "协方差：",
+      ["16.80", "0.84", "24.00", "19.20"], "βᵢβⱼσ²_M = 1.2(0.7)(20) = 16.8.", ""],
+    [7, "Calculation", "Weights 0.5, 0.3, 0.2 in stocks with betas 1.4, 0.9, 0.5. The portfolio beta is:", "组合 β：",
+      ["1.07", "0.93", "2.80", "1.00"], "0.7 + 0.27 + 0.10 = 1.07.", ""],
+    [7, "Theory", "R = a + bX + e, with X ~ (E(X), V(X)) and e ~ (0, V(e)). E[R] is:", "E[R] 等于：",
+      ["a + bE[X], because E[e] = 0", "a + bE[X] + e", "bE[X]", "a + b"], "E is linear and the residual has mean zero by assumption.", ""],
+    [7, "Calculation", "Cov(Rᵢ, R_M) = 18 and Var(R_M) = 15. Beta is:", "β：",
+      ["1.20", "0.83", "270", "3.00"], "β = Cov/Var(R_M) = 18/15 = 1.2.", ""],
+    [7, "Calculation", "β̂ = 0.62 with standard error 0.40. Test H₀: β = 0 at ±1.96.", "检验 β = 0：",
+      ["t = 1.55, fail to reject H₀", "t = 1.55, reject H₀", "t = 0.65, fail to reject H₀", "t = 2.48, reject H₀"], "t = 0.62/0.40 = 1.55, inside ±1.96: no significant relationship with the market.", "t 在 ±1.96 内，不拒绝。"],
+    [7, "Calculation", "β̂ = 1.45 with standard error 0.18. Test H₀: β = 1.", "检验 β = 1：",
+      ["t = 2.50, reject: beta differs from 1", "t = 8.06, reject", "t = 2.50, fail to reject", "t = 0.45, fail to reject"], "t = (1.45 − 1)/0.18 = 2.50 > 1.96. Subtract the hypothesised value, not zero.", "要减去原假设的值 1。"],
+    [7, "Calculation", "α̂ = 0.85 with standard error 0.52. Test H₀: α = 0.", "检验 α = 0：",
+      ["t = 1.63, fail to reject: alpha is not significantly different from 0", "t = 1.63, reject: alpha is positive", "t = 0.44, fail to reject", "t = 2.10, reject"], "0.85/0.52 = 1.63, inside ±1.96.", ""],
+    [7, "Calculation", "With T = 36 months, the correlation between two firms’ residuals is −0.21. Using the rule of thumb:", "T = 36，残差相关 −0.21：",
+      ["Critical ±0.333: fail to reject zero correlation, consistent with the SIM", "Critical ±0.333: reject, use the MM", "Critical ±0.056: reject", "Critical ±1.96: fail to reject"], "±2/√36 = ±0.333; |−0.21| < 0.333.", ""],
+    [7, "Theory", "A regression of Rᵢ on R_M has R² = 0.46. This means:", "R² = 0.46 的含义：",
+      ["46% of the variance of Rᵢ is explained by the market; 54% is firm-specific", "Beta equals 0.46", "There is a 46% chance the model is correct", "Alpha is significant"], "R² = β²σ²_M / σ²ᵢ, the systematic share of total variance.", "46% 为系统性风险。"],
+    [7, "Calculation", "The correlation between Rᵢ and R_M is 0.7. In the simple regression, R² is:", "R²：",
+      ["0.49", "0.70", "0.84", "0.30"], "In a simple regression R² = ρ².", ""],
+    [7, "Calculation", "α̂ = 0.5, β̂ = 1.2. In a month with R_M = 4%, the stock returned 7%. The residual is:", "残差：",
+      ["1.70%", "−1.70%", "5.30%", "2.20%"], "Predicted = 0.5 + 1.2(4) = 5.3; e = 7 − 5.3 = 1.7.", "实际 − 预测。"],
+    [7, "Theory", "In an OLS regression, the correlation between the residuals and R_M is:", "残差与 R_M 的相关：",
+      ["Zero by construction", "Equal to R²", "Equal to β", "±2/√T"], "OLS makes residuals orthogonal to the regressor.", ""],
+    [7, "Theory", "Using the same data, the SIM and the historical approach give the same individual means and variances but different covariances because:", "为什么协方差不同？",
+      ["The SIM assumes Cov(eᵢ, eⱼ) = 0, but the sample residuals are correlated", "The SIM uses different data", "Of rounding errors", "The SIM ignores alpha"], "Historical covariance includes Cov(eᵢ, eⱼ); the SIM sets it to zero.", ""],
+    [7, "Theory", "The share of a stock’s total variance that is systematic is:", "系统性风险占比：",
+      ["β²σ²_M / σ²ᵢ", "σ²_e / σ²ᵢ", "β / σᵢ", "α / β"], "This equals R² in the regression.", "就是 R²。"]
+  ];
+
+  // stable shuffle so the correct answer is not always first
+  function rng(seed) { return () => (seed = (seed * 9301 + 49297) % 233280) / 233280; }
+  const items = Q.map((q, i) => {
+    const r = rng(i * 7919 + 17), order = q[4].map((_, k) => k);
+    for (let k = order.length - 1; k > 0; k--) { const j = Math.floor(r() * (k + 1)); [order[k], order[j]] = [order[j], order[k]]; }
+    return { ch: q[0], type: q[1], q: q[2], zh: q[3], opts: order.map((k) => q[4][k]), ans: order.indexOf(0), exp: q[5], expZh: q[6] };
+  });
+
+  const KEY = "comm467-practice-answers";
+  let picked = {};
+  try { picked = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { picked = {}; }
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(picked)); } catch (e) {} };
+
+  const list = document.getElementById("mcList");
+  const letters = "ABCDE";
+  function render() {
+    list.replaceChildren();
+    items.forEach((it, i) => {
+      const card = document.createElement("div");
+      card.className = "mc"; card.dataset.ch = it.ch; card.id = "q" + (i + 1);
+      const top = document.createElement("div"); top.className = "mc-top";
+      top.innerHTML = `<span class="num">A${i + 1}</span><span class="tag">Ch ${it.ch} · ${it.type}</span>`;
+      const qt = document.createElement("p"); qt.className = "qtext"; qt.textContent = it.q;
+      const qz = document.createElement("p"); qz.className = "zh qzh"; qz.textContent = it.zh;
+      const opts = document.createElement("div"); opts.className = "opts";
+      it.opts.forEach((o, k) => {
+        const b = document.createElement("button"); b.type = "button"; b.className = "opt";
+        b.innerHTML = `<span class="k">${letters[k]}</span><span></span>`; b.lastChild.textContent = o;
+        b.addEventListener("click", () => { if (picked[i] !== undefined) return; picked[i] = k; save(); paint(i, card); score(); });
+        opts.appendChild(b);
+      });
+      const exp = document.createElement("div"); exp.className = "exp"; exp.hidden = true;
+      card.append(top, qt);
+      if (it.zh) card.append(qz);
+      card.append(opts, exp);
+      list.appendChild(card);
+      if (picked[i] !== undefined) paint(i, card);
+    });
+  }
+  function paint(i, card) {
+    const it = items[i], k = picked[i], btns = card.querySelectorAll(".opt"), exp = card.querySelector(".exp");
+    btns.forEach((b, j) => { b.disabled = true; if (j === it.ans) b.classList.add("right"); else if (j === k) b.classList.add("wrong"); });
+    const ok = k === it.ans;
+    exp.replaceChildren();
+    const v = document.createElement("div"); v.className = "verdict " + (ok ? "ok" : "no");
+    v.textContent = ok ? "Correct" : `Incorrect. Answer: ${letters[it.ans]}`;
+    const e = document.createElement("div"); e.textContent = it.exp;
+    exp.append(v, e);
+    if (it.expZh) { const z = document.createElement("div"); z.className = "zh"; z.textContent = it.expZh; exp.append(z); }
+    exp.hidden = false;
+  }
+  function score() {
+    const done = Object.keys(picked).map(Number), right = done.filter((i) => picked[i] === items[i].ans).length;
+    document.getElementById("score").innerHTML = `Score <b>${right}</b> / ${done.length} answered · ${items.length} questions`;
+  }
+  render(); score();
+
+  document.getElementById("reset").addEventListener("click", () => { picked = {}; save(); render(); score(); applyFilter(); });
+
+  let filter = "all";
+  function applyFilter() {
+    document.querySelectorAll(".mc, article.prob").forEach((el) => { el.hidden = filter !== "all" && el.dataset.ch !== filter; });
+  }
+  document.querySelectorAll(".chip").forEach((c) => c.addEventListener("click", () => {
+    filter = c.dataset.ch;
+    document.querySelectorAll(".chip").forEach((x) => x.setAttribute("aria-pressed", String(x === c)));
+    applyFilter();
+  }));
+
+  // 80-minute exam timer
+  let left = 80 * 60, tick = null;
+  const tEl = document.getElementById("timer"), tBtn = document.getElementById("timerBtn"), tBox = document.getElementById("timerBox");
+  const show = () => { tEl.textContent = `${String(Math.floor(left / 60)).padStart(2, "0")}:${String(left % 60).padStart(2, "0")}`; tBox.classList.toggle("low", left <= 300); };
+  tBtn.addEventListener("click", () => {
+    if (tick) { clearInterval(tick); tick = null; tBtn.textContent = "Resume"; return; }
+    if (left <= 0) left = 80 * 60;
+    tBtn.textContent = "Pause";
+    tick = setInterval(() => { left--; show(); if (left <= 0) { clearInterval(tick); tick = null; tBtn.textContent = "Restart"; tEl.textContent = "Time’s up"; } }, 1000);
+  });
+  show();
+})();
+</script>
