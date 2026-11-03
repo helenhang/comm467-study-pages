@@ -1,0 +1,1609 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+/* Language toggle: "both" shows the small Chinese lines, "en" hides them. Shared across pages via localStorage. */
+(function () {
+  var lang = "both";
+  try { lang = localStorage.getItem("comm467-lang") || "both"; } catch (e) {}
+  document.documentElement.dataset.lang = lang;
+  document.addEventListener("DOMContentLoaded", function () {
+    var btns = document.querySelectorAll(".lang button");
+    function sync() { btns.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.set === document.documentElement.dataset.lang)); }); }
+    btns.forEach(function (b) {
+      b.addEventListener("click", function () {
+        document.documentElement.dataset.lang = b.dataset.set;
+        try { localStorage.setItem("comm467-lang", b.dataset.set); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
+<title>Elton & Gruber 习题解答 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,650&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: sticky chapter rail on the left, problem sheets on the right; answers fold under each question like a workbook key. English leads, Chinese follows in small grey type. */
+:root {
+  --bg: #f4f6f9;
+  --surface: #ffffff;
+  --ink: #18202d;
+  --muted: #586274;
+  --line: #dbe0e8;
+  --accent: #1d5ca8;
+  --accent-soft: #e5eef9;
+  --eff: #c4352b;
+  --plot-muted: #9aa4b4;
+  --font-display: "Source Serif 4", "Songti SC", Georgia, serif;
+  --font-body: "Public Sans", "PingFang SC", "Noto Sans SC", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11151c; --surface: #19202a; --ink: #e5e9f0; --muted: #9ba5b6; --line: #2a323e;
+    --accent: #82b2f0; --accent-soft: #1d2a3c; --eff: #f2786c; --plot-muted: #66707f; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11151c; --surface: #19202a; --ink: #e5e9f0; --muted: #9ba5b6; --line: #2a323e;
+  --accent: #82b2f0; --accent-soft: #1d2a3c; --eff: #f2786c; --plot-muted: #66707f; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.65;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 64px;
+}
+.wrap { max-width: 1120px; margin: 0 auto; }
+header.top { padding-block: 40px 28px; border-bottom: 1px solid var(--line); margin-bottom: 28px; display: grid; gap: 10px; }
+.eyebrow { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+h1 { font-family: var(--font-display); font-weight: 650; font-size: clamp(26px, 4vw, 38px); line-height: 1.15; margin: 0; text-wrap: balance; }
+.lede { color: var(--muted); max-width: 68ch; margin: 0; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 6px; }
+button { font: inherit; cursor: pointer; }
+.btn { border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 6px; padding: 6px 12px; font-size: 13px; font-weight: 500; }
+.btn:hover { border-color: var(--accent); color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.note { font-size: 13px; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; max-width: 80ch; display: grid; gap: 4px; }
+.note p { margin: 0; }
+
+/* bilingual: Chinese sits under the English in smaller grey type */
+.zh { font-family: var(--font-body); font-size: 13px; color: var(--muted); line-height: 1.6; font-weight: 400; letter-spacing: 0; text-transform: none; }
+h1 .zh, h2 .zh, h3 .zh, h4 .zh { display: block; margin-top: 2px; }
+h1 .zh { font-size: 16px; }
+li .zh { display: block; }
+
+.layout { display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 40px; align-items: start; }
+nav.rail { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 16px); display: grid; gap: 18px; font-size: 13px; max-height: calc(100vh - 32px); overflow-y: auto; }
+nav.rail h4 { margin: 0 0 6px; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+nav.rail ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+nav.rail a { color: var(--ink); text-decoration: none; display: block; padding: 3px 8px; border-radius: 4px; }
+nav.rail a:hover { background: var(--accent-soft); color: var(--accent); }
+nav.rail a span { font-family: var(--font-mono); color: var(--muted); margin-right: 6px; font-size: 12px; }
+
+main { display: grid; gap: 56px; min-width: 0; }
+section.chapter { display: grid; gap: 22px; min-width: 0; }
+.ch-head { display: grid; gap: 4px; border-bottom: 2px solid var(--ink); padding-bottom: 10px; }
+.ch-head h2 { font-family: var(--font-display); font-size: 26px; font-weight: 650; margin: 0; line-height: 1.2; }
+.ch-head p { margin: 0; color: var(--muted); font-size: 14px; }
+
+article.prob { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 20px 22px; display: grid; gap: 14px; min-width: 0; scroll-margin-top: 16px; }
+.prob-head { display: flex; align-items: baseline; gap: 12px; }
+.prob-num { font-family: var(--font-mono); font-weight: 500; font-size: 13px; color: var(--accent); background: var(--accent-soft); border-radius: 4px; padding: 1px 8px; flex: none; }
+.prob-head h3 { margin: 0; font-family: var(--font-display); font-size: 18px; font-weight: 650; line-height: 1.3; }
+.q { font-family: var(--font-display); font-size: 15.5px; line-height: 1.6; display: grid; gap: 8px; min-width: 0; }
+.q p, .ans p { margin: 0; }
+.q ol, .ans ol, .ans ul { margin: 0; padding-left: 22px; display: grid; gap: 3px; }
+.q ol { list-style: upper-alpha; }
+.ans ul { gap: 8px; }
+
+details.ans { border-top: 1px dashed var(--line); padding-top: 12px; }
+details.ans > summary { cursor: pointer; font-weight: 600; color: var(--accent); font-size: 14px; list-style: none; display: inline-flex; gap: 6px; align-items: center; }
+details.ans > summary::-webkit-details-marker { display: none; }
+details.ans > summary::before { content: "▸"; transition: transform .15s; display: inline-block; }
+details.ans[open] > summary::before { transform: rotate(90deg); }
+details.ans > summary .zh { font-weight: 400; }
+.ans-body { display: grid; gap: 14px; margin-top: 14px; min-width: 0; }
+.part { display: grid; gap: 6px; min-width: 0; }
+.part > h5 { margin: 0; font-size: 13px; font-weight: 600; color: var(--ink); letter-spacing: .02em; }
+.part > h5 b { font-family: var(--font-mono); color: var(--accent); font-weight: 500; margin-right: 6px; }
+.part > h5 .zh { font-size: 12px; margin-left: 6px; }
+.formula { font-family: var(--font-mono); font-size: 13px; background: var(--bg); border-radius: 6px; padding: 8px 12px; overflow-x: auto; white-space: pre; line-height: 1.7; }
+.result { font-weight: 600; }
+.key { display: inline-block; font-family: var(--font-mono); font-size: 13px; background: var(--accent-soft); color: var(--accent); border-radius: 4px; padding: 0 6px; }
+.callout { border-left: 3px solid var(--eff); padding: 4px 0 4px 12px; font-size: 14px; display: grid; gap: 2px; }
+.small { font-size: 13px; color: var(--muted); }
+
+.tbl { overflow-x: auto; max-width: 100%; }
+table { border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; min-width: 100%; }
+th, td { padding: 4px 10px; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th { font-weight: 600; color: var(--muted); font-family: var(--font-body); font-size: 12px; }
+th:first-child, td:first-child { text-align: left; }
+td { font-family: var(--font-mono); }
+.q table td { font-family: var(--font-display); font-size: 14px; }
+tr.hl td { background: var(--accent-soft); }
+
+.charts { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+.chart { border: 1px solid var(--line); border-radius: 8px; padding: 8px; display: grid; gap: 4px; min-width: 0; }
+.chart .cap { font-size: 12px; color: var(--muted); padding: 0 4px; }
+.chart .cap .zh { font-size: 12px; display: block; }
+.chart svg { width: 100%; height: auto; display: block; }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12px; color: var(--muted); }
+.legend i { display: inline-block; width: 18px; height: 3px; vertical-align: middle; margin-right: 6px; border-radius: 2px; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.seg button { border: 0; background: var(--surface); color: var(--muted); padding: 5px 12px; font-size: 13px; }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--surface); }
+
+.notes { display: grid; gap: 12px; min-width: 0; }
+.notes > h3 { margin: 0; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.notes > h3 .zh { display: inline; margin-left: 6px; font-size: 12px; }
+.concept { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px 20px; display: grid; gap: 8px; min-width: 0; scroll-margin-top: 16px; }
+.concept h4 { margin: 0; font-family: var(--font-display); font-size: 17px; font-weight: 650; line-height: 1.3; }
+.concept h4 .pg { margin-left: 8px; vertical-align: 2px; }
+.concept p { margin: 0; max-width: 72ch; }
+.pg { font-family: var(--font-mono); font-size: 12px; font-weight: 400; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 0 6px; white-space: nowrap; }
+.refs { display: grid; gap: 4px; font-size: 13px; }
+.refs div { display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: baseline; }
+.refs .lbl { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 600; min-width: 64px; }
+.refs a { color: var(--accent); text-decoration: none; }
+.refs a:hover { text-decoration: underline; }
+.refs .src { color: var(--muted); font-size: 12px; }
+
+@media (max-width: 820px) {
+  .layout { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  nav.rail { position: static; max-height: none; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  nav.rail a { padding: 2px 4px; }
+  article.prob { padding: 16px; }
+}
+@media (prefers-reduced-motion: reduce) { details.ans > summary::before { transition: none; } }
+
+/* language toggle in the header */
+.topline { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; }
+.lang { display: inline-flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: var(--surface); }
+.lang button { font: inherit; font-size: 12px; font-weight: 500; border: 0; background: transparent; color: var(--muted); padding: 4px 10px; cursor: pointer; }
+.lang button + button { border-left: 1px solid var(--line); }
+.lang button[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent); }
+:root[data-lang="en"] .zh { display: none !important; }
+a.btn { text-decoration: none; display: inline-block; }
+</style>
+
+<div class="wrap">
+<header class="top">
+  <div class="topline">
+    <div class="eyebrow">COMM 467 · Modern Portfolio Theory and Investment Analysis, 9th ed. · Part 2</div>
+    <div class="lang" role="group" aria-label="Language"><button type="button" data-set="both">EN + 中文</button><button type="button" data-set="en">English</button></div>
+  </div>
+  <h1>Problem Solutions: Chapters 8 to 28<span class="zh">第 8–28 章课后习题解答与笔记</span></h1>
+  <p class="lede">The rest of the term after the midterm: multi-index models, choosing among portfolios, the CAPM and its variants, empirical tests, behavioral finance, and evaluating performance and security analysis. Chapters without end-of-chapter problems (20 and 28) have key concepts only.</p>
+  <p class="zh">期中之后的内容：多指数模型、组合选择、CAPM 及其变形、实证检验、行为金融、业绩评估与证券分析评估。第 20、28 章书上没有课后题，只有要点。</p>
+  <div class="note">
+    <p>These are self-worked solutions following the book’s methods, <b>not the official solutions manual</b>. Chapters 1, 4, 5 and 7 (including Blume and Vasicek beta adjustment) are in <a href="mpt-solutions.html">Part 1</a>. The CSR / socially responsible investing topic uses the professor’s slides, not the textbook, so it is not covered here.</p>
+    <p class="zh">答案按书中方法自行计算，不是官方答案。第 1、4、5、7 章在第一部分。CSR / 社会责任投资用的是老师自己的课件，本页不包含。</p>
+  </div>
+  <div class="toolbar">
+    <button class="btn" id="openAll" type="button">Expand all answers · 展开全部</button>
+    <button class="btn" id="closeAll" type="button">Collapse all · 收起全部</button>
+    <a class="btn" href="mpt-solutions.html">← Part 1: Ch 1, 4, 5, 7</a>
+  </div>
+</header>
+
+<div class="layout">
+<nav class="rail" aria-label="Contents">
+  <div><h4>Ch 8 Multi-index models</h4><ul>
+    <li><a href="#ch8-notes"><span>★</span>Key concepts</a></li>
+    <li><a href="#c8-1"><span>8.1</span>Constant correlation β</a></li>
+    <li><a href="#c8-2"><span>8.2</span>Orthogonal indexes</a></li>
+    <li><a href="#c8-3"><span>8.3</span>Residual cov = K</a></li>
+    <li><a href="#c8-4"><span>8.4</span>Three-index formulas</a></li>
+    <li><a href="#c8-5"><span>8.5</span>Two-index numbers</a></li>
+    <li><a href="#c8-6"><span>8.6</span>Industry A, B</a></li>
+    <li><a href="#c8-7"><span>8.7</span>Industry B, C</a></li>
+    <li><a href="#c8-8"><span>8.8</span>Orthogonalize</a></li>
+  </ul></div>
+  <div><h4>Ch 11 Choosing a portfolio</h4><ul>
+    <li><a href="#ch11-notes"><span>★</span>Key concepts</a></li>
+    <li><a href="#c11-1"><span>11.1</span>W − ½W²</a></li>
+    <li><a href="#c11-2"><span>11.2</span>−W^−½</a></li>
+    <li><a href="#c11-3"><span>11.3</span>W − 0.04W²</a></li>
+    <li><a href="#c11-4"><span>11.4</span>Indifference probs</a></li>
+    <li><a href="#c11-5"><span>11.5</span>W − 0.05W²</a></li>
+    <li><a href="#c11-6"><span>11.6</span>Indifference outcome</a></li>
+    <li><a href="#c11-7"><span>11.7</span>Roy</a></li>
+    <li><a href="#c11-8"><span>11.8</span>Kataoka</a></li>
+    <li><a href="#c11-9"><span>11.9</span>Telser</a></li>
+    <li><a href="#c11-10"><span>11.10</span>Geometric mean</a></li>
+    <li><a href="#c11-11"><span>11.11</span>Roy, RL = 3%</a></li>
+    <li><a href="#c11-12"><span>11.12</span>Geometric mean</a></li>
+  </ul></div>
+  <div><h4>Ch 13 Standard CAPM</h4><ul>
+    <li><a href="#ch13-notes"><span>★</span>Key concepts</a></li>
+    <li><a href="#c13-1"><span>13.1</span>Derive the SML</a></li>
+    <li><a href="#c13-2"><span>13.2</span>Good purchase</a></li>
+    <li><a href="#c13-3"><span>13.3</span>Fund performance</a></li>
+    <li><a href="#c13-4"><span>13.4</span>RF and premium</a></li>
+    <li><a href="#c13-5"><span>13.5</span>Price form</a></li>
+    <li><a href="#c13-6"><span>13.6</span>No short sales</a></li>
+    <li><a href="#c13-7"><span>13.7</span>Arbitrage</a></li>
+    <li><a href="#c13-8"><span>13.8</span>RM and RF</a></li>
+    <li><a href="#c13-9"><span>13.9</span>Required returns</a></li>
+  </ul></div>
+  <div><h4>Ch 14 Nonstandard CAPM</h4><ul>
+    <li><a href="#ch14-notes"><span>★</span>Key concepts</a></li>
+    <li><a href="#c14-1"><span>14.1</span>Zero-beta model</a></li>
+    <li><a href="#c14-2"><span>14.2</span>Zero-beta price form</a></li>
+    <li><a href="#c14-3"><span>14.3</span>Posttax RF</a></li>
+    <li><a href="#c14-4"><span>14.4</span>Draw the frontier</a></li>
+    <li><a href="#c14-5"><span>14.5</span>Tax arbitrage</a></li>
+    <li><a href="#c14-6"><span>14.6</span>Interest-rate factor</a></li>
+    <li><a href="#c14-7"><span>14.7</span>Lending only</a></li>
+    <li><a href="#c14-8"><span>14.8</span>Two-security swap</a></li>
+    <li><a href="#c14-9"><span>14.9</span>Leaving out bonds</a></li>
+  </ul></div>
+  <div><h4>Ch 15 Empirical tests</h4><ul>
+    <li><a href="#ch15-notes"><span>★</span>Key concepts</a></li>
+    <li><a href="#c15-1"><span>15.1</span>High-beta last year</a></li>
+    <li><a href="#c15-2"><span>15.2</span>Alcoholism theory</a></li>
+    <li><a href="#c15-3"><span>15.3</span>Inefficient market</a></li>
+    <li><a href="#c15-4"><span>15.4</span>Evaluate managers</a></li>
+    <li><a href="#c15-5"><span>15.5</span>Posttax vs S–L</a></li>
+  </ul></div>
+  <div><h4>Ch 20 Behavioral finance</h4><ul>
+    <li><a href="#ch20-notes"><span>★</span>Key concepts</a></li>
+  </ul></div>
+  <div><h4>Ch 26 Performance</h4><ul>
+    <li><a href="#ch26-notes"><span>★</span>Key concepts</a></li>
+    <li><a href="#c26-1"><span>26.1</span>Sharpe</a></li>
+    <li><a href="#c26-2"><span>26.2</span>Treynor</a></li>
+    <li><a href="#c26-3"><span>26.3</span>Differential (σ)</a></li>
+    <li><a href="#c26-4"><span>26.4</span>Differential (β)</a></li>
+    <li><a href="#c26-5"><span>26.5</span>Zero-beta</a></li>
+    <li><a href="#c26-6"><span>26.6</span>Reverse ranking</a></li>
+  </ul></div>
+  <div><h4>Ch 27 Security analysis</h4><ul>
+    <li><a href="#ch27-notes"><span>★</span>Key concepts</a></li>
+    <li><a href="#c27-1"><span>27.1</span>Forecast errors</a></li>
+  </ul></div>
+  <div><h4>Ch 28 Management revisited</h4><ul>
+    <li><a href="#ch28-notes"><span>★</span>Key concepts</a></li>
+  </ul></div>
+</nav>
+
+<main>
+<!-- ======================= CHAPTER 8 ======================= -->
+<section class="chapter" id="ch8">
+  <div class="ch-head">
+    <div class="eyebrow">Chapter 8 · pp. 172–173</div>
+    <h2>The Correlation Structure of Security Returns: Multi-index Models and Grouping Techniques<span class="zh">证券收益的相关结构：多指数模型与分组方法</span></h2>
+    <p>Extending the single-index model with more indexes (industry, sector, macro factors) or replacing it with simple averaging models.</p>
+  </div>
+  <div class="notes" id="ch8-notes">
+    <h3>Key concepts<span class="zh">本章要点</span></h3>
+    <div class="concept">
+      <h4>General multi-index model<span class="pg">p.156–159</span><span class="zh">一般多指数模型</span></h4>
+      <p>Returns depend on several indexes: R<sub>i</sub> = a<sub>i</sub> + b<sub>i1</sub>I<sub>1</sub> + … + b<sub>iL</sub>I<sub>L</sub> + c<sub>i</sub>. The model is easiest to use when the indexes are made <b>orthogonal</b> (uncorrelated with each other) and the residuals c<sub>i</sub> are uncorrelated across stocks. Then every mean, variance and covariance needs only the index statistics and each stock’s b’s.</p>
+      <p class="zh">收益由多个指数决定。把指数正交化（彼此不相关）、残差之间不相关后，均值、方差、协方差都只需要指数的统计量和各股票的 b 系数。</p>
+      <div class="formula">R̄ᵢ  = aᵢ + Σₖ bᵢₖ Īₖ
+σᵢ²  = Σₖ bᵢₖ² σ²(Iₖ) + σ²(cᵢ)
+σᵢⱼ  = Σₖ bᵢₖ bⱼₖ σ²(Iₖ)          (indexes orthogonal, cov(cᵢ, cⱼ) = 0)</div>
+      <div class="refs">
+        <div><span class="lbl">Videos</span><a href="https://www.youtube.com/watch?v=DNbp1a-YQgY" target="_blank" rel="noopener">Portfolio Risk and Return: Single Index and Multi Index Model</a><span class="src">JD's Guidance</span><a href="https://www.youtube.com/watch?v=SGL5FhV5IUQ" target="_blank" rel="noopener">Using Multifactor Models</a><span class="src">AnalystPrep (CFA L2)</span></div>
+        <div><span class="lbl">Problems</span><a href="#c8-3">8.3</a><a href="#c8-4">8.4</a><a href="#c8-5">8.5</a></div>
+      </div>
+    </div>
+    <div class="concept">
+      <h4>Orthogonalizing correlated indexes<span class="pg">p.169–170 (App. A)</span><span class="zh">把相关的指数正交化</span></h4>
+      <p>If two indexes are correlated, regress the second on the first: I₂* = γ₀ + γ₁I₁ + d. The residual d = I₂* − (γ₀ + γ₁I₁) is uncorrelated with I₁ by construction and becomes the new second index. Substitute back to get new coefficients. With three or more indexes, repeat: regress each new index on all the earlier (already orthogonal) ones.</p>
+      <p class="zh">用第二个指数对第一个回归，残差 d 与 I₁ 不相关，作为新的第二个指数，再代回原式得到新系数。指数更多时依次重复。</p>
+      <div class="formula">Rᵢ = aᵢ* + bᵢ₁*I₁ + bᵢ₂*I₂* + cᵢ   and   I₂* = γ₀ + γ₁I₁ + I₂
+⇒ Rᵢ = (aᵢ* + bᵢ₂*γ₀) + (bᵢ₁* + bᵢ₂*γ₁)·I₁ + bᵢ₂*·I₂ + cᵢ</div>
+      <div class="refs">
+        <div><span class="lbl">Problems</span><a href="#c8-2">8.2</a><a href="#c8-8">8.8</a></div>
+      </div>
+    </div>
+    <div class="concept">
+      <h4>Industry index models<span class="pg">p.159–162</span><span class="zh">行业指数模型</span></h4>
+      <p>A special two-index model: a market index plus one index for the stock’s own industry, with industry indexes uncorrelated with the market and with each other. Two stocks in the <b>same</b> industry are linked through both the market and their industry index; stocks in <b>different</b> industries are linked only through the market.</p>
+      <p class="zh">市场指数加上各自行业的指数。同一行业的股票通过市场和行业两条渠道相关；不同行业的只通过市场相关。</p>
+      <div class="formula">Same industry j:       σᵢₖ = bᵢₘ bₖₘ σₘ² + bᵢⱼ bₖⱼ σ²(Iⱼ)
+Different industries:  σᵢₖ = bᵢₘ bₖₘ σₘ²</div>
+      <div class="refs">
+        <div><span class="lbl">Problems</span><a href="#c8-6">8.6</a><a href="#c8-7">8.7</a></div>
+      </div>
+    </div>
+    <div class="concept">
+      <h4>Average correlation, mixed and fundamental models<span class="pg">p.162–169</span><span class="zh">平均相关模型、混合模型与基本面多因子模型</span></h4>
+      <p><b>Average (constant) correlation models</b> set every pairwise correlation equal to the historical average (overall, or one average per pair of industries). <b>Mixed models</b> keep the single-index model and model the leftover “extra-market covariance” separately. <b>Fundamental multi-index models</b> (e.g. BARRA-style) use firm characteristics and macro factors as indexes. The book’s main finding: complex models fit past correlations better, but simple models (single-index, overall mean correlation) often forecast future correlations as well or better, because the extra parameters add noise.</p>
+      <p class="zh">平均相关模型：所有相关系数取历史平均。混合模型：单指数模型加上额外的协方差结构。基本面模型：用公司特征和宏观因子作指数。书的结论：复杂模型拟合历史更好，但预测未来时简单模型往往不输，因为多出来的参数带来噪声。</p>
+      <div class="refs">
+        <div><span class="lbl">Videos</span><a href="https://www.youtube.com/watch?v=zXOjEc8t9LI" target="_blank" rel="noopener">CAPM, Beta, Alpha, and Multifactor Asset Pricing</a><span class="src">Dr. Dicle Explains Finance</span></div>
+        <div><span class="lbl">Problems</span><a href="#c8-1">8.1</a></div>
+      </div>
+    </div>
+  </div>
+
+  <article class="prob" id="c8-1">
+    <div class="prob-head"><span class="prob-num">8.1</span><h3>Beta when all correlations are equal<span class="zh">所有相关系数相同时的 beta</span></h3></div>
+    <div class="q"><p>Given that the correlation coefficient between all securities is the same, call it ρ*, and the assumption of the single-index model is accepted, derive an expression for the beta on any stock in terms of ρ*.</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <p>Under the single-index model, the covariance between two stocks comes only through the market, so each correlation is the product of the two stocks’ correlations with the market:</p>
+      <div class="formula">σᵢⱼ = βᵢβⱼσₘ²   ⇒   ρᵢⱼ = βᵢβⱼσₘ² / (σᵢσⱼ) = ρᵢₘ · ρⱼₘ,   where ρᵢₘ = βᵢσₘ/σᵢ</div>
+      <p>If ρᵢⱼ = ρ* for every pair, then ρᵢₘρⱼₘ = ρ* for all i, j. Taking any three stocks i, j, k shows ρᵢₘ = ρⱼₘ = ρₖₘ, so every stock has the same correlation with the market, ρᵢₘ = √ρ*. Therefore</p>
+      <p class="result">βᵢ = √ρ* · σᵢ / σₘ</p>
+      <p class="zh">单指数模型下 ρᵢⱼ = ρᵢₘρⱼₘ。所有 ρᵢⱼ 都等于 ρ* 时，每只股票与市场的相关系数都为 √ρ*，所以 βᵢ = √ρ*·σᵢ/σₘ。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c8-2">
+    <div class="prob-head"><span class="prob-num">8.2</span><h3>Three orthogonal indexes<span class="zh">三个正交指数</span></h3></div>
+    <div class="q"><p>Complete the procedure in Appendix A for reducing a general three-index model to a three-index model with orthogonal indexes.</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <p>Start with Rᵢ = aᵢ* + bᵢ₁*I₁* + bᵢ₂*I₂* + bᵢ₃*I₃* + cᵢ, where the starred indexes may be correlated.</p>
+      <div class="part"><h5><b>1</b>Keep the first index<span class="zh">保留第一个指数</span></h5>
+        <div class="formula">I₁ = I₁*</div></div>
+      <div class="part"><h5><b>2</b>Remove I₁ from the second index<span class="zh">从第二个指数中剔除 I₁</span></h5>
+        <div class="formula">Regress  I₂* = γ₀ + γ₁I₁ + d₂     ⇒  I₂ ≡ d₂ = I₂* − γ₀ − γ₁I₁   (uncorrelated with I₁)</div></div>
+      <div class="part"><h5><b>3</b>Remove I₁ and I₂ from the third index<span class="zh">从第三个指数中剔除 I₁ 和 I₂</span></h5>
+        <div class="formula">Regress  I₃* = θ₀ + θ₁I₁ + θ₂I₂ + d₃   ⇒  I₃ ≡ d₃ = I₃* − θ₀ − θ₁I₁ − θ₂I₂   (uncorrelated with I₁ and I₂)</div></div>
+      <div class="part"><h5><b>4</b>Substitute back<span class="zh">代回原式</span></h5>
+        <div class="formula">I₂* = γ₀ + γ₁I₁ + I₂        I₃* = θ₀ + θ₁I₁ + θ₂I₂ + I₃
+
+Rᵢ = [aᵢ* + bᵢ₂*γ₀ + bᵢ₃*θ₀]
+   + [bᵢ₁* + bᵢ₂*γ₁ + bᵢ₃*θ₁] · I₁
+   + [bᵢ₂* + bᵢ₃*θ₂] · I₂
+   + bᵢ₃* · I₃ + cᵢ</div></div>
+      <p class="result">The bracketed terms are the new aᵢ, bᵢ₁, bᵢ₂, bᵢ₃; the indexes I₁, I₂, I₃ are mutually uncorrelated.</p>
+      <p class="zh">依次回归、取残差作为新指数，再把 I₂*、I₃* 的表达式代回，括号里就是新的系数。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c8-3">
+    <div class="prob-head"><span class="prob-num">8.3</span><h3>Residual covariance equal to a constant K<span class="zh">残差协方差为常数 K</span></h3></div>
+    <div class="q"><p>Assume that all assumptions of the single-index model hold, except that the covariance between residuals is a constant K instead of zero. Derive the covariance between the two securities and the variance on a portfolio.</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="formula">Rᵢ = αᵢ + βᵢRₘ + eᵢ,   cov(eᵢ, Rₘ) = 0,   cov(eᵢ, eⱼ) = K  (i ≠ j)
+
+σᵢⱼ = E[(βᵢ(Rₘ − R̄ₘ) + eᵢ)(βⱼ(Rₘ − R̄ₘ) + eⱼ)] = βᵢβⱼσₘ² + K</div>
+      <p>Portfolio return: Rₚ = Σ Xᵢαᵢ + βₚRₘ + Σ Xᵢeᵢ with βₚ = Σ Xᵢβᵢ. So</p>
+      <div class="formula">σₚ² = βₚ²σₘ² + Σᵢ Xᵢ²σ²(eᵢ) + Σᵢ Σⱼ≠ᵢ XᵢXⱼK
+    = βₚ²σₘ² + Σᵢ Xᵢ²σ²(eᵢ) + K[(Σᵢ Xᵢ)² − Σᵢ Xᵢ²]
+    = βₚ²σₘ² + Σᵢ Xᵢ²[σ²(eᵢ) − K] + K          (if Σ Xᵢ = 1)</div>
+      <p class="zh">两只股票的协方差多了一项 K。组合方差多出所有 i ≠ j 的 XᵢXⱼK 项；权重和为 1 时可化简成上式。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c8-4">
+    <div class="prob-head"><span class="prob-num">8.4</span><h3>Formulas for an orthogonal three-index model<span class="zh">正交三指数模型的公式</span></h3></div>
+    <div class="q"><p>Given a three-index model such that all indexes are orthogonal, derive the formulas for the expected return, variance, and covariance of any stock.</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <p>Model: Rᵢ = aᵢ + bᵢ₁I₁ + bᵢ₂I₂ + bᵢ₃I₃ + cᵢ with E(cᵢ) = 0, cov(Iₖ, Iₗ) = 0 for k ≠ l, cov(cᵢ, Iₖ) = 0 and cov(cᵢ, cⱼ) = 0.</p>
+      <div class="formula">Expected return:  R̄ᵢ = aᵢ + bᵢ₁Ī₁ + bᵢ₂Ī₂ + bᵢ₃Ī₃
+
+Variance:  σᵢ² = E[(bᵢ₁(I₁ − Ī₁) + bᵢ₂(I₂ − Ī₂) + bᵢ₃(I₃ − Ī₃) + cᵢ)²]
+              = bᵢ₁²σ²(I₁) + bᵢ₂²σ²(I₂) + bᵢ₃²σ²(I₃) + σ²(cᵢ)
+
+Covariance: σᵢⱼ = bᵢ₁bⱼ₁σ²(I₁) + bᵢ₂bⱼ₂σ²(I₂) + bᵢ₃bⱼ₃σ²(I₃)</div>
+      <p>All cross-product terms vanish because the indexes are orthogonal and the residuals are uncorrelated with the indexes and with each other.</p>
+      <p class="zh">因为指数正交、残差与指数及彼此不相关，展开后所有交叉项都为 0。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c8-5">
+    <div class="prob-head"><span class="prob-num">8.5</span><h3>Two-index model with numbers<span class="zh">两指数模型的数值计算</span></h3></div>
+    <div class="q">
+      <div class="tbl"><table>
+        <tr><th></th><th>A</th><th>B</th><th>C</th></tr>
+        <tr><td>aᵢ</td><td>2</td><td>3</td><td>1</td></tr>
+        <tr><td>bᵢ₁</td><td>0.8</td><td>1.1</td><td>0.9</td></tr>
+        <tr><td>bᵢ₂</td><td>0.9</td><td>1.3</td><td>1.1</td></tr>
+        <tr><td>σ(cᵢ)</td><td>2.0</td><td>1.0</td><td>1.5</td></tr>
+      </table></div>
+      <p>Assuming the I’s are uncorrelated and Ī₁ = 8, Ī₂ = 4, σ(I₁) = 2.0, σ(I₂) = 2.5, calculate the following using the general multi-index model: (1) expected returns, (2) variance of return, (3) covariance of return.</p>
+    </div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <p>σ²(I₁) = 4, σ²(I₂) = 6.25.</p>
+      <div class="part"><h5><b>1</b>Expected returns<span class="zh">期望收益</span></h5>
+        <div class="formula">R̄_A = 2 + 0.8·8 + 0.9·4 = 12.0
+R̄_B = 3 + 1.1·8 + 1.3·4 = 17.0
+R̄_C = 1 + 0.9·8 + 1.1·4 = 12.6</div></div>
+      <div class="part"><h5><b>2</b>Variances<span class="zh">方差</span></h5>
+        <div class="formula">σ_A² = 0.64·4 + 0.81·6.25 + 4.00 = 2.56 + 5.0625 + 4.00 = 11.62
+σ_B² = 1.21·4 + 1.69·6.25 + 1.00 = 4.84 + 10.5625 + 1.00 = 16.40
+σ_C² = 0.81·4 + 1.21·6.25 + 2.25 = 3.24 + 7.5625 + 2.25 = 13.05</div></div>
+      <div class="part"><h5><b>3</b>Covariances<span class="zh">协方差</span></h5>
+        <div class="formula">σ_AB = 0.8·1.1·4 + 0.9·1.3·6.25 = 3.52 + 7.3125 = 10.83
+σ_AC = 0.8·0.9·4 + 0.9·1.1·6.25 = 2.88 + 6.1875 =  9.07
+σ_BC = 1.1·0.9·4 + 1.3·1.1·6.25 = 3.96 + 8.9375 = 12.90</div></div>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c8-6">
+    <div class="prob-head"><span class="prob-num">8.6</span><h3>Industry index model: A and B in the same industry<span class="zh">行业指数模型：A、B 同行业</span></h3></div>
+    <div class="q"><p>Using the data from Problem 5, assume the model is now an Industry Index Model where I₁ = Iₘ and that I₂ is now an industry index. Assuming that firms A and B are in the same industry, calculate the covariance of returns.</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <p>Now bᵢ₂ measures sensitivity to the firm’s <i>own</i> industry index. A and B share an industry index; C belongs to a different industry whose index is uncorrelated with A and B’s industry index, so only the market term links C to the others.</p>
+      <div class="formula">σ_AB = 0.8·1.1·4 + 0.9·1.3·6.25 = 10.83      (market + common industry)
+σ_AC = 0.8·0.9·4 = 2.88                         (market only)
+σ_BC = 1.1·0.9·4 = 3.96                         (market only)</div>
+      <p class="zh">同行业的 A、B 通过市场和行业两项相关；C 在别的行业，只剩市场项。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c8-7">
+    <div class="prob-head"><span class="prob-num">8.7</span><h3>Industry index model: B and C in the same industry<span class="zh">行业指数模型：B、C 同行业</span></h3></div>
+    <div class="q"><p>Repeat Problem 6, assuming now that firms B and C are in the same industry.</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="formula">σ_BC = 1.1·0.9·4 + 1.3·1.1·6.25 = 3.96 + 8.9375 = 12.90   (market + common industry)
+σ_AB = 0.8·1.1·4 = 3.52                                   (market only)
+σ_AC = 0.8·0.9·4 = 2.88                                   (market only)</div>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c8-8">
+    <div class="prob-head"><span class="prob-num">8.8</span><h3>Transform to orthogonal indexes<span class="zh">化为正交指数</span></h3></div>
+    <div class="q"><p>Given the multi-index model Rᵢ = 2 + 1.1I₁* + 1.2I₂* + cᵢ, where I₁* and I₂* are correlated, and given the regression equation I₂* = 1 + 1.3I₁* + dₜ, transform the equation for Rᵢ into one with orthogonal indexes.</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="formula">Let I₁ = I₁*  and  I₂ = dₜ = I₂* − 1 − 1.3I₁   (uncorrelated with I₁)
+Substitute I₂* = 1 + 1.3I₁ + I₂:
+Rᵢ = 2 + 1.1I₁ + 1.2(1 + 1.3I₁ + I₂) + cᵢ
+   = (2 + 1.2) + (1.1 + 1.56)I₁ + 1.2I₂ + cᵢ</div>
+      <p class="result">Rᵢ = 3.2 + 2.66·I₁ + 1.2·I₂ + cᵢ</p>
+      <p class="zh">新的市场系数 2.66 包含了通过第二个指数间接受到的市场影响（1.2 × 1.3）。</p>
+    </div></details>
+  </article>
+</section>
+
+<!-- ======================= CHAPTER 11 ======================= -->
+<section class="chapter" id="ch11">
+  <div class="ch-head">
+    <div class="eyebrow">Chapter 11 · pp. 249–250</div>
+    <h2>How to Select among the Portfolios in the Opportunity Set<span class="zh">如何在机会集中选择组合</span></h2>
+    <p>Expected utility, risk aversion, safety-first criteria and the geometric mean as ways to pick one portfolio from the efficient set.</p>
+  </div>
+  <div class="notes" id="ch11-notes">
+    <h3>Key concepts<span class="zh">本章要点</span></h3>
+    <div class="concept">
+      <h4>Expected utility<span class="pg">p.221–224</span><span class="zh">期望效用</span></h4>
+      <p>Rank risky choices by expected utility, E[U(W)] = Σ Pᵢ U(Wᵢ), not by expected wealth. Only the ranking matters, so any positive linear transformation a + bU (b &gt; 0) gives the same choice.</p>
+      <p class="zh">用期望效用 ΣPᵢU(Wᵢ) 排序，而不是期望财富。只看排序，所以 a + bU（b &gt; 0）结论不变。</p>
+      <div class="refs">
+        <div><span class="lbl">Videos</span><a href="https://www.youtube.com/watch?v=hsM4BVMR_EE" target="_blank" rel="noopener">Expected Value, Risk Aversion &amp; Utility Functions Explained</a><span class="src">Prof John K</span></div>
+        <div><span class="lbl">Problems</span><a href="#c11-1">11.1</a><a href="#c11-2">11.2</a><a href="#c11-3">11.3</a><a href="#c11-4">11.4</a><a href="#c11-5">11.5</a><a href="#c11-6">11.6</a></div>
+      </div>
+    </div>
+    <div class="concept">
+      <h4>Properties of utility functions<span class="pg">p.247–249 (App.)</span><span class="zh">效用函数的性质</span></h4>
+      <p><b>Nonsatiation:</b> U′(W) &gt; 0. <b>Risk aversion:</b> U″(W) &lt; 0 (reject a fair gamble); U″ = 0 is risk neutral, U″ &gt; 0 risk seeking. <b>Absolute risk aversion</b> A(W) = −U″/U′ says how the <i>dollar</i> amount put in risky assets changes with wealth (decreasing A is the usual assumption). <b>Relative risk aversion</b> R(W) = W·A(W) says how the <i>percentage</i> in risky assets changes; ln W has constant relative risk aversion. Quadratic utility W − bW² has increasing absolute risk aversion and is only sensible for W &lt; 1/(2b).</p>
+      <p class="zh">非饱和 U′ &gt; 0；风险厌恶 U″ &lt; 0。绝对风险厌恶 A(W) = −U″/U′ 描述投入风险资产的金额如何随财富变化；相对风险厌恶 R(W) = W·A(W) 描述比例的变化。ln W 是常数相对风险厌恶。二次效用只在 W &lt; 1/(2b) 时合理。</p>
+      <div class="formula">A(W) = −U″(W)/U′(W)        R(W) = W·A(W)</div>
+      <div class="refs">
+        <div><span class="lbl">Videos</span><a href="https://www.youtube.com/watch?v=kKyCf50CGGo" target="_blank" rel="noopener">Arrow-Pratt Measure of Absolute and Relative Risk Aversion</a><span class="src">Justin Eloriaga</span><a href="https://www.youtube.com/watch?v=2FjsCkg6KoQ" target="_blank" rel="noopener">Risk aversion coefficient</a><span class="src">Initial Return</span></div>
+      </div>
+    </div>
+    <div class="concept">
+      <h4>Safety-first criteria<span class="pg">p.226–232</span><span class="zh">安全第一准则</span></h4>
+      <p>Focus on bad outcomes. With normally distributed returns each reduces to a rule in mean–standard deviation space. <b>Roy:</b> minimize Prob(Rₚ &lt; R<sub>L</sub>), i.e. maximize (R̄ₚ − R<sub>L</sub>)/σₚ. <b>Kataoka:</b> maximize the lower limit R<sub>L</sub> subject to Prob(Rₚ ≤ R<sub>L</sub>) ≤ α, i.e. maximize R̄ₚ − zσₚ. <b>Telser:</b> maximize R̄ₚ subject to Prob(Rₚ ≤ R<sub>L</sub>) ≤ α, i.e. R̄ₚ − zσₚ ≥ R<sub>L</sub>. For α = 5%, z = 1.65; for α = 10%, z = 1.28.</p>
+      <p class="zh">Roy：最小化跌破 R<sub>L</sub> 的概率，即最大化 (R̄ − R<sub>L</sub>)/σ。Kataoka：在跌破概率 ≤ α 的约束下最大化下限。Telser：在同样约束下最大化期望收益。α = 5% 时 z = 1.65，α = 10% 时 z = 1.28。</p>
+      <div class="refs">
+        <div><span class="lbl">Videos</span><a href="https://www.youtube.com/watch?v=No_feL_qK8c" target="_blank" rel="noopener">Roy's Safety First Criterion</a><span class="src">Jeff Davis</span><a href="https://www.youtube.com/watch?v=W_37a77nEFc" target="_blank" rel="noopener">Roy's Safety-First Criterion and Shortfall Risk</a><span class="src">Everest Exam Prep</span></div>
+        <div><span class="lbl">Problems</span><a href="#c11-7">11.7</a><a href="#c11-8">11.8</a><a href="#c11-9">11.9</a><a href="#c11-11">11.11</a></div>
+      </div>
+    </div>
+    <div class="concept">
+      <h4>Maximizing the geometric mean<span class="pg">p.232–234</span><span class="zh">最大化几何平均收益</span></h4>
+      <p>Choose the portfolio with the highest geometric mean return; over many periods it maximizes the chance of ending with more wealth than any other strategy. It is equivalent to maximizing expected ln(1 + R).</p>
+      <p class="zh">选几何平均收益最高的组合，长期来看最可能积累最多财富，等价于最大化 E[ln(1 + R)]。</p>
+      <div class="formula">R̄_G = Π (1 + Rᵢ)^Pᵢ − 1</div>
+      <div class="refs">
+        <div><span class="lbl">Videos</span><a href="https://www.youtube.com/watch?v=1HW3XCei_Bg" target="_blank" rel="noopener">Arithmetic vs geometric average return</a><span class="src">Initial Return</span></div>
+        <div><span class="lbl">Problems</span><a href="#c11-10">11.10</a><a href="#c11-12">11.12</a></div>
+      </div>
+    </div>
+  </div>
+  <div class="note">
+    <p>The investments in Problems 1–10 are written in dollars; for the safety-first and geometric-mean problems the outcomes are read as percentage returns, as the problems’ R<sub>L</sub> = 5% implies. Means and standard deviations use the probabilities (population formulas).</p>
+    <p class="zh">第 1–10 题的结果以美元表示；安全第一和几何平均的题目按百分比收益理解（题目给的 R<sub>L</sub> = 5% 就是这个意思）。</p>
+  </div>
+
+  <article class="prob" id="c11-1">
+    <div class="prob-head"><span class="prob-num">11.1</span><h3>Quadratic utility U(W) = W − ½W²<span class="zh">二次效用函数</span></h3></div>
+    <div class="q">
+      <p>Consider the following three investments. Which are preferred if U(W) = W − (1/2)W²?</p>
+      <div class="tbl"><table>
+        <tr><th colspan="2">Investment A</th><th colspan="2">Investment B</th><th colspan="2">Investment C</th></tr>
+        <tr><th>$</th><th>Prob.</th><th>$</th><th>Prob.</th><th>$</th><th>Prob.</th></tr>
+        <tr><td>5</td><td>1/3</td><td>4</td><td>1/4</td><td>1</td><td>1/5</td></tr>
+        <tr><td>6</td><td>1/3</td><td>7</td><td>1/2</td><td>9</td><td>3/5</td></tr>
+        <tr><td>9</td><td>1/3</td><td>10</td><td>1/4</td><td>18</td><td>1/5</td></tr>
+      </table></div>
+    </div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="formula">E[U] = Σ P·(W − ½W²)
+A: ⅓[(5 − 12.5) + (6 − 18) + (9 − 40.5)]       = ⅓(−7.5 − 12 − 31.5)  = −17.00
+B: ¼(4 − 8) + ½(7 − 24.5) + ¼(10 − 50)          = −1 − 8.75 − 10       = −19.75
+C: ⅕(1 − 0.5) + ⅗(9 − 40.5) + ⅕(18 − 162)       = 0.1 − 18.9 − 28.8    = −47.60</div>
+      <p class="result">A is preferred (A ≻ B ≻ C).</p>
+      <div class="callout"><p>Note: U′(W) = 1 − W is negative for W &gt; 1, so over these outcomes this function says more money is <i>worse</i>. It violates nonsatiation here; the arithmetic still ranks A first.</p><p class="zh">注意：W &gt; 1 时 U′ &lt; 0，这个函数在本题范围内违反“多多益善”，但按公式算仍是 A 最好。</p></div>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c11-2">
+    <div class="prob-head"><span class="prob-num">11.2</span><h3>Power utility U(W) = −W<sup>−½</sup><span class="zh">幂效用函数</span></h3></div>
+    <div class="q"><p>Assume the utility function is U(W) = −W<sup>−1/2</sup>. What is the preferred investment in Problem 1?</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="formula">E[U] = −Σ P·W^(−½)
+A: −⅓(0.4472 + 0.4082 + 0.3333)            = −0.3963
+B: −[¼(0.5000) + ½(0.3780) + ¼(0.3162)]     = −0.3930
+C: −[⅕(1.0000) + ⅗(0.3333) + ⅕(0.2357)]     = −0.4471</div>
+      <p class="result">B is preferred (B ≻ A ≻ C). This function is increasing and concave, so it is a sensible risk-averse utility.</p>
+      <p class="zh">B 最好。这个函数递增且凹，是合理的风险厌恶效用。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c11-3">
+    <div class="prob-head"><span class="prob-num">11.3</span><h3>Quadratic utility with b = 0.04<span class="zh">b = 0.04 的二次效用</span></h3></div>
+    <div class="q">
+      <p>Consider the following two investments. Which is preferred if the utility function is U(W) = W − 0.04W²?</p>
+      <div class="tbl"><table>
+        <tr><th colspan="2">Investment A</th><th colspan="2">Investment B</th></tr>
+        <tr><th>$</th><th>Prob.</th><th>$</th><th>Prob.</th></tr>
+        <tr><td>7</td><td>2/5</td><td>5</td><td>1/2</td></tr>
+        <tr><td>10</td><td>1/5</td><td>12</td><td>1/4</td></tr>
+        <tr><td>14</td><td>2/5</td><td>20</td><td>1/4</td></tr>
+      </table></div>
+    </div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="callout"><p>The 9th edition prints U(W) = −W − 0.04W², which decreases in wealth; this is almost certainly a typo for W − 0.04W². The answer is the same either way.</p><p class="zh">第 9 版印的是 −W − 0.04W²（财富越多效用越低），应是印刷错误。两种写法结论相同。</p></div>
+      <div class="formula">U(W) = W − 0.04W²:   U(5) = 4.00, U(7) = 5.04, U(10) = 6.00, U(12) = 6.24, U(14) = 6.16, U(20) = 4.00
+E[U_A] = 0.4·5.04 + 0.2·6.00 + 0.4·6.16 = 5.68
+E[U_B] = 0.5·4.00 + 0.25·6.24 + 0.25·4.00 = 4.56
+(as printed, −W − 0.04W²:  A = −15.12,  B = −16.44)</div>
+      <p class="result">A is preferred.</p>
+      <p>Intuition: B has a slightly higher mean (10.5 vs 10.4) but a much larger variance (38.25 vs 9.84), and this investor is risk averse.</p>
+      <p class="zh">B 的均值略高，但方差大得多，风险厌恶的投资者选 A。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c11-4">
+    <div class="prob-head"><span class="prob-num">11.4</span><h3>Probabilities that make the investor indifferent<span class="zh">使投资者无差异的概率</span></h3></div>
+    <div class="q"><p>Consider the choice shown in Problem 3. The probability of a $5 return is 1/2 and of a $12 return is 1/4. How much would these probabilities have to change so that the investor is indifferent between investments A and B?</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <p>Keep Prob($20) = 1/4 and let p = Prob($5), so Prob($12) = 3/4 − p. Set E[U_B] = E[U_A] = 5.68:</p>
+      <div class="formula">p·4.00 + (0.75 − p)·6.24 + 0.25·4.00 = 5.68
+4p + 4.68 − 6.24p + 1.00 = 5.68
+−2.24p = 0   ⇒   p = 0</div>
+      <p class="result">The probability of $5 must fall from 1/2 to 0, and the probability of $12 must rise from 1/4 to 3/4. Only then is B as good as A.</p>
+      <p class="zh">$5 的概率要从 1/2 降到 0，$12 的概率从 1/4 升到 3/4，两者才无差异。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c11-5">
+    <div class="prob-head"><span class="prob-num">11.5</span><h3>Quadratic utility with b = 0.05<span class="zh">b = 0.05 的二次效用</span></h3></div>
+    <div class="q">
+      <p>Consider the following investments. Which is preferred if U(W) = W − 0.05W²?</p>
+      <div class="tbl"><table>
+        <tr><th colspan="2">Investment A</th><th colspan="2">Investment B</th></tr>
+        <tr><th>Outcome</th><th>Prob.</th><th>Outcome</th><th>Prob.</th></tr>
+        <tr><td>5</td><td>0.20</td><td>6</td><td>0.30</td></tr>
+        <tr><td>7</td><td>0.50</td><td>8</td><td>0.60</td></tr>
+        <tr><td>10</td><td>0.30</td><td>9</td><td>0.10</td></tr>
+      </table></div>
+    </div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="formula">U(5) = 3.75, U(6) = 4.20, U(7) = 4.55, U(8) = 4.80, U(9) = 4.95, U(10) = 5.00
+E[U_A] = 0.2·3.75 + 0.5·4.55 + 0.3·5.00 = 4.525
+E[U_B] = 0.3·4.20 + 0.6·4.80 + 0.1·4.95 = 4.635</div>
+      <p class="result">B is preferred. Both have a mean of 7.5, but B’s variance is lower (1.05 vs 3.25).</p>
+      <p class="zh">两者均值都是 7.5，B 方差更小，选 B。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c11-6">
+    <div class="prob-head"><span class="prob-num">11.6</span><h3>Changing the $5 outcome<span class="zh">改变 $5 这个结果</span></h3></div>
+    <div class="q"><p>In Problem 5, what is the minimum amount that the $5 outcome would have to be changed to so that the investor is indifferent between the two investments?</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="formula">0.2·U(x) + 0.5·4.55 + 0.3·5.00 = 4.635
+0.2·U(x) = 4.635 − 3.775 = 0.86   ⇒   U(x) = x − 0.05x² = 4.30
+0.05x² − x + 4.30 = 0   ⇒   x = [1 ± √(1 − 0.86)] / 0.1 = 6.258  or  13.74</div>
+      <p class="result">The $5 outcome must rise to about $6.26 (an increase of $1.26).</p>
+      <p>The other root, 13.74, lies beyond W = 10, where this quadratic utility starts to fall, so it is not meaningful.</p>
+      <p class="zh">$5 要提高到约 $6.26。另一个根 13.74 超过了效用开始下降的 W = 10，没有意义。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c11-7">
+    <div class="prob-head"><span class="prob-num">11.7</span><h3>Roy’s criterion, R<sub>L</sub> = 5%<span class="zh">Roy 准则</span></h3></div>
+    <div class="q"><p>If R<sub>L</sub> equals 5%, what is the preferred investment shown in Problem 1 using Roy’s safety-first criterion?</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="tbl"><table>
+        <tr><th>Investment</th><th>R̄</th><th>σ</th><th>(R̄ − 5)/σ</th><th>Actual Prob(R &lt; 5)</th></tr>
+        <tr class="hl"><td>A</td><td>6.67</td><td>1.70</td><td>0.98</td><td>0</td></tr>
+        <tr><td>B</td><td>7.00</td><td>2.12</td><td>0.94</td><td>1/4</td></tr>
+        <tr><td>C</td><td>9.20</td><td>5.38</td><td>0.78</td><td>1/5</td></tr>
+      </table></div>
+      <p class="result">A is preferred, both with the normal approximation (largest (R̄ − R<sub>L</sub>)/σ) and with the actual distribution (no chance of falling below 5%).</p>
+      <p class="zh">无论用正态近似还是实际分布，A 都最好。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c11-8">
+    <div class="prob-head"><span class="prob-num">11.8</span><h3>Kataoka’s criterion, α = 10%<span class="zh">Kataoka 准则</span></h3></div>
+    <div class="q"><p>If α equals 10%, what is the preferred investment shown in Problem 1 using Kataoka’s safety-first criterion?</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <p>With normal returns and α = 10%, the lower limit is 1.28 standard deviations below the mean: R<sub>L</sub> = R̄ − 1.28σ.</p>
+      <div class="formula">A: 6.67 − 1.28·1.70 = 4.49
+B: 7.00 − 1.28·2.12 = 4.28
+C: 9.20 − 1.28·5.38 = 2.31</div>
+      <p class="result">A is preferred (highest lower limit, 4.49%). With the actual discrete outcomes A also wins: its 10% lower limit is 5 versus 4 for B and 1 for C.</p>
+      <p class="zh">A 的下限最高。按实际分布算也是 A（下限 5，B 为 4，C 为 1）。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c11-9">
+    <div class="prob-head"><span class="prob-num">11.9</span><h3>Telser’s criterion<span class="zh">Telser 准则</span></h3></div>
+    <div class="q"><p>If R<sub>L</sub> = 5% and α = 10%, what is the preferred investment shown in Problem 1 using Telser’s safety-first criterion?</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <p>Telser: among investments with Prob(R ≤ R<sub>L</sub>) ≤ α, pick the highest mean.</p>
+      <div class="part"><h5><b>Actual distribution</b><span class="zh">按实际分布</span></h5>
+        <p>Prob(R &lt; 5): A = 0, B = 25%, C = 20%. Only A meets the 10% constraint, so <span class="key">A is chosen</span>.</p></div>
+      <div class="part"><h5><b>Normal approximation</b><span class="zh">按正态近似</span></h5>
+        <p>The constraint is R̄ − 1.28σ ≥ 5. From Problem 8 the values are 4.49, 4.28 and 2.31, so <span class="key">no investment qualifies</span>; Telser’s investor would hold none of them (for example, stay in a riskless asset).</p></div>
+      <p class="zh">按实际分布只有 A 满足约束；按正态近似三者都不满足，投资者一个都不选。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c11-10">
+    <div class="prob-head"><span class="prob-num">11.10</span><h3>Geometric mean, Problem 1 investments<span class="zh">几何平均</span></h3></div>
+    <div class="q"><p>Using geometric mean return as a criterion, which investment is to be preferred in Problem 1?</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="formula">R̄_G = Π(1 + Rᵢ)^Pᵢ − 1
+A: (1.05 · 1.06 · 1.09)^(1/3) − 1                 = 6.65%
+B: 1.04^0.25 · 1.07^0.5 · 1.10^0.25 − 1            = 6.98%
+C: 1.01^0.2 · 1.09^0.6 · 1.18^0.2 − 1              = 9.07%</div>
+      <p class="result">C is preferred (highest geometric mean, 9.07%).</p>
+      <p class="zh">C 的几何平均最高。注意这和期望效用（选 A 或 B）的结论不同。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c11-11">
+    <div class="prob-head"><span class="prob-num">11.11</span><h3>Roy’s criterion with R<sub>L</sub> = 3%<span class="zh">Roy 准则，R<sub>L</sub> = 3%</span></h3></div>
+    <div class="q">
+      <p>Given the following investments, if R<sub>L</sub> is 3%, what investment is preferred using Roy’s safety-first criterion?</p>
+      <div class="tbl"><table>
+        <tr><th colspan="2">A</th><th colspan="2">B</th><th colspan="2">C</th></tr>
+        <tr><th>Prob.</th><th>%</th><th>Prob.</th><th>%</th><th>Prob.</th><th>%</th></tr>
+        <tr><td>0.4</td><td>3</td><td>0.1</td><td>5</td><td>0.1</td><td>5</td></tr>
+        <tr><td>0.3</td><td>4</td><td>0.2</td><td>6</td><td>0.1</td><td>7</td></tr>
+        <tr><td>0.1</td><td>6</td><td>0.1</td><td>8</td><td>0.2</td><td>8</td></tr>
+        <tr><td>0.1</td><td>7</td><td>0.2</td><td>9</td><td>0.2</td><td>9</td></tr>
+        <tr><td>0.1</td><td>9</td><td>0.4</td><td>10</td><td>0.4</td><td>11</td></tr>
+      </table></div>
+    </div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="tbl"><table>
+        <tr><th></th><th>R̄</th><th>σ</th><th>(R̄ − 3)/σ</th></tr>
+        <tr><td>A</td><td>4.60</td><td>1.96</td><td>0.82</td></tr>
+        <tr><td>B</td><td>8.30</td><td>1.85</td><td>2.87</td></tr>
+        <tr class="hl"><td>C</td><td>9.00</td><td>1.95</td><td>3.08</td></tr>
+      </table></div>
+      <p class="result">C is preferred: R<sub>L</sub> = 3% lies 3.08 standard deviations below its mean, the most of the three.</p>
+      <p>With the actual distribution none of the three can fall strictly below 3% (A hits exactly 3% with probability 0.4), so the normal-approximation ratio is what separates them.</p>
+      <p class="zh">C 的比值最大。按实际分布三者都不会低于 3%（A 有 40% 恰好等于 3%），所以用正态近似的比值来区分。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c11-12">
+    <div class="prob-head"><span class="prob-num">11.12</span><h3>Geometric mean, Problem 11 investments<span class="zh">几何平均</span></h3></div>
+    <div class="q"><p>Using geometric mean, which investment is preferred in Problem 11?</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="formula">A: 1.03^0.4 · 1.04^0.3 · 1.06^0.1 · 1.07^0.1 · 1.09^0.1 − 1   = 4.58%
+B: 1.05^0.1 · 1.06^0.2 · 1.08^0.1 · 1.09^0.2 · 1.10^0.4 − 1   = 8.28%
+C: 1.05^0.1 · 1.07^0.1 · 1.08^0.2 · 1.09^0.2 · 1.11^0.4 − 1   = 8.98%</div>
+      <p class="result">C is preferred (8.98%).</p>
+    </div></details>
+  </article>
+</section>
+
+<!-- ======================= CHAPTER 13 ======================= -->
+<section class="chapter" id="ch13">
+  <div class="ch-head">
+    <div class="eyebrow">Chapter 13 · pp. 308–309</div>
+    <h2>The Standard Capital Asset Pricing Model<span class="zh">标准资本资产定价模型</span></h2>
+    <p>If everyone does mean–variance analysis with the same inputs, everyone holds the market portfolio, and expected return depends only on beta.</p>
+  </div>
+  <div class="notes" id="ch13-notes">
+    <h3>Key concepts<span class="zh">本章要点</span></h3>
+    <div class="concept">
+      <h4>Assumptions and the capital market line<span class="pg">p.290–294</span><span class="zh">假设与资本市场线（CML）</span></h4>
+      <p>Assumptions include no transaction costs or taxes, infinitely divisible assets, price-taking investors, mean–variance decisions, unlimited short sales, unlimited lending and borrowing at R<sub>F</sub>, a single period, and homogeneous expectations. Then every investor holds the same tangency portfolio, which must be the <b>market portfolio M</b>, plus lending or borrowing. Efficient portfolios lie on the CML.</p>
+      <p class="zh">在无交易成本、无税、可无限卖空和借贷、预期一致等假设下，所有人持有同一个切点组合，也就是市场组合 M。有效组合都在 CML 上。</p>
+      <div class="formula">CML:  R̄ₑ = R_F + [(R̄ₘ − R_F)/σₘ] · σₑ        (efficient portfolios only)</div>
+      <div class="refs">
+        <div><span class="lbl">Videos</span><a href="https://www.youtube.com/watch?v=M0r1eQuvwX8" target="_blank" rel="noopener">Explaining CAPM graphs for beginners (SML, CML, CAL)</a><span class="src">Ismahelps</span></div>
+        <div><span class="lbl">Problems</span><a href="#c13-6">13.6</a></div>
+      </div>
+    </div>
+    <div class="concept">
+      <h4>The security market line<span class="pg">p.294–300</span><span class="zh">证券市场线（SML）</span></h4>
+      <p>For <i>any</i> asset or portfolio, efficient or not, expected return is linear in beta. Only systematic risk is priced, because residual risk is diversified away in the market portfolio. An asset above the SML is underpriced (positive alpha); below it is overpriced. Two correctly priced assets are enough to pin down the line.</p>
+      <p class="zh">对任何资产都成立：期望收益与 beta 线性相关，只有系统风险有回报。高于 SML 的资产被低估，低于 SML 的被高估。两个定价正确的资产就能确定这条线。</p>
+      <div class="formula">SML:  R̄ᵢ = R_F + βᵢ(R̄ₘ − R_F),    βᵢ = σᵢₘ/σₘ²
+From two points:  slope = (R̄₂ − R̄₁)/(β₂ − β₁) = R̄ₘ − R_F,   intercept = R_F</div>
+      <div class="refs">
+        <div><span class="lbl">Videos</span><a href="https://www.youtube.com/watch?v=XIXd7pUt4cg" target="_blank" rel="noopener">Explaining the CAPM &amp; Security Market Line</a><span class="src">Ryan O'Connell, CFA, FRM</span><a href="https://www.youtube.com/watch?v=sQjqq0K4KQ4" target="_blank" rel="noopener">Security Market Line Explained | SML vs. CML</a><span class="src">Farhat Lectures</span></div>
+        <div><span class="lbl">Problems</span><a href="#c13-1">13.1</a><a href="#c13-2">13.2</a><a href="#c13-3">13.3</a><a href="#c13-4">13.4</a><a href="#c13-7">13.7</a><a href="#c13-8">13.8</a><a href="#c13-9">13.9</a></div>
+      </div>
+    </div>
+    <div class="concept">
+      <h4>CAPM in price form<span class="pg">p.300–302</span><span class="zh">价格形式的 CAPM</span></h4>
+      <p>Substitute Rᵢ = Yᵢ/Pᵢ − 1 (Y = end-of-period value including dividends) into the SML. Today’s price is the certainty equivalent of the end-of-period value, discounted at the riskless rate; the risk adjustment depends on covariance with the market’s dollar value.</p>
+      <p class="zh">把 Rᵢ = Yᵢ/Pᵢ − 1 代入 SML：今天的价格 = 期末价值的确定性等价，再按无风险利率折现。</p>
+      <div class="formula">Pᵢ = (1/r_F) · [ Ȳᵢ − (Ȳₘ − r_F·Pₘ) · cov(Yᵢ, Yₘ)/var(Yₘ) ],    r_F = 1 + R_F</div>
+      <div class="refs">
+        <div><span class="lbl">Problems</span><a href="#c13-5">13.5</a></div>
+      </div>
+    </div>
+  </div>
+
+  <article class="prob" id="c13-1">
+    <div class="prob-head"><span class="prob-num">13.1</span><h3>Derive the SML from two assets<span class="zh">用两项资产推出 SML</span></h3></div>
+    <div class="q"><p>Assume that the following assets are correctly priced according to the security market line. Derive the security market line. What is the expected return on an asset with a beta of 2?</p>
+      <div class="formula">R̄₁ = 6%,  β₁ = 0.5        R̄₂ = 12%,  β₂ = 1.5</div></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="formula">slope = (12 − 6)/(1.5 − 0.5) = 6 = R̄ₘ − R_F
+intercept: 6 = R_F + 6·0.5  ⇒  R_F = 3
+SML:  R̄ᵢ = 3 + 6βᵢ        β = 2:  R̄ = 3 + 12 = 15%</div>
+      <p class="result">R̄ᵢ = 3% + 6%·βᵢ; an asset with β = 2 should return 15%.</p>
+      <div class="charts"><div class="chart"><div id="chart-c13-1"></div><div class="cap">The SML through assets 1 and 2. Asset 3 from Problem 7 (β = 1.2, R̄ = 15%) plots above the line, so it is underpriced.<span class="zh">SML 经过资产 1、2。第 7 题的资产 3 在线上方，被低估。</span></div></div></div>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c13-2">
+    <div class="prob-head"><span class="prob-num">13.2</span><h3>When is a stock a good purchase?<span class="zh">什么时候值得买入</span></h3></div>
+    <div class="q"><p>Assume the security market line given below. Assume that analysts have estimated the beta on two stocks as follows: β<sub>x</sub> = 0.5 and β<sub>y</sub> = 2. What must the expected return on the two securities be in order for them to be a good purchase?</p>
+      <div class="formula">R̄ᵢ = 0.04 + 0.08βᵢ</div></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="formula">Required return:  x: 0.04 + 0.08·0.5 = 8%        y: 0.04 + 0.08·2 = 20%</div>
+      <p class="result">X is a good purchase if analysts expect more than 8%; Y if they expect more than 20%. Above the SML means a positive alpha (underpriced).</p>
+      <p class="zh">X 预期收益要超过 8%，Y 要超过 20%，即位于 SML 上方。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c13-3">
+    <div class="prob-head"><span class="prob-num">13.3</span><h3>Evaluating two funds with the SML<span class="zh">用 SML 评价两只基金</span></h3></div>
+    <div class="q"><p>Assume that over some period, a CAPM was estimated. The results are shown below. Assume that over the same period, two mutual funds had the following results: Fund A actual return = 10%, beta = 0.8; Fund B actual return = 15%, beta = 1.2. What can be said about the fund performance?</p>
+      <div class="formula">R̄ᵢ = 0.06 + 0.19βᵢ</div></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="formula">Fund A benchmark: 0.06 + 0.19·0.8 = 21.2%    actual 10%   ⇒  −11.2%
+Fund B benchmark: 0.06 + 0.19·1.2 = 28.8%    actual 15%   ⇒  −13.8%</div>
+      <p class="result">Both funds plot well below the SML: each earned less than a passive mix of the market and the riskless asset with the same beta. Both underperformed (A by 11.2%, B by 13.8%).</p>
+      <p class="zh">两只基金都在 SML 下方，表现都不如同 beta 的被动组合。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c13-4">
+    <div class="prob-head"><span class="prob-num">13.4</span><h3>Reading R<sub>F</sub> and the market premium<span class="zh">读出 R<sub>F</sub> 和市场溢价</span></h3></div>
+    <div class="q"><p>Consider the CAPM line shown below. What is the excess return of the market over the risk-free rate? What is the risk-free rate?</p>
+      <div class="formula">R̄ᵢ = 0.04 + 0.10βᵢ</div></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <p class="result">R̄ₘ − R<sub>F</sub> = slope = 10%;  R<sub>F</sub> = intercept = 4% (so R̄ₘ = 14%).</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c13-5">
+    <div class="prob-head"><span class="prob-num">13.5</span><h3>Price form of the Problem 4 CAPM<span class="zh">第 4 题 CAPM 的价格形式</span></h3></div>
+    <div class="q"><p>Write the CAPM shown in Problem 4 in price form.</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <p>With R<sub>F</sub> = 0.04, r<sub>F</sub> = 1.04, and R̄ₘ − R<sub>F</sub> = 0.10, so Ȳₘ/Pₘ − 1.04 = 0.10, i.e. Ȳₘ − 1.04Pₘ = 0.10Pₘ.</p>
+      <div class="formula">Pᵢ = (1/1.04) · [ Ȳᵢ − (Ȳₘ − 1.04Pₘ) · cov(Yᵢ, Yₘ)/var(Yₘ) ]
+   = (1/1.04) · [ Ȳᵢ − 0.10·Pₘ · cov(Yᵢ, Yₘ)/var(Yₘ) ]</div>
+      <p class="zh">期末价值减去风险调整，再按 4% 折现。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c13-6">
+    <div class="prob-head"><span class="prob-num">13.6</span><h3>CAPM without short sales<span class="zh">禁止卖空时 CAPM 仍成立</span></h3></div>
+    <div class="q"><p>Show that the standard CAPM should hold even if short sales are not allowed.</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <p>Derive the equilibrium first assuming short sales are allowed. With homogeneous expectations and riskless lending and borrowing, every investor holds the same tangency portfolio of risky assets. Markets must clear, so that common portfolio is the market portfolio, and every asset’s weight in it equals its share of total market value.</p>
+      <p>Every asset that exists has a positive market value, so every weight in the tangency portfolio is positive. Nobody is short anything in equilibrium. A no-short-sales constraint therefore does not bind: it rules out positions nobody wanted to take, and the same equilibrium, and the same SML, results.</p>
+      <p class="zh">允许卖空时，均衡下人人持有市场组合，而市场组合里每项资产的权重都是正的（市值为正）。所以没有人卖空，禁止卖空的约束不起作用，CAPM 不变。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c13-7">
+    <div class="prob-head"><span class="prob-num">13.7</span><h3>Designing the arbitrage<span class="zh">构造套利</span></h3></div>
+    <div class="q"><p>Assume that an asset exists with R̄₃ = 15% and β₃ = 1.2. Further assume the security market line discussed in Problem 1. Design the arbitrage opportunity.</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <p>On the SML, β = 1.2 should earn 3 + 6·1.2 = 10.2%. Asset 3 offers 15%, so it is underpriced. Build a portfolio of assets 1 and 2 with the same beta:</p>
+      <div class="formula">0.5X + 1.5(1 − X) = 1.2   ⇒   X = 0.3 in asset 1, 0.7 in asset 2
+Return: 0.3·6 + 0.7·12 = 10.2%,   beta 1.2</div>
+      <p class="result">Buy $1 of asset 3 and short $1 of the portfolio (sell $0.30 of asset 1 and $0.70 of asset 2). Net investment 0, net beta 0, expected profit 15% − 10.2% = 4.8% per dollar. Scale it up.</p>
+      <p class="zh">买入资产 3，同时卖空 0.3 份资产 1 和 0.7 份资产 2（beta 同为 1.2）。零投资、零 beta，每 1 元赚 4.8%。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c13-8">
+    <div class="prob-head"><span class="prob-num">13.8</span><h3>Market return and R<sub>F</sub> from two assets<span class="zh">由两项资产求市场收益和 R<sub>F</sub></span></h3></div>
+    <div class="q"><p>If the following assets are correctly priced on the security market line, what is the return of the market portfolio? What is the risk-free rate?</p>
+      <div class="formula">R̄₁ = 9.40%,  β₁ = 0.80        R̄₂ = 13.40%,  β₂ = 1.30</div></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="formula">slope = (13.4 − 9.4)/(1.3 − 0.8) = 8 = R̄ₘ − R_F
+R_F = 9.4 − 8·0.8 = 3.0%        R̄ₘ = R_F + 8 = 11.0%   (β = 1)</div>
+      <p class="result">R<sub>F</sub> = 3%, R̄ₘ = 11%.</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c13-9">
+    <div class="prob-head"><span class="prob-num">13.9</span><h3>Required returns for β = 1.2 and 0.9<span class="zh">β 为 1.2 和 0.9 时的要求收益</span></h3></div>
+    <div class="q"><p>Given the security market line R̄ᵢ = 0.07 + 0.09βᵢ, what must be the returns for two stocks, assuming their βs are 1.2 and 0.9?</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="formula">β = 1.2:  0.07 + 0.09·1.2 = 17.8%        β = 0.9:  0.07 + 0.09·0.9 = 15.1%</div>
+    </div></details>
+  </article>
+</section>
+
+<!-- ======================= CHAPTER 14 ======================= -->
+<section class="chapter" id="ch14">
+  <div class="ch-head">
+    <div class="eyebrow">Chapter 14 · pp. 333–334</div>
+    <h2>Nonstandard Forms of Capital Asset Pricing Models<span class="zh">非标准形式的资本资产定价模型</span></h2>
+    <p>What happens to the CAPM when you relax its assumptions: no riskless borrowing, taxes, nonmarketable assets, multiple sources of risk.</p>
+  </div>
+  <div class="notes" id="ch14-notes">
+    <h3>Key concepts<span class="zh">本章要点</span></h3>
+    <div class="concept">
+      <h4>Zero-beta CAPM (no riskless lending or borrowing)<span class="pg">p.312–318</span><span class="zh">零 beta CAPM（无风险借贷不可用）</span></h4>
+      <p>Black’s model: without a riskless asset, the market portfolio M is still efficient, and the SML’s intercept becomes the return on the <b>zero-beta portfolio Z</b>, the minimum-variance portfolio uncorrelated with M. Z lies on the inefficient (lower) half of the minimum-variance frontier. Any two minimum-variance portfolios, such as M and Z, trace out the whole frontier.</p>
+      <p class="zh">Black 模型：没有无风险资产时，SML 的截距换成零 beta 组合 Z 的收益。Z 与 M 不相关，位于最小方差前沿的下半段（无效部分）。</p>
+      <div class="formula">R̄ᵢ = R̄_Z + βᵢ(R̄ₘ − R̄_Z)</div>
+      <div class="refs">
+        <div><span class="lbl">Videos</span><a href="https://www.youtube.com/watch?v=bVFTIPBVw3g" target="_blank" rel="noopener">Black's zero beta CAPM (conference talk)</a><span class="src">Michael Ward</span></div>
+        <div><span class="lbl">Problems</span><a href="#c14-1">14.1</a><a href="#c14-2">14.2</a><a href="#c14-4">14.4</a></div>
+      </div>
+    </div>
+    <div class="concept">
+      <h4>Riskless lending but no riskless borrowing<span class="pg">p.316–320</span><span class="zh">只能无风险贷出、不能借入</span></h4>
+      <p>Investors can combine R<sub>F</sub> with a tangency portfolio T, but cannot lever up. The efficient frontier is the straight line from R<sub>F</sub> to T, then the curved frontier from T upward. M lies on the curve above T. Risky assets still satisfy the zero-beta SML with intercept R̄<sub>Z</sub> &gt; R<sub>F</sub>; lending portfolios (mixes of R<sub>F</sub> and T) lie on a separate, lower line from R<sub>F</sub> to T in beta space.</p>
+      <p class="zh">有效前沿 = 从 R<sub>F</sub> 到切点 T 的直线 + T 以上的曲线。风险资产仍满足以 R̄<sub>Z</sub> 为截距的 SML，R̄<sub>Z</sub> &gt; R<sub>F</sub>；贷出组合在 beta 图中位于另一条较低的线上。</p>
+      <div class="refs">
+        <div><span class="lbl">Problems</span><a href="#c14-4">14.4</a><a href="#c14-7">14.7</a></div>
+      </div>
+    </div>
+    <div class="concept">
+      <h4>Personal taxes: the posttax CAPM<span class="pg">p.322–324</span><span class="zh">个人所得税：税后 CAPM</span></h4>
+      <p>If dividends are taxed more heavily than capital gains, investors demand a higher pretax return on high-dividend-yield stocks. Expected return now depends on beta <i>and</i> dividend yield δ: the equilibrium is a plane, not a line. τ is a positive, wealth-weighted average tax factor.</p>
+      <p class="zh">股利税率高于资本利得税率时，高股息股票需要更高的税前收益。期望收益取决于 beta 和股息率 δ，均衡是一个平面。</p>
+      <div class="formula">R̄ᵢ = R_F + βᵢ[(R̄ₘ − R_F) − τ(δₘ − R_F)] + τ(δᵢ − R_F)</div>
+      <div class="refs">
+        <div><span class="lbl">Problems</span><a href="#c14-3">14.3</a><a href="#c14-5">14.5</a><a href="#c14-8">14.8</a></div>
+      </div>
+    </div>
+    <div class="concept">
+      <h4>Nonmarketable assets, heterogeneous expectations and multi-beta models<span class="pg">p.324–330</span><span class="zh">不可交易资产、异质预期和多 beta 模型</span></h4>
+      <p>Human capital and other nonmarketable assets add a term for covariance with nonmarketable income (Mayers). Heterogeneous expectations make the market portfolio a wealth-weighted blend of beliefs, so it need not be efficient for anyone. Merton’s multiperiod (intertemporal) CAPM adds a beta for each state variable investors hedge (e.g. interest rates, inflation): R̄ᵢ − R<sub>F</sub> = βᵢₘ(R̄ₘ − R<sub>F</sub>) + Σ βᵢₖ(R̄ₖ − R<sub>F</sub>). The consumption CAPM uses beta with aggregate consumption.</p>
+      <p class="zh">人力资本等不可交易资产会增加一项协方差项。预期不同时，市场组合未必对任何人有效。Merton 的跨期 CAPM 对每个要对冲的状态变量（如利率）增加一个 beta。消费 CAPM 用与总消费的 beta。</p>
+      <div class="refs">
+        <div><span class="lbl">Problems</span><a href="#c14-6">14.6</a><a href="#c14-9">14.9</a></div>
+      </div>
+    </div>
+  </div>
+
+  <article class="prob" id="c14-1">
+    <div class="prob-head"><span class="prob-num">14.1</span><h3>Reading the zero-beta model<span class="zh">读零 beta 模型</span></h3></div>
+    <div class="q"><p>Assume the equilibrium equation shown below. What is the return on the zero-beta portfolio and the return on the market assuming the zero-beta model holds?</p>
+      <div class="formula">R̄ᵢ = 0.04 + 0.10βᵢ</div></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="formula">R̄ᵢ = R̄_Z + βᵢ(R̄ₘ − R̄_Z)   ⇒   R̄_Z = 4%,   R̄ₘ − R̄_Z = 10%  ⇒  R̄ₘ = 14%</div>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c14-2">
+    <div class="prob-head"><span class="prob-num">14.2</span><h3>Zero-beta model in price form<span class="zh">零 beta 模型的价格形式</span></h3></div>
+    <div class="q"><p>In the previous chapter we showed that the standard CAPM model could be written in price form. What is the zero-beta model in price form?</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <p>Repeat the Chapter 13 derivation with R̄<sub>Z</sub> in place of R<sub>F</sub>. Let r<sub>Z</sub> = 1 + R̄<sub>Z</sub> and substitute Rᵢ = Yᵢ/Pᵢ − 1, Rₘ = Yₘ/Pₘ − 1 into R̄ᵢ = R̄<sub>Z</sub> + (R̄ₘ − R̄<sub>Z</sub>)·cov(Rᵢ, Rₘ)/σₘ²:</p>
+      <div class="formula">Ȳᵢ/Pᵢ = r_Z + (Ȳₘ/Pₘ − r_Z) · Pₘ·cov(Yᵢ, Yₘ) / (Pᵢ·var(Yₘ))
+Ȳᵢ = r_Z·Pᵢ + (Ȳₘ − r_Z·Pₘ) · cov(Yᵢ, Yₘ)/var(Yₘ)
+
+Pᵢ = (1/r_Z) · [ Ȳᵢ − (Ȳₘ − r_Z·Pₘ) · cov(Yᵢ, Yₘ)/var(Yₘ) ]</div>
+      <p class="zh">和第 13 章的推导一样，只是把 R<sub>F</sub> 换成 R̄<sub>Z</sub>。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c14-3">
+    <div class="prob-head"><span class="prob-num">14.3</span><h3>Risk-free rate in the posttax model<span class="zh">税后模型中的无风险利率</span></h3></div>
+    <div class="q"><p>Given the model shown below, what is the risk-free rate if the posttax equilibrium model describes returns?</p>
+      <div class="formula">R̄ᵢ = 0.05 + 0.10βᵢ + 0.24δᵢ</div></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <p>Rearrange the posttax model to separate the constant, the beta term and the dividend-yield term:</p>
+      <div class="formula">R̄ᵢ = R_F(1 − τ) + βᵢ[(R̄ₘ − R_F) − τ(δₘ − R_F)] + τ·δᵢ
+Match coefficients:  τ = 0.24,   R_F(1 − 0.24) = 0.05</div>
+      <p class="result">R<sub>F</sub> = 0.05/0.76 = 6.58%.</p>
+      <p class="zh">δ 的系数就是 τ = 0.24；常数项 = R<sub>F</sub>(1 − τ)，所以 R<sub>F</sub> = 6.58%。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c14-4">
+    <div class="prob-head"><span class="prob-num">14.4</span><h3>Drawing the frontier with M, Z and R<sub>F</sub><span class="zh">用 M、Z、R<sub>F</sub> 画前沿</span></h3></div>
+    <div class="q"><p>Given R̄ₘ = 15, σₘ = 22, R̄<sub>Z</sub> = 5, σ<sub>Z</sub> = 8 and R<sub>F</sub> = 3: draw the minimum variance curve and efficient frontier in expected return standard deviation space. Be sure to give the coordinates of all key points. Draw the security market line.</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <p>Since R̄<sub>Z</sub> ≠ R<sub>F</sub>, the riskless rate can only be used for lending (with borrowing too, M would be the tangency portfolio and R̄<sub>Z</sub> would equal R<sub>F</sub>). M and Z are both on the minimum-variance curve and uncorrelated, so the whole curve is their combinations: X in M, 1 − X in Z.</p>
+      <div class="formula">R̄(X) = 5 + 10X        σ²(X) = 484X² + 64(1 − X)²
+
+Minimum-variance portfolio:  X = 64/(484 + 64) = 0.117   ⇒  R̄ = 6.17,  σ = 7.52
+Tangency from R_F = 3:       weights ∝ excess return/variance = 12/484 : 2/64
+                             X = 0.442   ⇒  R̄ = 9.42,  σ = 10.71,  slope (9.42 − 3)/10.71 = 0.60</div>
+      <div class="tbl"><table>
+        <tr><th>Point</th><th>σ</th><th>R̄</th></tr>
+        <tr><td>R<sub>F</sub></td><td>0</td><td>3.00</td></tr>
+        <tr><td>Z (zero-beta)</td><td>8.00</td><td>5.00</td></tr>
+        <tr><td>MVP</td><td>7.52</td><td>6.17</td></tr>
+        <tr><td>T (tangency)</td><td>10.71</td><td>9.42</td></tr>
+        <tr><td>M (market)</td><td>22.00</td><td>15.00</td></tr>
+      </table></div>
+      <p class="result">Efficient frontier: the straight line from R<sub>F</sub> (0, 3) to T (10.71, 9.42), then the curve from T up through M. Z is on the inefficient lower half of the curve.</p>
+      <div class="charts">
+        <div class="chart"><div id="chart-c14-4a"></div><div class="cap">Grey: minimum-variance curve. Red: efficient frontier (lend at R<sub>F</sub> up to T, then the curve).<span class="zh">灰线为最小方差曲线，红线为有效前沿。</span></div></div>
+        <div class="chart"><div id="chart-c14-4b"></div><div class="cap">Expected return–beta space. Risky assets lie on R̄ = 5 + 10β (through Z and M). Lending portfolios lie on the lower line from R<sub>F</sub> to T (β<sub>T</sub> = 0.44).<span class="zh">风险资产在 R̄ = 5 + 10β 上，贷出组合在 R<sub>F</sub> 到 T 的较低直线上。</span></div></div>
+      </div>
+      <p>Security market line for risky assets: R̄ᵢ = 5 + 10βᵢ. A mix of R<sub>F</sub> and T has beta equal to its weight in T times β<sub>T</sub> = 0.442 (T’s beta equals its weight in M because β<sub>Z</sub> = 0).</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c14-5">
+    <div class="prob-head"><span class="prob-num">14.5</span><h3>Arbitrage between a believer and a skeptic<span class="zh">相信税后模型与不相信者之间的套利</span></h3></div>
+    <div class="q"><p>You have just lectured two tax-free institutions on the necessity of including taxes in the general equilibrium relationship. One believed you and one did not. Demonstrate that if the model holds, the one that did could engage in risk-free arbitrage with the one that did not in a manner such that: A. Both parties believed they were making an arbitrage profit in the transaction. B. The one who believed in the posttax model actually made a profit; the other institution incurred a loss.</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <p>Take two stocks H (high dividend yield) and L (low yield) with the <b>same beta</b>. If the posttax model holds, H’s expected pretax return exceeds L’s by τ(δ<sub>H</sub> − δ<sub>L</sub>). The skeptic uses the pretax CAPM, so it expects the same return on both.</p>
+      <div class="part"><h5><b>The trade</b><span class="zh">交易</span></h5>
+        <p>The believer buys H from the skeptic at a small premium above market (say ε per dollar) and sells L to the skeptic at a small discount ε. The position is long H, short L, zero beta and zero net investment.</p></div>
+      <div class="part"><h5><b>A. Both think they profit</b><span class="zh">双方都认为自己赚了</span></h5>
+        <p>Skeptic: H and L have the same expected return, so selling H above value and buying L below value is a riskless gain of 2ε. Believer: the long–short position earns τ(δ<sub>H</sub> − δ<sub>L</sub>) − 2ε &gt; 0 if ε is small enough.</p></div>
+      <div class="part"><h5><b>B. Who actually profits</b><span class="zh">实际谁赚</span></h5>
+        <p>The posttax model is true, so H really does earn τ(δ<sub>H</sub> − δ<sub>L</sub>) more. Both institutions are tax-free, so they keep that whole difference. The believer gains τ(δ<sub>H</sub> − δ<sub>L</sub>) − 2ε; the skeptic, holding the mirror position, loses the same amount.</p></div>
+      <p class="zh">选 beta 相同的高股息 H 和低股息 L。相信者以略高价格买 H、略低价格卖 L。不相信者以为两者收益相同，白赚价差；但税后模型成立时 H 确实多赚 τ(δ<sub>H</sub> − δ<sub>L</sub>)，免税机构能全部拿到，所以相信者真赚，不相信者真亏。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c14-6">
+    <div class="prob-head"><span class="prob-num">14.6</span><h3>A second factor: interest-rate changes<span class="zh">第二个因子：利率变化</span></h3></div>
+    <div class="q"><p>Assume that returns are generated as follows: Rᵢ = R̄ᵢ + aᵢ(Rₘ − R̄ₘ) + bᵢ(C − C̄), where C is the rate of change in interest rates. Derive a general equilibrium relationship for security returns.</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <p>Returns have two sources of systematic risk, so (as in Merton’s multi-beta CAPM or a two-factor APT) expected return is linear in both sensitivities. Form a well-diversified portfolio with a = 0 and b = 0: it is riskless, so it must earn R<sub>F</sub>. Portfolios with a = 1, b = 0 and a = 0, b = 1 define the two risk premiums.</p>
+      <div class="formula">R̄ᵢ = R_F + aᵢ·λₘ + bᵢ·λ_C
+λₘ = R̄ₚ₁ − R_F   (portfolio with a = 1, b = 0)
+λ_C = R̄ₚ₂ − R_F   (portfolio with a = 0, b = 1: the price of interest-rate risk)</div>
+      <p>If the market portfolio has no net exposure to C, λₘ = R̄ₘ − R<sub>F</sub>. If investors want to hedge rising rates, λ<sub>C</sub> will be negative for securities that pay off when rates rise.</p>
+      <p class="zh">两个系统风险来源，期望收益对两种敏感度都是线性的：R̄ᵢ = R<sub>F</sub> + aᵢλₘ + bᵢλ<sub>C</sub>。λ 由只暴露于单一因子的组合决定。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c14-7">
+    <div class="prob-head"><span class="prob-num">14.7</span><h3>Lending allowed, borrowing not<span class="zh">可贷出不可借入</span></h3></div>
+    <div class="q"><p>If R̄ₘ = 15% and R<sub>F</sub> = 5% and risk-free lending is allowed but riskless borrowing is not, sketch what the efficient frontier might look like in expected return standard deviation space. Sketch the security market line and the location of all portfolios in expected return beta space. Label all points and explain why you have drawn them as you have.</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <p>The shape is the same as the charts in <a href="#c14-4">Problem 14.4</a> (which use R<sub>F</sub> = 3 instead of 5).</p>
+      <div class="part"><h5><b>Mean–standard deviation space</b><span class="zh">均值–标准差图</span></h5>
+        <p>Draw the minimum-variance curve. From R<sub>F</sub> = 5% draw the line tangent to the curve at T. Investors who want little risk lend and hold T; investors who want more risk than T cannot borrow, so they move <i>up the curve</i> past T. Since the market is the wealth-weighted average of what everyone holds, M (15%) lies on the curve <b>above T</b>. Efficient frontier: R<sub>F</sub> → T (straight), then T → M → beyond (curve).</p></div>
+      <div class="part"><h5><b>Expected return–beta space</b><span class="zh">期望收益–beta 图</span></h5>
+        <p>All risky assets and all risky portfolios on the curve lie on the zero-beta SML: R̄ᵢ = R̄<sub>Z</sub> + βᵢ(15 − R̄<sub>Z</sub>), through Z (β = 0) and M (β = 1). Because the tangency line from 5% touches the curve below M, the zero-beta rate R̄<sub>Z</sub> is <b>above 5%</b>. Lending portfolios (R<sub>F</sub> plus T) lie on a separate straight line from (0, 5%) to T, below the zero-beta SML for β &lt; β<sub>T</sub>.</p></div>
+      <p class="zh">均值–标准差图：从 R<sub>F</sub> 到切点 T 是直线，之后沿曲线向上，M 在 T 上方。beta 图：风险资产在截距为 R̄<sub>Z</sub>（&gt; 5%）的 SML 上；贷出组合在从 5% 到 T 的较低直线上。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c14-8">
+    <div class="prob-head"><span class="prob-num">14.8</span><h3>A two-security swap with a pretax believer<span class="zh">与相信税前 CAPM 的人做互换</span></h3></div>
+    <div class="q"><p>Assume you paid a higher tax on income than on capital gains. Furthermore, assume that you believed that prices were determined by the posttax CAPM. Now another investor comes along who believes that prices are determined by the pretax CAPM. Demonstrate that you can make an excess return by engaging in a two-security swap with him.</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <p>Pick H (high yield) and L (low yield) with equal betas. Under the posttax CAPM, H must offer a higher pretax return to compensate for dividend taxes. The other investor uses the pretax CAPM, so to him the two are interchangeable at market prices.</p>
+      <p>Swap: you give him H (which you, as a high-income-tax investor, value less after tax) and take L in exchange, asking for a small sweetener (a slightly better price on L or a little cash). He accepts because by his model the trade costs him nothing and gains him the sweetener. You end up with the same beta, a portfolio tilted toward capital gains that suits your tax bracket, and the sweetener on top: an excess return on an after-tax basis.</p>
+      <p class="zh">选 beta 相同的高股息 H 和低股息 L。你用 H 换他的 L，并要求一点补偿。按他的税前模型两者等价，所以愿意换。你得到更适合自己税率的低股息股票，再加上补偿，税后获得超额收益。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c14-9">
+    <div class="prob-head"><span class="prob-num">14.9</span><h3>Leaving bonds out of the market index<span class="zh">市场指数中漏掉债券</span></h3></div>
+    <div class="q"><p>As we will see in the next chapter, most tests of the CAPM involve tests on common stock data and perform the tests using the S&amp;P index. You have just had a revelation that bonds are also marketable assets and thus should belong in the market return. Show what effect leaving them out might have on stocks with different characteristics.</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <p>The true market is M = w·S + (1 − w)·B (stocks plus bonds), so a stock’s true beta depends on its covariance with both: βᵢ = [w·cov(Rᵢ, S) + (1 − w)·cov(Rᵢ, B)]/σₘ². Measuring beta against the S&amp;P alone ignores the bond term.</p>
+      <ul>
+        <li><b>Interest-rate-sensitive stocks</b> (utilities, banks, high-dividend stocks) covary strongly with bonds. Their true beta is higher, relative to other stocks, than their S&amp;P beta suggests, so their true expected return is higher than the S&amp;P-based SML predicts. In tests they will appear to have <b>positive alphas</b>.</li>
+        <li><b>Stocks with little bond covariance</b> (e.g. growth stocks) are the reverse: relative to their S&amp;P beta they will appear to have <b>negative alphas</b>.</li>
+        <li>The fitted SML is distorted: its intercept and slope no longer equal R<sub>F</sub> and R̄ₘ − R<sub>F</sub>, and the test may wrongly reject (or accept) the CAPM. This is Roll’s point in Chapter 15: a test is only a test of whether the chosen proxy is efficient.</li>
+      </ul>
+      <p class="zh">真正的市场包含债券。与债券高度相关的股票（公用事业、银行、高股息股）真实 beta 被低估，检验中会显示正 alpha；与债券无关的股票会显示负 alpha。整条 SML 被扭曲，这正是 Roll 批评的要点。</p>
+    </div></details>
+  </article>
+</section>
+
+<!-- ======================= CHAPTER 15 ======================= -->
+<section class="chapter" id="ch15">
+  <div class="ch-head">
+    <div class="eyebrow">Chapter 15 · p. 359</div>
+    <h2>Empirical Tests of Equilibrium Models<span class="zh">均衡模型的实证检验</span></h2>
+    <p>How the CAPM is tested with realized data, what the tests find, and why the tests themselves are hard to interpret.</p>
+  </div>
+  <div class="notes" id="ch15-notes">
+    <h3>Key concepts<span class="zh">本章要点</span></h3>
+    <div class="concept">
+      <h4>Ex ante model, ex post tests<span class="pg">p.340–341</span><span class="zh">事前模型，事后检验</span></h4>
+      <p>The CAPM is about expectations, but we only observe realized returns. Tests assume expectations are on average right, so the ex post version is Rᵢₜ = R<sub>F</sub>ₜ + βᵢ(Rₘₜ − R<sub>F</sub>ₜ) + εᵢₜ. In any single period the market can do worse than R<sub>F</sub>, and then high-beta stocks <i>should</i> do worse. Tests need long periods.</p>
+      <p class="zh">CAPM 讲的是预期，检验只能用已实现收益。单期内市场可能跑输 R<sub>F</sub>，这时高 beta 股票本来就应该更差，所以要用长时间数据。</p>
+      <div class="refs">
+        <div><span class="lbl">Problems</span><a href="#c15-1">15.1</a></div>
+      </div>
+    </div>
+    <div class="concept">
+      <h4>Two-pass tests and what they find<span class="pg">p.341–352</span><span class="zh">两步法检验及结论</span></h4>
+      <p><b>First pass:</b> time-series regressions estimate each security’s (or portfolio’s) beta. <b>Second pass:</b> cross-sectional regression of average returns on beta: R̄ᵢ = γ₀ + γ₁βᵢ + γ₂βᵢ² + γ₃σ²(eᵢ) + ηᵢ. The CAPM predicts γ₀ = R<sub>F</sub>, γ₁ = R̄ₘ − R<sub>F</sub> &gt; 0, γ₂ = 0 (linear) and γ₃ = 0 (residual risk not priced). Portfolios are used to reduce errors in beta; Fama–MacBeth run the cross-section every month. Typical findings: return rises with beta and is linear, residual risk is not rewarded, but the intercept is above R<sub>F</sub> and the slope is flatter than R̄ₘ − R<sub>F</sub>, consistent with a zero-beta version.</p>
+      <p class="zh">第一步时间序列回归估计 beta，第二步横截面回归检验 γ₀ = R<sub>F</sub>、γ₁ &gt; 0、线性、残差风险不定价。结论：收益随 beta 线性上升、残差风险无回报，但截距高于 R<sub>F</sub>、斜率偏平，与零 beta 模型一致。</p>
+      <div class="formula">R̄ᵢ = γ₀ + γ₁βᵢ + γ₂βᵢ² + γ₃σ²(eᵢ) + ηᵢ</div>
+      <div class="refs">
+        <div><span class="lbl">Videos</span><a href="https://www.youtube.com/watch?v=9sIFMRDpxyI" target="_blank" rel="noopener">Fama-MacBeth Approach for Estimating Market Prices of Risk</a><span class="src">C-RAM</span><a href="https://www.youtube.com/watch?v=ddCxdqjvJHw" target="_blank" rel="noopener">CAPM Alpha/Beta Estimation and Security Market Line</a><span class="src">Jonathan Kalodimos, PhD</span></div>
+        <div><span class="lbl">Problems</span><a href="#c15-2">15.2</a><a href="#c15-5">15.5</a></div>
+      </div>
+    </div>
+    <div class="concept">
+      <h4>Roll’s critique<span class="pg">p.356–358</span><span class="zh">Roll 的批评</span></h4>
+      <p>The linear relation between expected return and beta holds exactly, as a mathematical identity, whenever betas are measured against <b>any</b> mean–variance efficient portfolio. So a test of the CAPM is really a test of whether the chosen market proxy is efficient. The true market portfolio (all assets, including bonds, real estate and human capital) is unobservable, so the CAPM cannot be cleanly tested.</p>
+      <p class="zh">只要用任何一个有效组合计算 beta，期望收益与 beta 的线性关系都在数学上成立。所以检验 CAPM 等于检验所选的市场代理是否有效；真正的市场组合观察不到，CAPM 无法被干净地检验。</p>
+      <div class="refs">
+        <div><span class="lbl">Problems</span><a href="#c15-3">15.3</a><a href="#c14-9">14.9</a></div>
+      </div>
+    </div>
+  </div>
+
+  <article class="prob" id="c15-1">
+    <div class="prob-head"><span class="prob-num">15.1</span><h3>“High-beta stocks did worse last year”<span class="zh">“去年高 beta 股票表现更差”</span></h3></div>
+    <div class="q"><p>We have sometimes heard investment managers say, “I followed that (expletive deleted) theory and bought high-beta stocks last year and they did worse than low-beta stocks. That theory is (expletive deleted).” Is this a valid test, and is this empirical evidence inconsistent with the theory?</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <p class="result">Not a valid test, and not inconsistent with the CAPM.</p>
+      <p>The CAPM says high-beta stocks have higher <i>expected</i> returns. The realized relation is Rᵢ = R<sub>F</sub> + βᵢ(Rₘ − R<sub>F</sub>) + eᵢ: if last year’s market return was below the riskless rate, the ex post line slopes down and high-beta stocks <i>should</i> have done worse. That is exactly what risk means. One year is also far too short, and one manager’s handful of stocks carries a lot of residual noise. A valid test uses many periods and well-diversified portfolios, and checks whether high beta is rewarded on average.</p>
+      <p class="zh">不是有效检验，也不与理论矛盾。CAPM 讲的是期望收益；如果去年市场收益低于无风险利率，高 beta 股票本来就该表现更差，这正是风险的含义。一年也太短。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c15-2">
+    <div class="prob-head"><span class="prob-num">15.2</span><h3>Testing the “alcoholism” theory<span class="zh">检验“酗酒”理论</span></h3></div>
+    <div class="q"><p>A new theory has been proposed. The expected percentage increase in alcoholism in each city is equal to the rate of change in the price of gold plus the product of two terms. The first is the covariance of the percentage change in alcoholism in the city with the percentage change in professors’ salaries divided by the variance of the percentage change in professors’ salaries. The second term is the percentage change in professors’ salaries minus the percentage increase in gold. How would you test this proposition?</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <p>Written out, the theory is a CAPM in disguise. Let Aᵢ = % change in alcoholism in city i, S = % change in professors’ salaries (the “market”), G = % change in the gold price (the “riskless rate”):</p>
+      <div class="formula">E(Aᵢ) = G + βᵢ(S − G),    βᵢ = cov(Aᵢ, S)/var(S)</div>
+      <p>Test it the way the CAPM is tested:</p>
+      <ol>
+        <li><b>First pass (time series):</b> for each city, regress Aᵢₜ on Sₜ to estimate βᵢ. Group cities into portfolios by beta to reduce measurement error.</li>
+        <li><b>Second pass (cross section):</b> regress average Aᵢ on the estimated βᵢ (and add βᵢ² and residual variance): Āᵢ = γ₀ + γ₁βᵢ + γ₂βᵢ² + γ₃σ²(eᵢ) + η.</li>
+        <li><b>Check the predictions:</b> γ₀ = average G; γ₁ = average (S − G); γ₂ = 0 (linearity); γ₃ = 0 (city-specific variation is not “priced”). Repeat across subperiods (Fama–MacBeth) to get standard errors.</li>
+      </ol>
+      <p class="zh">这就是换了名字的 CAPM：先对每个城市做时间序列回归估计 beta，再做横截面回归，检验截距 = 黄金涨幅、斜率 = 工资涨幅减黄金涨幅、线性、残差方差不起作用。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c15-3">
+    <div class="prob-head"><span class="prob-num">15.3</span><h3>If M is not efficient, the zero-beta CAPM fails<span class="zh">M 无效时零 beta CAPM 不成立</span></h3></div>
+    <div class="q"><p>Show that if the market portfolio is not an efficient portfolio, then R̄ᵢ = R̄<sub>Z</sub> + βᵢ(R̄ₘ − R̄<sub>Z</sub>) cannot in general hold.</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <p>Write the relation for all N assets at once in vector form, with μ the vector of expected returns, Σ the covariance matrix, xₘ the market weights and 1 a vector of ones. Since βᵢ = (Σxₘ)ᵢ/σₘ²:</p>
+      <div class="formula">μ = R̄_Z·1 + [(R̄ₘ − R̄_Z)/σₘ²] · Σ·xₘ
+⇒  Σ·xₘ = [σₘ²/(R̄ₘ − R̄_Z)] · (μ − R̄_Z·1)
+⇒  xₘ = k · Σ⁻¹(μ − R̄_Z·1),   k a positive constant</div>
+      <p>But x = k·Σ⁻¹(μ − c·1) is exactly the first-order condition for the tangency portfolio from a rate c: the portfolio that maximizes (R̄ₚ − c)/σₚ, which lies on the efficient frontier. So if the relation holds for every asset, M must be on the efficient frontier. Contrapositive: if M is not efficient, no R̄<sub>Z</sub> can make the relation hold for all assets.</p>
+      <p class="zh">把关系写成向量形式可推出 xₘ ∝ Σ⁻¹(μ − R̄<sub>Z</sub>·1)，这正是有效组合（切点组合）的一阶条件。所以关系对所有资产成立 ⇔ M 有效；M 无效时关系不可能普遍成立。这就是 Roll 批评的数学基础。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c15-4">
+    <div class="prob-head"><span class="prob-num">15.4</span><h3>Using equilibrium theory to evaluate managers<span class="zh">用均衡理论评价基金经理</span></h3></div>
+    <div class="q"><p>Explain how you might use general equilibrium theory to evaluate the performance of one or more common-stocks managers.</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <p>The equilibrium model gives the return a manager should earn for the risk taken; performance is the difference between actual and required return.</p>
+      <ul>
+        <li><b>Jensen’s alpha:</b> regress (Rₚₜ − R<sub>F</sub>ₜ) on (Rₘₜ − R<sub>F</sub>ₜ). The intercept αₚ is the average return above the SML; a significantly positive α (t-test) means superior performance.</li>
+        <li><b>Treynor</b> (R̄ₚ − R<sub>F</sub>)/βₚ and <b>Sharpe</b> (R̄ₚ − R<sub>F</sub>)/σₚ ratios rank managers relative to the SML and CML.</li>
+        <li>If a nonstandard model fits better (zero-beta, posttax, multi-factor), use its benchmark instead, e.g. replace R<sub>F</sub> with R̄<sub>Z</sub> or add other betas. This is developed in <a href="#ch26">Chapter 26</a>.</li>
+      </ul>
+      <p class="zh">均衡模型给出“应得收益”，实际收益减去应得收益就是业绩。常用 Jensen alpha、Treynor 和 Sharpe 比率；也可换成零 beta 或多因子基准。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c15-5">
+    <div class="prob-head"><span class="prob-num">15.5</span><h3>Posttax CAPM true, Sharpe–Lintner tested<span class="zh">税后 CAPM 成立却检验 Sharpe–Lintner 模型</span></h3></div>
+    <div class="q"><p>Assume the posttax CAPM holds but the Sharpe–Lintner model is tested. What would you expect the empirical results to look like?</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="formula">True:    R̄ᵢ = R_F(1 − τ) + βᵢ[(R̄ₘ − R_F) − τ(δₘ − R_F)] + τδᵢ
+Tested:  R̄ᵢ = γ₀ + γ₁βᵢ + ηᵢ</div>
+      <ul>
+        <li>The dividend-yield term τδᵢ is omitted, so the residuals ηᵢ are positively related to dividend yield: high-yield stocks show <b>positive alphas</b>, low-yield stocks negative alphas. Adding δᵢ to the regression would give a significant positive coefficient (≈ τ).</li>
+        <li>The slope on beta is not R̄ₘ − R<sub>F</sub> but (R̄ₘ − R<sub>F</sub>) − τ(δₘ − R<sub>F</sub>).</li>
+        <li>Low-beta stocks tend to have high yields (utilities). If yield and beta are negatively correlated, the omitted yield effect props up returns of low-beta stocks: the estimated intercept is <b>above R<sub>F</sub></b> and the slope is <b>flatter</b>, the same pattern the empirical tests actually found.</li>
+      </ul>
+      <p class="zh">漏掉了股息率项：高股息股票显示正 alpha；beta 的斜率不再是市场溢价。低 beta 股票往往股息高，所以估计出的截距高于 R<sub>F</sub>、斜率偏平，与实际检验结果一致。</p>
+    </div></details>
+  </article>
+</section>
+
+<!-- ======================= CHAPTER 20 ======================= -->
+<section class="chapter" id="ch20">
+  <div class="ch-head">
+    <div class="eyebrow">Chapter 20 · pp. 499–513 · no end-of-chapter problems</div>
+    <h2>Behavioral Finance, Investor Decision Making, and Asset Prices<span class="zh">行为金融、投资者决策与资产价格</span></h2>
+    <p>How real investors depart from expected-utility rationality, and whether those departures move prices.</p>
+  </div>
+  <div class="notes" id="ch20-notes">
+    <h3>Key concepts<span class="zh">本章要点</span></h3>
+    <div class="concept">
+      <h4>Prospect theory and framing<span class="pg">p.499–501</span><span class="zh">前景理论与框架效应</span></h4>
+      <p>Kahneman and Tversky: people value <b>gains and losses relative to a reference point</b> (purchase price, current wealth), not final wealth. The value function is concave for gains (risk averse) and convex for losses (risk seeking), and steeper for losses (loss aversion). Framing the same choice as “lives saved” or “lives lost” flips the majority choice (the Asian disease experiment: 72% vs 22% pick the sure option). Markowitz (1952) had earlier proposed utility measured relative to “customary wealth”.</p>
+      <p class="zh">以参照点衡量得失，而不是最终财富。收益区凹（风险厌恶），损失区凸（风险偏好），损失一侧更陡（损失厌恶）。同一问题换个说法，选择就会翻转。</p>
+      <div class="refs">
+        <div><span class="lbl">Videos</span><a href="https://www.youtube.com/watch?v=XdHG16DvoEU" target="_blank" rel="noopener">Behavioral Finance Basics: Introduction to Prospect Theory</a><span class="src">Dr. Bryan Foltice</span><a href="https://www.youtube.com/watch?v=Sl-qgzF70IM" target="_blank" rel="noopener">Prospect Theory: An Overview</a><span class="src">Ashley Hodgson</span></div>
+      </div>
+    </div>
+    <div class="concept">
+      <h4>The disposition effect<span class="pg">p.501–502</span><span class="zh">处置效应</span></h4>
+      <p>Investors sell winners too early and hold losers too long (Shefrin and Statman, 1985). With a prospect-theory value function, a stock bought at $50 now at $40 sits in the loss region, so the investor gambles on getting back to break-even rather than realizing the loss. This is the opposite of good tax planning (realize losses, defer gains). Odean (1998) confirms it in brokerage data; it is weaker for wealthier, more educated investors.</p>
+      <p class="zh">过早卖出赚钱的股票、死守亏钱的股票。这与合理的税务安排（实现亏损、推迟收益）相反。</p>
+      <div class="refs">
+        <div><span class="lbl">Videos</span><a href="https://www.youtube.com/watch?v=YUedGJ9KPTg" target="_blank" rel="noopener">Behavioral Finance Basics: Prospect Theory and Mental Accounting</a><span class="src">Dr. Bryan Foltice</span></div>
+      </div>
+    </div>
+    <div class="concept">
+      <h4>Heuristics and other biases<span class="pg">p.502–506</span><span class="zh">启发式与其他偏差</span></h4>
+      <p><b>Representativeness:</b> stereotyping and jumping to conclusions from small samples. <b>Anchoring and adjustment:</b> starting from a familiar number (e.g. the S&amp;P return) and adjusting too little. <b>Availability:</b> judging probabilities by recent or vivid events. <b>Overconfidence:</b> overestimating one’s own forecasting ability, which leads to excessive trading. Others: mental accounting, home bias, money illusion.</p>
+      <p class="zh">代表性、锚定与调整、可得性、过度自信（导致过度交易），以及心理账户、本土偏好、货币幻觉等。</p>
+    </div>
+    <div class="concept">
+      <h4>Do biases affect prices? Limits to arbitrage<span class="pg">p.506–513</span><span class="zh">偏差会影响价格吗？套利的限制</span></h4>
+      <p>Rational theory (especially APT) needs only some well-capitalized arbitrageurs to push mispriced securities back to the security market line. Biases can move prices when arbitrage is limited: short-selling constraints, transaction costs, illiquidity, or lack of financing. Example: Massmutual Corporate Investors (ticker MCI) moved on news about the telecom firm MCI (ticker MCIC); the fund was too small and illiquid for arbitrageurs to correct. Behavioral explanations are offered for anomalies such as momentum and overreaction.</p>
+      <p class="zh">理性定价只需要少数资金充足的套利者纠正错价。卖空限制、交易成本、流动性差或缺乏融资时，套利受限，偏差才会影响价格。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= CHAPTER 26 ======================= -->
+<section class="chapter" id="ch26">
+  <div class="ch-head">
+    <div class="eyebrow">Chapter 26 · p. 693</div>
+    <h2>Evaluation of Portfolio Performance<span class="zh">投资组合业绩评估</span></h2>
+    <p>Risk-adjusted measures that ask whether a manager beat a passive strategy with the same risk.</p>
+  </div>
+  <div class="notes" id="ch26-notes">
+    <h3>Key concepts<span class="zh">本章要点</span></h3>
+    <div class="concept">
+      <h4>Sharpe ratio (reward-to-variability)<span class="pg">p.661–663</span><span class="zh">夏普比率</span></h4>
+      <p>Excess return per unit of total risk: the slope of the line from R<sub>F</sub> to the portfolio in mean–standard deviation space. Right measure when the portfolio is the investor’s whole risky holding, so total risk matters.</p>
+      <p class="zh">每单位总风险的超额收益，即从 R<sub>F</sub> 到该组合连线的斜率。组合代表投资者全部风险资产时适用。</p>
+      <div class="formula">Sₚ = (R̄ₚ − R_F)/σₚ</div>
+      <div class="refs">
+        <div><span class="lbl">Videos</span><a href="https://www.youtube.com/watch?v=yOSnxTeezVU" target="_blank" rel="noopener">Sharpe ratio, Treynor ratio, Jensen's alpha</a><span class="src">Initial Return</span><a href="https://www.youtube.com/watch?v=9NJqujK5v5g" target="_blank" rel="noopener">Sharpe, Treynor and Jensen's Alpha (Calculations)</a><span class="src">AnalystPrep</span></div>
+        <div><span class="lbl">Problems</span><a href="#c26-1">26.1</a><a href="#c26-6">26.6</a></div>
+      </div>
+    </div>
+    <div class="concept">
+      <h4>Treynor ratio (excess return to beta)<span class="pg">p.663–665</span><span class="zh">特雷诺比率</span></h4>
+      <p>Excess return per unit of systematic risk: the slope from R<sub>F</sub> to the portfolio in expected return–beta space. Right measure when the portfolio is one of many held, so only its beta adds to the investor’s risk.</p>
+      <p class="zh">每单位系统风险的超额收益。当组合只是投资者众多持仓之一时适用。</p>
+      <div class="formula">Tₚ = (R̄ₚ − R_F)/βₚ</div>
+      <div class="refs">
+        <div><span class="lbl">Problems</span><a href="#c26-2">26.2</a></div>
+      </div>
+    </div>
+    <div class="concept">
+      <h4>Differential return and Jensen’s alpha<span class="pg">p.665–669</span><span class="zh">差额收益与 Jensen alpha</span></h4>
+      <p>Compare the portfolio with a passive mix of the market and the riskless asset that has the same risk. With β as the risk measure the benchmark is the SML, and the differential return is Jensen’s alpha (estimated as the intercept of the excess-return regression). With σ as the risk measure the benchmark is the CML. If the zero-beta model holds, replace R<sub>F</sub> with R̄<sub>Z</sub>.</p>
+      <p class="zh">与相同风险的被动组合比较。用 β 时基准是 SML（即 Jensen alpha）；用 σ 时基准是 CML；零 beta 模型下把 R<sub>F</sub> 换成 R̄<sub>Z</sub>。</p>
+      <div class="formula">β benchmark:   R′ₚ = R_F + βₚ(R̄ₘ − R_F)              αₚ = R̄ₚ − R′ₚ
+σ benchmark:   R′ₚ = R_F + σₚ(R̄ₘ − R_F)/σₘ
+Zero-beta:     R′ₚ = R̄_Z + βₚ(R̄ₘ − R̄_Z)</div>
+      <div class="refs">
+        <div><span class="lbl">Videos</span><a href="https://www.youtube.com/watch?v=_5ouIZG05Yc" target="_blank" rel="noopener">Comparing Mutual Funds: Sharpe, Treynor &amp; Jensen's Alpha</a><span class="src">Aditya Classes</span></div>
+        <div><span class="lbl">Problems</span><a href="#c26-3">26.3</a><a href="#c26-4">26.4</a><a href="#c26-5">26.5</a></div>
+      </div>
+    </div>
+    <div class="concept">
+      <h4>Market timing and multi-index evaluation<span class="pg">p.670–678</span><span class="zh">择时能力与多指数评估</span></h4>
+      <p>A manager who raises beta before up markets and lowers it before down markets produces a convex relation between portfolio and market returns. <b>Treynor–Mazuy</b> add a squared term, (Rₘ − R<sub>F</sub>)²; <b>Henriksson–Merton</b> add a separate up-market beta. A significant positive coefficient indicates timing ability. Multi-index benchmarks (size, value, bonds) avoid crediting a manager for simply holding a style the single index misses. Evidence: mutual funds on average do not beat passive benchmarks after expenses.</p>
+      <p class="zh">择时能力会让组合收益与市场收益呈凸关系。Treynor–Mazuy 加平方项，Henriksson–Merton 加上涨市场的单独 beta。多指数基准可以避免把风格暴露误当成能力。平均而言共同基金扣费后跑不赢被动基准。</p>
+      <div class="formula">Treynor–Mazuy:  Rₚ − R_F = a + b(Rₘ − R_F) + c(Rₘ − R_F)² + e,   timing if c &gt; 0</div>
+    </div>
+  </div>
+
+  <article class="prob" id="c26-1">
+    <div class="prob-head"><span class="prob-num">26.1</span><h3>Reward-to-variability ranking<span class="zh">夏普比率排名</span></h3></div>
+    <div class="q">
+      <p>Here are data on five mutual funds:</p>
+      <div class="tbl"><table>
+        <tr><th>Fund</th><th>Return</th><th>Std. dev.</th><th>Beta</th></tr>
+        <tr><td>A</td><td>14</td><td>6</td><td>1.5</td></tr>
+        <tr><td>B</td><td>12</td><td>4</td><td>0.5</td></tr>
+        <tr><td>C</td><td>16</td><td>8</td><td>1.0</td></tr>
+        <tr><td>D</td><td>10</td><td>6</td><td>0.5</td></tr>
+        <tr><td>E</td><td>20</td><td>10</td><td>2</td></tr>
+      </table></div>
+      <p>What is the reward-to-variability ratio and the ranking if the risk-free rate is 3%?</p>
+    </div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="tbl"><table>
+        <tr><th>Fund</th><th>(R̄ − 3)/σ</th><th>Rank</th></tr>
+        <tr><td>A</td><td>11/6 = 1.833</td><td>2</td></tr>
+        <tr class="hl"><td>B</td><td>9/4 = 2.250</td><td>1</td></tr>
+        <tr><td>C</td><td>13/8 = 1.625</td><td>4</td></tr>
+        <tr><td>D</td><td>7/6 = 1.167</td><td>5</td></tr>
+        <tr><td>E</td><td>17/10 = 1.700</td><td>3</td></tr>
+      </table></div>
+      <p class="result">Ranking: B, A, E, C, D.</p>
+      <div class="charts">
+        <div class="chart"><div id="chart-c26a"></div><div class="cap">Mean–standard deviation space. The CML from R<sub>F</sub> = 3% through the market (σ = 5, R̄ = 13) has slope 2; funds above it beat the market on a total-risk basis (only B).<span class="zh">CML 斜率为 2，只有 B 在 CML 上方。</span></div></div>
+        <div class="chart"><div id="chart-c26b"></div><div class="cap">Expected return–beta space. The SML is R̄ = 3 + 10β; B, C and D lie above it (positive alpha), A and E below.<span class="zh">SML 为 3 + 10β；B、C、D 在线上方，A、E 在下方。</span></div></div>
+      </div>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c26-2">
+    <div class="prob-head"><span class="prob-num">26.2</span><h3>Treynor ranking<span class="zh">特雷诺比率排名</span></h3></div>
+    <div class="q"><p>For the data in Problem 1, what is the Treynor measure and ranking?</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="tbl"><table>
+        <tr><th>Fund</th><th>(R̄ − 3)/β</th><th>Rank</th></tr>
+        <tr><td>A</td><td>11/1.5 = 7.33</td><td>5</td></tr>
+        <tr class="hl"><td>B</td><td>9/0.5 = 18.00</td><td>1</td></tr>
+        <tr><td>C</td><td>13/1.0 = 13.00</td><td>3</td></tr>
+        <tr><td>D</td><td>7/0.5 = 14.00</td><td>2</td></tr>
+        <tr><td>E</td><td>17/2 = 8.50</td><td>4</td></tr>
+      </table></div>
+      <p class="result">Ranking: B, D, C, E, A. D moves from last (Sharpe) to second: most of its risk is diversifiable, which Treynor ignores.</p>
+      <p class="zh">D 从夏普排名的最后升到第二：它的风险大部分可分散，Treynor 不计这部分。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c26-3">
+    <div class="prob-head"><span class="prob-num">26.3</span><h3>Differential return with σ as the risk measure<span class="zh">以 σ 衡量风险的差额收益</span></h3></div>
+    <div class="q"><p>For the data in Problem 1, what is the differential return if the market return is 13%, the standard deviation of return is 5%, and standard deviation is the appropriate measure of risk?</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="formula">Benchmark (CML):  R′ = 3 + σₚ·(13 − 3)/5 = 3 + 2σₚ</div>
+      <div class="tbl"><table>
+        <tr><th>Fund</th><th>R′</th><th>R̄ − R′</th></tr>
+        <tr><td>A</td><td>3 + 12 = 15</td><td>−1</td></tr>
+        <tr class="hl"><td>B</td><td>3 + 8 = 11</td><td>+1</td></tr>
+        <tr><td>C</td><td>3 + 16 = 19</td><td>−3</td></tr>
+        <tr><td>D</td><td>3 + 12 = 15</td><td>−5</td></tr>
+        <tr><td>E</td><td>3 + 20 = 23</td><td>−3</td></tr>
+      </table></div>
+      <p class="result">Only B beats the CML (+1%).</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c26-4">
+    <div class="prob-head"><span class="prob-num">26.4</span><h3>Differential return with β as the risk measure<span class="zh">以 β 衡量风险的差额收益</span></h3></div>
+    <div class="q"><p>For the data in Problem 1, what is the differential return if beta is the appropriate measure of risk?</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="formula">Benchmark (SML):  R′ = 3 + βₚ(13 − 3) = 3 + 10βₚ</div>
+      <div class="tbl"><table>
+        <tr><th>Fund</th><th>R′</th><th>α = R̄ − R′</th></tr>
+        <tr><td>A</td><td>18</td><td>−4</td></tr>
+        <tr class="hl"><td>B</td><td>8</td><td>+4</td></tr>
+        <tr><td>C</td><td>13</td><td>+3</td></tr>
+        <tr><td>D</td><td>8</td><td>+2</td></tr>
+        <tr><td>E</td><td>23</td><td>−3</td></tr>
+      </table></div>
+      <p class="result">B, C and D have positive Jensen alphas; A and E negative.</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c26-5">
+    <div class="prob-head"><span class="prob-num">26.5</span><h3>Differential return with the zero-beta CAPM<span class="zh">零 beta CAPM 下的差额收益</span></h3></div>
+    <div class="q"><p>Assume that the zero-beta form of the capital asset pricing model (CAPM) is appropriate. What is the differential return for the funds shown in Problem 1 if R̄<sub>Z</sub> = 4%?</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="formula">Benchmark:  R′ = 4 + βₚ(13 − 4) = 4 + 9βₚ</div>
+      <div class="tbl"><table>
+        <tr><th>Fund</th><th>R′</th><th>R̄ − R′</th></tr>
+        <tr><td>A</td><td>17.5</td><td>−3.5</td></tr>
+        <tr class="hl"><td>B</td><td>8.5</td><td>+3.5</td></tr>
+        <tr><td>C</td><td>13.0</td><td>+3.0</td></tr>
+        <tr><td>D</td><td>8.5</td><td>+1.5</td></tr>
+        <tr><td>E</td><td>22.0</td><td>−2.0</td></tr>
+      </table></div>
+      <p>The flatter zero-beta line raises the benchmark for low-beta funds and lowers it for high-beta funds, so B and D look a little worse and A and E a little better than in Problem 4. The ranking is unchanged.</p>
+      <p class="zh">零 beta 线更平，低 beta 基金的基准提高、高 beta 基金的基准降低，排名不变。</p>
+    </div></details>
+  </article>
+
+  <article class="prob" id="c26-6">
+    <div class="prob-head"><span class="prob-num">26.6</span><h3>How much must B change to swap ranks with A?<span class="zh">B 要变多少才会与 A 交换排名</span></h3></div>
+    <div class="q"><p>For funds A and B in Problem 1, how much would the return on B have to change to reverse the ranking using the reward-to-variability measure?</p></div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <div class="formula">A’s ratio: 11/6 = 1.833        Need (R_B − 3)/4 &lt; 1.833
+R_B &lt; 3 + 4·1.833 = 10.33%</div>
+      <p class="result">B’s return would have to fall from 12% to below 10.33%, a drop of about 1.67 percentage points (at exactly 10.33% the two tie).</p>
+      <p class="zh">B 的收益要从 12% 降到 10.33% 以下，约下降 1.67 个百分点。</p>
+    </div></details>
+  </article>
+</section>
+
+<!-- ======================= CHAPTER 27 ======================= -->
+<section class="chapter" id="ch27">
+  <div class="ch-head">
+    <div class="eyebrow">Chapter 27 · p. 712</div>
+    <h2>Evaluation of Security Analysis<span class="zh">证券分析的评估</span></h2>
+    <p>Measuring how good earnings forecasts are, and where the errors come from.</p>
+  </div>
+  <div class="notes" id="ch27-notes">
+    <h3>Key concepts<span class="zh">本章要点</span></h3>
+    <div class="concept">
+      <h4>Predictive realization diagram (PRD)<span class="pg">p.702–704</span><span class="zh">预测–实现图</span></h4>
+      <p>Plot the predicted change in earnings (P, horizontal) against the realized change (R, vertical). Points on the 45° line are perfect forecasts. Quadrants I and III are correct direction; II and IV are <b>turning-point errors</b> (wrong direction). In quadrant I, points below the line mean the forecaster <b>overestimated</b> increases.</p>
+      <p class="zh">横轴为预测变化，纵轴为实际变化。45° 线上为完美预测；第二、四象限是方向判断错误；第一象限线下方表示高估了增长。</p>
+    </div>
+    <div class="concept">
+      <h4>Mean squared forecast error and Theil’s coefficient<span class="pg">p.701–702</span><span class="zh">均方预测误差与 Theil 系数</span></h4>
+      <p>Pᵢ = predicted change = forecast − previous earnings; Rᵢ = realized change = actual − previous earnings. MSFE is the same whether computed on levels or changes. Theil’s inequality coefficient compares the forecaster with a naive “no change” forecast: TIC = 0 is perfect, TIC = 1 is no better than predicting no change, TIC &gt; 1 is worse.</p>
+      <p class="zh">用盈利变化计算：MSFE 对水平或变化都一样。TIC 与“不变”预测比较：0 完美，1 与不变预测一样，大于 1 更差。</p>
+      <div class="formula">MSFE = (1/N) Σ (Pᵢ − Rᵢ)²            TIC = Σ (Pᵢ − Rᵢ)² / Σ Rᵢ²</div>
+    </div>
+    <div class="concept">
+      <h4>Decomposing forecast error<span class="pg">p.704–708</span><span class="zh">预测误差分解</span></h4>
+      <p><b>By level of aggregation:</b> economy-wide error, industry error (misjudging how industries differ from the average), and firm error (misjudging firms within an industry). <b>By forecast characteristics:</b> bias (average forecast too high or low), inefficiency (forecasts systematically too extreme or too timid: slope of R on P not equal to 1) and random error. Consensus forecasts: almost all error is random and firm-specific.</p>
+      <p class="zh">按层级：经济整体、行业、公司。按特征：偏差、无效性（R 对 P 回归斜率不为 1）、随机误差。一致预期的误差大部分是随机的、公司层面的。</p>
+      <div class="formula">MSFE = (P̄ − R̄)²  +  (1/N)Σ[(P̄ₐ − P̄) − (R̄ₐ − R̄)]²  +  (1/N)Σ[(Pᵢ − P̄ₐ) − (Rᵢ − R̄ₐ)]²
+        economy          industry                              firm
+MSFE = (P̄ − R̄)² + (1 − β)²σ_P² + (1 − ρ²)σ_R²      (bias, inefficiency, random)
+MSFE = (P̄ − R̄)² + (σ_P − σ_R)² + 2(1 − ρ)σ_Pσ_R   (Theil: bias, variance, covariance)</div>
+    </div>
+  </div>
+
+  <article class="prob" id="c27-1">
+    <div class="prob-head"><span class="prob-num">27.1</span><h3>A brokerage firm’s earnings forecasts<span class="zh">一家券商的盈利预测</span></h3></div>
+    <div class="q">
+      <p>Assume that a brokerage firm concentrates on a few closely related industries. It has produced a set of estimates of earnings for 1985 and subsequently recorded the earnings that actually occurred:</p>
+      <div class="tbl"><table>
+        <tr><th>Industry</th><th>Firm</th><th>Previous</th><th>Estimated</th><th>Actual</th></tr>
+        <tr><td>A</td><td>1</td><td>1.05</td><td>1.10</td><td>1.05</td></tr>
+        <tr><td></td><td>2</td><td>1.32</td><td>1.37</td><td>1.35</td></tr>
+        <tr><td></td><td>3</td><td>3.50</td><td>4.25</td><td>3.25</td></tr>
+        <tr><td>B</td><td>4</td><td>2.06</td><td>2.10</td><td>2.12</td></tr>
+        <tr><td></td><td>5</td><td>2.08</td><td>2.13</td><td>2.12</td></tr>
+        <tr><td></td><td>6</td><td>2.60</td><td>3.25</td><td>2.80</td></tr>
+        <tr><td></td><td>7</td><td>1.07</td><td>1.06</td><td>1.06</td></tr>
+        <tr><td>C</td><td>8</td><td>2.00</td><td>2.70</td><td>2.40</td></tr>
+        <tr><td></td><td>9</td><td>0.55</td><td>0.52</td><td>0.54</td></tr>
+        <tr><td></td><td>10</td><td>1.18</td><td>1.16</td><td>1.20</td></tr>
+      </table></div>
+      <ol type="A">
+        <li>Plot these points on a Predictive Realization Diagram. What can we learn about the forecast pattern of this firm from the PRD?</li>
+        <li>Calculate the mean square forecasted error for this firm.</li>
+        <li>Decompose the error by level of aggregation: what percentage was due to the inability to forecast earnings for this sector of the economy, to forecast each industry, and to forecast differences for each firm?</li>
+        <li>Assume that there are three analysts, each following one industry. What is the mean squared error of each analyst? How much of each analyst’s error is due to inability to predict the industry followed, and how much to inability to differentiate between firms in the industry?</li>
+        <li>Decompose the error by forecast characteristics: what percentage is due to bias, to variance, and to covariance?</li>
+      </ol>
+    </div>
+    <details class="ans"><summary>Show answer <span class="zh">查看答案</span></summary><div class="ans-body">
+      <p>Work in changes: P = estimated − previous, R = actual − previous.</p>
+      <div class="tbl"><table>
+        <tr><th>Firm</th><th>Ind.</th><th>P</th><th>R</th><th>P − R</th><th>(P − R)²</th></tr>
+        <tr><td>1</td><td>A</td><td>0.05</td><td>0.00</td><td>0.05</td><td>0.0025</td></tr>
+        <tr><td>2</td><td>A</td><td>0.05</td><td>0.03</td><td>0.02</td><td>0.0004</td></tr>
+        <tr><td>3</td><td>A</td><td>0.75</td><td>−0.25</td><td>1.00</td><td>1.0000</td></tr>
+        <tr><td>4</td><td>B</td><td>0.04</td><td>0.06</td><td>−0.02</td><td>0.0004</td></tr>
+        <tr><td>5</td><td>B</td><td>0.05</td><td>0.04</td><td>0.01</td><td>0.0001</td></tr>
+        <tr><td>6</td><td>B</td><td>0.65</td><td>0.20</td><td>0.45</td><td>0.2025</td></tr>
+        <tr><td>7</td><td>B</td><td>−0.01</td><td>−0.01</td><td>0.00</td><td>0.0000</td></tr>
+        <tr><td>8</td><td>C</td><td>0.70</td><td>0.40</td><td>0.30</td><td>0.0900</td></tr>
+        <tr><td>9</td><td>C</td><td>−0.03</td><td>−0.01</td><td>−0.02</td><td>0.0004</td></tr>
+        <tr><td>10</td><td>C</td><td>−0.02</td><td>0.02</td><td>−0.04</td><td>0.0016</td></tr>
+      </table></div>
+
+      <div class="part"><h5><b>A</b>Predictive realization diagram<span class="zh">预测–实现图</span></h5>
+        <div class="charts"><div class="chart"><div id="chart-c27"></div><div class="cap">Predicted change (P) against realized change (R), with the 45° perfect-forecast line. Firm numbers label the points.<span class="zh">横轴预测变化，纵轴实际变化，虚线为 45° 完美预测线。</span></div></div></div>
+        <p>Small predicted changes (firms 1, 2, 4, 5, 7, 9, 10) are forecast quite accurately and cluster near the origin. The three large predicted increases (firms 3, 6, 8) all lie well <b>below</b> the 45° line: the firm is systematically <b>overoptimistic about big increases</b>. Firm 3 is a turning-point error (predicted +0.75, actual −0.25, quadrant IV), and firms 9 and 10 have small direction errors. Overall: an upward bias concentrated in the firms where the analysts expected the most.</p>
+        <p class="zh">小幅变化预测得很准；三个大幅增长的预测（3、6、8）都在 45° 线下方，说明对大幅增长过度乐观。公司 3 方向判断错误。</p></div>
+
+      <div class="part"><h5><b>B</b>Mean squared forecast error<span class="zh">均方预测误差</span></h5>
+        <div class="formula">MSFE = 1.2979/10 = 0.1298
+TIC  = Σ(P − R)²/ΣR² = 1.2979/0.2692 = 4.82</div>
+        <p>TIC is well above 1: a naive “no change in earnings” forecast would have been far more accurate.</p>
+        <p class="zh">TIC 远大于 1，还不如直接预测“盈利不变”。</p></div>
+
+      <div class="part"><h5><b>C</b>By level of aggregation<span class="zh">按层级分解</span></h5>
+        <div class="formula">P̄ = 0.223,  R̄ = 0.048
+Industry means:   A: P̄ₐ = 0.2833, R̄ₐ = −0.0733    B: 0.1825, 0.0725    C: 0.2167, 0.1367
+
+Economy  (P̄ − R̄)²                               = 0.0306   23.6%
+Industry (1/N)Σ[(P̄ₐ − P̄) − (R̄ₐ − R̄)]²           = 0.0143   11.0%
+Firm     (1/N)Σ[(Pᵢ − P̄ₐ) − (Rᵢ − R̄ₐ)]²          = 0.0849   65.4%
+Total                                             = 0.1298  100%</div>
+        <p class="result">About two-thirds of the error comes from not distinguishing firms within industries; a quarter from overestimating the sector as a whole.</p></div>
+
+      <div class="part"><h5><b>D</b>By analyst<span class="zh">按分析师分解</span></h5>
+        <div class="tbl"><table>
+          <tr><th>Analyst (industry)</th><th>MSE</th><th>Industry level (P̄ₐ − R̄ₐ)²</th><th>Within industry</th></tr>
+          <tr><td>A (firms 1–3)</td><td>0.3343</td><td>0.1272 (38.1%)</td><td>0.2071 (61.9%)</td></tr>
+          <tr><td>B (firms 4–7)</td><td>0.0508</td><td>0.0121 (23.8%)</td><td>0.0387 (76.2%)</td></tr>
+          <tr><td>C (firms 8–10)</td><td>0.0307</td><td>0.0064 (20.9%)</td><td>0.0243 (79.1%)</td></tr>
+        </table></div>
+        <p>Analyst A is by far the least accurate, driven by firm 3, and has the largest share of error from misjudging the industry (predicted the industry would grow 0.28 when it fell 0.07). All three analysts lose most accuracy in differentiating firms.</p>
+        <p class="zh">分析师 A 误差最大（主要来自公司 3），对行业整体的误判也最多。三位分析师的误差大部分来自区分不同公司。</p></div>
+
+      <div class="part"><h5><b>E</b>By forecast characteristics<span class="zh">按预测特征分解</span></h5>
+        <div class="formula">σ_P = 0.3144,  σ_R = 0.1569,  ρ = 0.246,  β (R on P) = 0.123
+
+Theil decomposition:
+Bias        (P̄ − R̄)²           = 0.0306   23.6%
+Variance    (σ_P − σ_R)²        = 0.0248   19.1%
+Covariance  2(1 − ρ)σ_Pσ_R      = 0.0744   57.3%
+
+Book’s regression version:
+Bias        (P̄ − R̄)²           = 0.0306   23.6%
+Inefficiency (1 − β)²σ_P²       = 0.0760   58.6%
+Random      (1 − ρ²)σ_R²        = 0.0231   17.8%</div>
+        <p class="result">Bias is 23.6% of the error; the forecasts are also far too dispersed (σ<sub>P</sub> is twice σ<sub>R</sub>) and weakly correlated with outcomes (ρ = 0.25). In the regression form, inefficiency (β = 0.12, far below 1) is the largest component: the analysts’ big predicted changes should be scaled down sharply.</p>
+        <p class="zh">偏差占 23.6%；预测的波动是实际的两倍，相关性只有 0.25。按回归分解，无效性（β = 0.12，远小于 1）占比最大：大幅变化的预测应该大幅缩小。</p></div>
+    </div></details>
+  </article>
+</section>
+
+<!-- ======================= CHAPTER 28 ======================= -->
+<section class="chapter" id="ch28">
+  <div class="ch-head">
+    <div class="eyebrow">Chapter 28 · pp. 714–728 · no end-of-chapter problems</div>
+    <h2>Portfolio Management Revisited<span class="zh">再论投资组合管理</span></h2>
+    <p>How the theory of the book shows up in real management styles, for stocks and bonds.</p>
+  </div>
+  <div class="notes" id="ch28-notes">
+    <h3>Key concepts<span class="zh">本章要点</span></h3>
+    <div class="concept">
+      <h4>Passive management and index funds<span class="pg">p.715–718</span><span class="zh">被动管理与指数基金</span></h4>
+      <p>Passive = trading on mechanical rules from past data, with no forecasts. The standard CAPM justifies holding the market (approximated by an index such as the S&amp;P 500); in practice index funds beat most active managers after costs. Three ways to build one, trading <b>tracking error</b> against transaction costs: (1) hold every stock at index weight, (2) optimize a smaller set of stocks to track the index historically, (3) match the index on characteristics (sector, industry, size). Variants based on other models: yield-tilted funds (posttax CAPM), small-cap and low-P/E funds (anomalies), and funds holding T-bills plus index futures.</p>
+      <p class="zh">被动管理：按机械规则，不做预测。CAPM 支持持有市场组合；实际中指数基金扣费后胜过多数主动经理。三种构建方法在跟踪误差和交易成本之间取舍。还有股息倾斜、小盘股、低市盈率等变体。</p>
+    </div>
+    <div class="concept">
+      <h4>Active management<span class="pg">p.718–720</span><span class="zh">主动管理</span></h4>
+      <p>Any departure from the passive benchmark weights is a bet based on a forecast. Three styles: <b>market timers</b> change portfolio beta according to market forecasts (via futures, options or the cash/bond mix); <b>sector selectors</b> over- or underweight industries or sectors; <b>security selectors</b> pick individual mispriced stocks, often using the single-index framework to trade off alpha against residual risk.</p>
+      <p class="zh">偏离基准权重就是基于预测的押注。三种风格：择时（调整 beta）、行业选择（超配或低配行业）、个股选择。</p>
+      <div class="refs">
+        <div><span class="lbl">See also</span><a href="#ch26-notes">Ch 26 timing measures</a><a href="#ch27-notes">Ch 27 evaluating forecasts</a></div>
+      </div>
+    </div>
+    <div class="concept">
+      <h4>International diversification, bonds and liabilities<span class="pg">p.720–728</span><span class="zh">国际分散、债券管理与负债匹配</span></h4>
+      <p>International portfolios add a choice of countries and currency exposure on top of the domestic decisions. Bond portfolios can be passive (bond index funds) or active (forecasting interest rates, credit spreads, sector swaps). When the manager must meet a stream of liabilities (pension funds, insurers), the problem becomes managing the <b>surplus</b> (assets minus liabilities): immunization and duration matching protect against interest-rate shifts, and the risky asset mix is chosen relative to the liabilities rather than in isolation.</p>
+      <p class="zh">国际组合多了国家和汇率选择。债券组合可以被动或主动。需要偿付负债时，目标变成管理盈余（资产减负债），用免疫和久期匹配对冲利率风险。</p>
+    </div>
+  </div>
+</section>
+</main>
+</div>
+</div>
+<script>
+(function () {
+  const NS = "http://www.w3.org/2000/svg";
+  const css = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  function niceStep(span, n) {
+    const raw = span / n, mag = Math.pow(10, Math.floor(Math.log10(raw)));
+    const f = raw / mag;
+    return (f < 1.5 ? 1 : f < 3 ? 2 : f < 7 ? 5 : 10) * mag;
+  }
+  function el(tag, attrs, parent) {
+    const e = document.createElementNS(NS, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  // spec: {x:[min,max], y:[min,max], lines:[{pts, color, width, dash}], dots:[{x,y,label,color,r}], xl, yl, title}
+  function chart(host, spec) {
+    const W = 340, H = 240, L = 40, R = 12, T = spec.title ? 24 : 12, B = 34;
+    const [x0, x1] = spec.x, [y0, y1] = spec.y;
+    const sx = (v) => L + (v - x0) / (x1 - x0) * (W - L - R);
+    const sy = (v) => H - B - (v - y0) / (y1 - y0) * (H - T - B);
+    const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": spec.title || "chart" });
+    const ink = css("--muted"), grid = css("--line");
+    if (spec.title) { const t = el("text", { x: L, y: 15, fill: css("--ink"), "font-size": 12, "font-weight": 600, "font-family": "Public Sans, sans-serif" }, svg); t.textContent = spec.title; }
+    const xs = niceStep(x1 - x0, 5), ys = niceStep(y1 - y0, 5);
+    for (let v = Math.ceil(x0 / xs) * xs; v <= x1 + 1e-9; v += xs) {
+      el("line", { x1: sx(v), x2: sx(v), y1: T, y2: H - B, stroke: grid, "stroke-width": 1 }, svg);
+      const t = el("text", { x: sx(v), y: H - B + 14, fill: ink, "font-size": 10, "text-anchor": "middle", "font-family": "JetBrains Mono, monospace" }, svg);
+      t.textContent = +v.toFixed(2);
+    }
+    for (let v = Math.ceil(y0 / ys) * ys; v <= y1 + 1e-9; v += ys) {
+      el("line", { x1: L, x2: W - R, y1: sy(v), y2: sy(v), stroke: grid, "stroke-width": 1 }, svg);
+      const t = el("text", { x: L - 5, y: sy(v) + 3, fill: ink, "font-size": 10, "text-anchor": "end", "font-family": "JetBrains Mono, monospace" }, svg);
+      t.textContent = +v.toFixed(2);
+    }
+    const xl = el("text", { x: (L + W - R) / 2, y: H - 4, fill: ink, "font-size": 10, "text-anchor": "middle", "font-family": "Public Sans, sans-serif" }, svg);
+    xl.textContent = spec.xl || "σ (%)";
+    const yl = el("text", { x: 10, y: (T + H - B) / 2, fill: ink, "font-size": 10, "text-anchor": "middle", transform: `rotate(-90 10 ${(T + H - B) / 2})`, "font-family": "Public Sans, sans-serif" }, svg);
+    yl.textContent = spec.yl || "R̄ (%)";
+    const clipId = "c" + Math.random().toString(36).slice(2);
+    const cp = el("clipPath", { id: clipId }, el("defs", {}, svg));
+    el("rect", { x: L, y: T, width: W - L - R, height: H - T - B, fill: "none" }, cp);
+    const g = el("g", { "clip-path": `url(#${clipId})` }, svg);
+    (spec.lines || []).forEach((ln) => {
+      if (ln.pts.length < 2) return;
+      el("polyline", { points: ln.pts.map((p) => `${sx(p[0]).toFixed(1)},${sy(p[1]).toFixed(1)}`).join(" "), fill: "none", stroke: ln.color, "stroke-width": ln.width || 2, "stroke-dasharray": ln.dash || "", "stroke-linecap": "round", "stroke-linejoin": "round" }, g);
+    });
+    (spec.dots || []).forEach((d) => {
+      el("circle", { cx: sx(d.x), cy: sy(d.y), r: d.r || 3.5, fill: d.color, stroke: css("--surface"), "stroke-width": 1 }, svg);
+      if (d.label) {
+        const right = sx(d.x) > W - 70;
+        const t = el("text", { x: sx(d.x) + (right ? -6 : 6), y: sy(d.y) - 5, fill: css("--ink"), "font-size": 10, "text-anchor": right ? "end" : "start", "font-family": "JetBrains Mono, monospace" }, svg);
+        t.textContent = d.label;
+      }
+    });
+    host.replaceChildren(svg);
+  }
+
+
+  function drawC131() {
+    chart(document.getElementById("chart-c13-1"), {
+      x: [0, 2.2], y: [0, 18], xl: "β", yl: "R̄ (%)",
+      lines: [{ pts: [[0, 3], [2.2, 3 + 6 * 2.2]], color: css("--eff"), width: 2.5 }],
+      dots: [{ x: 0, y: 3, label: "RF = 3", color: css("--ink") },
+             { x: 0.5, y: 6, label: "1", color: css("--accent"), r: 4.5 }, { x: 1.5, y: 12, label: "2", color: css("--accent"), r: 4.5 },
+             { x: 2, y: 15, label: "β = 2: 15%", color: css("--eff") }, { x: 1.2, y: 15, label: "3 (Prob. 7)", color: css("--plot-muted"), r: 4.5 }]
+    });
+  }
+  function drawC144() {
+    const red = css("--eff"), grey = css("--plot-muted"), blue = css("--accent"), ink = css("--ink");
+    const pt = (x) => [Math.sqrt(484 * x * x + 64 * (1 - x) * (1 - x)), 5 + 10 * x];
+    const curve = [], eff = [];
+    for (let k = 0; k <= 200; k++) { const x = -0.4 + 1.9 * k / 200, p = pt(x); curve.push(p); if (x >= 0.4424) eff.push(p); }
+    const T = pt(0.4424);
+    chart(document.getElementById("chart-c14-4a"), {
+      x: [0, 26], y: [0, 18],
+      lines: [{ pts: curve, color: grey, width: 1.5 }, { pts: [[0, 3], T], color: red, width: 3 }, { pts: eff, color: red, width: 3 }],
+      dots: [{ x: 0, y: 3, label: "RF", color: ink }, { x: 8, y: 5, label: "Z", color: blue }, { x: 7.52, y: 6.17, label: "MVP", color: grey },
+             { x: T[0], y: T[1], label: "T", color: red, r: 4 }, { x: 22, y: 15, label: "M", color: blue, r: 4 }]
+    });
+    chart(document.getElementById("chart-c14-4b"), {
+      x: [0, 1.4], y: [0, 18], xl: "β", yl: "R̄ (%)",
+      lines: [{ pts: [[0, 5], [1.4, 19]], color: red, width: 2.5 }, { pts: [[0, 3], [0.4424, 9.424]], color: grey, width: 2, dash: "5 4" }],
+      dots: [{ x: 0, y: 3, label: "RF", color: ink }, { x: 0, y: 5, label: "Z", color: blue }, { x: 0.4424, y: 9.424, label: "T", color: red }, { x: 1, y: 15, label: "M", color: blue, r: 4 }]
+    });
+  }
+  function drawC26() {
+    const F = { A: [14, 6, 1.5], B: [12, 4, 0.5], C: [16, 8, 1], D: [10, 6, 0.5], E: [20, 10, 2] };
+    const dots = (i) => Object.keys(F).map((k) => ({ x: F[k][i], y: F[k][0], label: k, color: css("--accent"), r: 4 }));
+    chart(document.getElementById("chart-c26a"), {
+      x: [0, 12], y: [0, 26],
+      lines: [{ pts: [[0, 3], [12, 27]], color: css("--eff"), width: 2 }],
+      dots: [{ x: 0, y: 3, label: "RF", color: css("--ink") }, { x: 5, y: 13, label: "M", color: css("--eff") }, ...dots(1)]
+    });
+    chart(document.getElementById("chart-c26b"), {
+      x: [0, 2.3], y: [0, 26], xl: "β", yl: "R̄ (%)",
+      lines: [{ pts: [[0, 3], [2.3, 26]], color: css("--eff"), width: 2 }],
+      dots: [{ x: 0, y: 3, label: "RF", color: css("--ink") }, { x: 1, y: 13, label: "M", color: css("--eff") }, ...dots(2)]
+    });
+  }
+  function drawC27() {
+    const P = [0.05, 0.05, 0.75, 0.04, 0.05, 0.65, -0.01, 0.70, -0.03, -0.02];
+    const R = [0.00, 0.03, -0.25, 0.06, 0.04, 0.20, -0.01, 0.40, -0.01, 0.02];
+    const big = { 2: 1, 5: 1, 7: 1 };
+    chart(document.getElementById("chart-c27"), {
+      x: [-0.3, 0.8], y: [-0.3, 0.8], xl: "Predicted change P", yl: "Realized change R",
+      lines: [{ pts: [[-0.3, -0.3], [0.8, 0.8]], color: css("--plot-muted"), width: 1.5, dash: "5 4" },
+              { pts: [[-0.3, 0], [0.8, 0]], color: css("--ink"), width: 1 }, { pts: [[0, -0.3], [0, 0.8]], color: css("--ink"), width: 1 }],
+      dots: P.map((p, i) => ({ x: p, y: R[i], label: big[i] ? String(i + 1) : "", color: big[i] ? css("--eff") : css("--accent"), r: 4 }))
+    });
+  }
+  function drawAll() { drawC131(); drawC144(); drawC26(); drawC27(); }
+  drawAll();
+  // repaint charts when the theme flips so SVG colors follow the tokens
+  const mq = matchMedia("(prefers-color-scheme: dark)");
+  mq.addEventListener && mq.addEventListener("change", drawAll);
+  new MutationObserver(drawAll).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+  const all = () => document.querySelectorAll("details.ans");
+  document.getElementById("openAll").addEventListener("click", () => all().forEach((d) => d.open = true));
+  document.getElementById("closeAll").addEventListener("click", () => all().forEach((d) => d.open = false));
+  // open the answer for a problem linked by #hash
+  function openHash() {
+    const t = location.hash && document.getElementById(location.hash.slice(1));
+    const d = t && t.querySelector("details.ans"); if (d) d.open = true;
+  }
+  addEventListener("hashchange", openHash); openHash();
+})();
+</script>

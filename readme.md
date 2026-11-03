@@ -1,12 +1,13 @@
 # COMM 467 Study Pages
 
-Self-made study material for Elton, Gruber, Brown & Goetzmann, *Modern Portfolio Theory and Investment Analysis* (9th ed.), Chapters 1, 4, 5 and 7.
-自制学习资料，覆盖第 1、4、5、7 章。
+Self-made study material for Elton, Gruber, Brown & Goetzmann, *Modern Portfolio Theory and Investment Analysis* (9th ed.): every chapter on the COMM 467 reading list.
+自制学习资料，覆盖 COMM 467 全部指定章节。
 
 | File | What it is |
 | --- | --- |
 | `index.html` | Home page linking to both study pages. 首页。 |
-| `mpt-solutions.html` | Worked answers to the end-of-chapter problems, key-concept notes with charts and video links. 课后题解答与知识点笔记。 |
+| `mpt-solutions.html` | Part 1: Ch 1, 4, 5, 7. Worked answers to the end-of-chapter problems, key-concept notes with charts and video links. 课后题解答与知识点笔记。 |
+| `mpt-solutions-2.html` | Part 2: Ch 8, 11, 13, 14, 15, 20, 26, 27, 28 — 50 worked problems and 32 key-concept notes. 第二部分：期中之后的章节。 |
 | `practice-midterm.html` | 72 multiple-choice questions and 12 written problems with solutions, chapter filters and an 80-minute timer. 模拟期中考试。 |
 
 Live site: https://helenhang.github.io/comm467-study-pages/
